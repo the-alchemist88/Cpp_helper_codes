@@ -5,13 +5,13 @@
 
 using namespace std;
 
-class Car
+class Car               // base class
 {
 public:
 
-    void test_car()     // NVI --> Non-Virtual Interface: Calling private virtual functions of the base class in public section
-    {
-        start();
+    void test_car()     // NVI(Herb Sutter's acronym) --> Non-Virtual Interface: Calling private virtual functions of the base class in public section
+    {                   
+        start();        // Since these calls are made with hidden Car*, virtual dispatch mechanism can operate here
         run();
         stop();
     }
@@ -128,7 +128,7 @@ private:
     }
 };
 
-class VolvoXC90 : public Volvo      // multilevel inheritence
+class VolvoXC90 : public Volvo                          // multilevel inheritence
 {
 private:
     virtual void start() override
@@ -137,7 +137,7 @@ private:
     }
 
     //virtual void run() override                       // now that this is commented; the virtual function("run"),
-    //{                                                 // in upper classes in multilevel inheritance hierchy, which is overridden will be called --> Iniside volvo
+    //{                                                 // in upper classes in multilevel inheritance hierachy, which is overridden will be called --> Iniside volvo
     //    cout << "VolvoXC90 is running now\n";
     //}
 
@@ -149,7 +149,7 @@ private:
 
 Car* create_random_car()
 {
-    static mt19937 eng{ random_device{}() };        // create random numbers
+    static mt19937 eng{ random_device{}() };            // create random numbers
     static uniform_int_distribution dist{ 0, 5 };
 
     switch (dist(eng))
