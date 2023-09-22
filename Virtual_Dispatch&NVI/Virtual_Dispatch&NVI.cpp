@@ -3,6 +3,7 @@
 
 void car_game(Car* p)
 {
+    Car* pnewcar = p->clone(); // thereis no virtual
     p->test_car();
     (void)getchar();
     system("cls");
@@ -28,6 +29,7 @@ int main()
     for (size_t i{}; i < 10; ++i)
     {
         ptr = create_random_car();
+        cout << *ptr << "\n";
         car_game(ptr);
     }
 
@@ -55,10 +57,11 @@ Ex: virtPtr->table[idx]
 
 4) There are cases when virtual dispatch mechanism doesn't get activated:
     a) In object slicing(initializing a base class object with a derived class object)
-    b) In ctors, becuase then base class may try to use the members/resources of an object that has not constructed yet.
+    b) Virtual function calls that made inside base class ctors, becuase if otherwise, base class would try to use the members/resources of an
+object(of derived class) that has not constructed yet.
 Note that construction starts from base class and continues to derived class.
-    c) In dtor, becuase then base class may try to use the members/resources of a destroyed object.
-Note that destruction is done in the reverse order of construction, first members/resources of derived class and then base class.
+    c) Virtual function calls that made inside base class dtor, becuase if otherwise, base class would try to use the members/resources of a destroyed object.
+Note that destruction is done in the reverse order of construction, first members/resources of derived class and then base class are destroyed.
     d) When a member is used with resolution operator in base class. For ex, Base::a
 
 5) C++ is a hybrid language, it's not specifically object-oriented. In fact, its strength lies in generic programming paradigm.
