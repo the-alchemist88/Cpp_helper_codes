@@ -19,7 +19,7 @@ public:
     virtual Car* clone() = 0; // There is no virtual ctor in C++, instead there is virtual clone idiom that constructs the exact same derived class object
                               // See the trivial implementation below in overriders
 
-    friend ostream& operator<<(ostream& os, const Car& rhs) // An example aobut how to use a global function(operator <<()) in virtual dispatch
+    friend ostream& operator<<(ostream& os, const Car& rhs) // An example about how to use a global function(operator <<()) in virtual dispatch
     {
         rhs.printName(os);
         return os;
@@ -44,7 +44,7 @@ private:
     }
 };
 
-class Audi : public Car
+class Audi : public Car         // derived class-1
 {
 
 private:
@@ -75,7 +75,7 @@ private:
 
 };
 
-class Ferrari :public Car
+class Ferrari :public Car       // derived class - 2
 {
 private:
     virtual void start() override
@@ -105,7 +105,7 @@ private:
 
 };
 
-class Mercedes :public Car
+class Mercedes :public Car      // derived class - 3
 {
 private:
     virtual void start() override
@@ -135,7 +135,7 @@ private:
 
 };
 
-class Toyota : public Car
+class Toyota : public Car       // derived class - 4
 {
 private:
     virtual void start() override
@@ -165,7 +165,7 @@ private:
 
 };
 
-class Volvo : public Car
+class Volvo : public Car            // derived class - 5
 {
 private:
     virtual void start() override
@@ -194,7 +194,7 @@ private:
     }
 };
 
-class VolvoXC90 final: public Volvo                     // multilevel inheritence
+class VolvoXC90 final: public Volvo     // derived class - 5 : dervied class - 1 (multilevel inheritence)
 {
 private:
     virtual void start() override
