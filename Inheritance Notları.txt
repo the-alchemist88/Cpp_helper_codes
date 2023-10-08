@@ -1,0 +1,94 @@
+DYNAMIC_CAST & TYPEID
+
+-dynamic_cast operatörü downcasting(taban sınıftan türemiş sınıfa dönüşüm) 'in yapılıp yapılamayacığını sınar.
+-dynamic_cast'in operandı olan ifade polimorfik bir türe ilişkin olmak zorunda.
+-dynamic_cast ayrıca hiyerarşiyi aşağı doğru tarar, yani türemiş sınıftan da kalıtım yoluyla elde edilmiş bir sınıf varsa
+ve fonksiyona(*Car) o gönderilmişse onun türüne dönüşüm olacaktır.
+
+-typeid operatörünün operandı olan ifade polimorfik bir türe ilişkin olmak zorunda değil.
+-Eğer polimorfik türse, dinamik tür kavramı esas alınır ve hangi tür olduğu çalışma zamanında belirlenir, eğer polimorfik değilse, statik tür kavramı esas alınır.
+-typeid ayrıca hiyerarşiyi taramaz, sadece operandı olan ifadenin türünü baz alır.
+
+-İki ayrı sınıfın aynı kalıtım hiyerarşisindede olup olmadığını derleme zamanında anlamak için static_cast operatörü kullanılabilir.
+Aynı hiyerarşideki sınıfların static_cast ile birbirine dönüşümü legal olacaktır, bu şekilde başlık dosyalarını incelemeye gerek kalmaz.
+
+PRIVATE INHERITANCE
+
+1)
+
+Public inheritance'ta, taban sınıfın arayüzleri aynı şekilde türemiş sınıfa eklenir:
+
+	base public 		--> 	derived public
+	base protected 		--> 	derived protected
+	
+Private inhertiance'ta ise:
+	
+	base public 		--> 	derived private
+
+2)Bir is-a relationship yok. Türemiş sınıftan taban sınıfa örtülü dönüşüm yok. Upcasting, iki istisna dışında sentaks hatası :
+
+a)Türemiş sınıfın üye fonksiyonu içinde upcasting (örtülü olarak) geçerli
+b)Türemiş sınıfın friend'lik verdiği fonksiyonlarda geçerli 
+
+3)Private kalıtmı composition(containment)'a bir alternatif. İkisi arasındaki farklar:
+
+a)Elemanımız olan sınıfın protected bölümüne erişemeyiz. Ancak private kalıtımda taban sınıfımızın protected bölümüne erişebilriz.
+b)Elemenımızın sanal fonksiyonu (doğrudan)override edemeyiz. Ancak private kalıtımda taban sınıfımızın sanal fonksiyonu override edebiliriz.
+c)Elemeanımızın türüne sınıf türünden dönüşüm yok. Ancak private kalıtımda sınırlı da olsa türemiş sınıftan taban sınıfa dönüşüm var(2. madde).
+
+Private kalıtımda mümkün ama composition'da mümkün olmayan örnekler:
+- Bir sınıfın başka bir sınıf türünden iki tane elemanı olabilir
+- Bir sınıfın başka bir sınıf türünden dizi elemanı olabilir
+
+EBO(Empty Base Optimization)
+
+PROTECTED INHERITANCE
+
+Private kalıtımı ile protected kalıtımı arasındaki en büyük fark:
+
+	base public 		--> 	derived private
+
+Bu durumda multi-level inheritance ile türetilen sınıflar bu öğelere erişebilir.
+
+MULTIPLE INHERTIANCE
+
+Taban sınıflar kalıtım sentaksında bildirimdeki sıra ile hayata gelir(ctor init listteki sıra ile değil, member'larda olduğu gibi)
+
+class Der : public BaseX, public BaseY // Bu sıra ile hayata gelir
+{
+	Der(): BaseY(), BaseX
+}
+
+İsim arama bütün sınıflarda(türemiş ve taban sınıflar) aynı anda yapılır, dolayısıyla function overloading olmaz(zaten scope'lar da farklı).
+Burada ambiguity'i engellemenin yolu:
+static_cast operatörü ya da nitelenmiş isim kullanmaktır. Ör:
+
+myder.BaseX::foo()
+myder.BaseY::foo(1,2)
+
+static_cast<BaseX&>(myder).foo();
+static_cast<BaseY&>(myder).foo(1,2);
+
+Eğer function overloading mekanizmasının çalışması isteniyorsa türemiş sınıf içinde iki taban sınıf için de using bildirimi yapılabilir:
+
+using BaseX::foo;
+using BaseY::foo;
+
+VIRTUAL INHERITANCE
+
+Diamond(karo) formdaki hiyerarşide çıkan, türemiş sınıf türünden bir nesne(MathTeacher) tanımlandığında taban sınıf 
+nesnesinin(Person) iki kere hayata gelmesi problemini(ambiguity) çözmeye yönelik bir araçtır. Sentaksı:
+
+class Person{};
+class Worker: virtual public Person{};
+class Teacher: virtual public Person{ };
+class MathTeacher: public Teacher, public Worker{ };
+
+
+Eğer virtual inheritance kullanılarak türetilen sınıf  çoklu kalıtımda başka bir sınıfla birlikte taban sınıf olacaksa, bu kendi taban 
+sınıfından bir tane koyulmasını sağlayacak. Bu sentaksta iki taban sınıfın da(Worker, Teacher) virtual inheritance youlya elde edilmesi gerek,
+aksi takdirde virtual inheritance mekanizması devreye girmeyecektir. Burada ortak taban sınıfa(Person) virtual base class denir.
+
+
+
+
