@@ -3,7 +3,7 @@
 
 void car_game(Car* p)
 {
-    Car* pnewcar = p->clone(); // thereis no virtual
+    Car* pnewcar = p->clone();
     p->test_car();
     (void)getchar();
     system("cls");
@@ -40,7 +40,7 @@ int main()
 Notes:
 
 1) Virtual functions can be placed in public, protected and private sections of base class and can be orverriden also in each section of derived class.
-As long as you they are called via pointer/reference to base class type, virtual dispatch mechanism will be on action. In this example:
+As long as they are called via pointer/reference to base class type, virtual dispatch mechanism will be on action. In this example:
 void car_game(Car* p){ p->test_car();}
 
 2) Name lookup, context control and access control are related to static checks. These are done in compile-time.

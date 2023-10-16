@@ -40,7 +40,7 @@ private:
 
     virtual void stop()
     {
-        cout << "Car has just stoppped\n";
+        cout << "Car has just stopped\n";
     }
 };
 
@@ -60,7 +60,7 @@ private:
 
     virtual void stop() override
     {
-        cout << "Audi has just stoppped\n";
+        cout << "Audi has just stopped\n";
     }
 
     virtual Car* clone() override
@@ -90,7 +90,7 @@ private:
 
     virtual void stop() override
     {
-        cout << "Ferrari has just stoppped\n";
+        cout << "Ferrari has just stopped\n";
     }
 
     virtual Car* clone() override
@@ -120,7 +120,7 @@ private:
 
     virtual void stop() override
     {
-        cout << "Mercedes has just stoppped\n";
+        cout << "Mercedes has just stopped\n";
     }
 
     virtual Car* clone() override
@@ -150,7 +150,7 @@ private:
 
     virtual void stop() override
     {
-        cout << "Toyota has just stoppped\n";
+        cout << "Toyota has just stopped\n";
     }
 
     virtual Car* clone() override
@@ -180,7 +180,7 @@ private:
 
     virtual void stop() override
     {
-        cout << "Volvo has just stoppped\n";
+        cout << "Volvo has just stopped\n";
     }
 
     virtual Car* clone() override
@@ -209,7 +209,7 @@ private:
 
     virtual void stop() override
     {
-        cout << "VolvoXC90 has just stoppped\n";
+        cout << "VolvoXC90 has just stopped\n";
     }
 
     virtual Car* clone() override
