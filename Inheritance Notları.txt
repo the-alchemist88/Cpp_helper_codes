@@ -1,6 +1,6 @@
 DYNAMIC_CAST & TYPEID
 
--dynamic_cast operatörü downcasting(taban sınıftan türemiş sınıfa dönüşüm) 'in yapılıp yapılamayacığını sınar.
+-dynamic_cast operatörü downcasting(taban sınıftan türemiş sınıfa dönüşüm)'in yapılıp yapılamayacığını sınar.
 -dynamic_cast'in operandı olan ifade polimorfik bir türe ilişkin olmak zorunda.
 -dynamic_cast ayrıca hiyerarşiyi aşağı doğru tarar, yani türemiş sınıftan da kalıtım yoluyla elde edilmiş bir sınıf varsa
 ve fonksiyona(*Car) o gönderilmişse onun türüne dönüşüm olacaktır.
@@ -37,8 +37,8 @@ b)Elemenımızın sanal fonksiyonu (doğrudan)override edemeyiz. Ancak private k
 c)Elemeanımızın türüne sınıf türünden dönüşüm yok. Ancak private kalıtımda sınırlı da olsa türemiş sınıftan taban sınıfa dönüşüm var(2. madde).
 
 Private kalıtımda mümkün ama composition'da mümkün olmayan örnekler:
-- Bir sınıfın başka bir sınıf türünden iki tane elemanı olabilir
-- Bir sınıfın başka bir sınıf türünden dizi elemanı olabilir
+- Bir sınıfın başka bir sınıf türünden iki tane elemanı olabilir.
+- Bir sınıfın başka bir sınıf türünden dizi elemanı olabilir.
 
 EBO(Empty Base Optimization)
 
@@ -60,8 +60,7 @@ class Der : public BaseX, public BaseY // Bu sıra ile hayata gelir
 }
 
 İsim arama bütün sınıflarda(türemiş ve taban sınıflar) aynı anda yapılır, dolayısıyla function overloading olmaz(zaten scope'lar da farklı).
-Burada ambiguity'i engellemenin yolu:
-static_cast operatörü ya da nitelenmiş isim kullanmaktır. Ör:
+Burada ambiguity'i engellemenin yolu: static_cast operatörü ya da nitelenmiş isim kullanmaktır. Ör:
 
 myder.BaseX::foo()
 myder.BaseY::foo(1,2)
