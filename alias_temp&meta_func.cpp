@@ -20,10 +20,12 @@ using Myclass_v = typename Myclass<T>::value;
 /****************************************************************************************/
 
 //Possible implementation of integral_constant meta function in type_traits.h
-template<typename T, T n>
+template<typename T, T v>
 struct IntegralConstant
 {
-    constexpr static T value = n;
+    constexpr static T value = v;
+    using value_type = T;
+    using type = IntegralConstant<T,v>;
 };
 
 using TrueType = IntegralConstant<bool, true>;
@@ -33,14 +35,14 @@ using FalseType = IntegralConstant<bool, false>;
 
 //Possible implementation of is_pointer meta function in type_traits.h
 template<typename T>
-struct IsPointer : false_type {};
+struct IsPointer : FalseType {};
 
 template<typename T>
-struct IsPointer<T*> : true_type {};
+struct IsPointer<T*> : TrueType {};
 
 template<typename T>
 void func(T) {
-    static_assert(IsPointer<T>::value);
+    static_assert(IsPointer<T>::value, "Only for pointer types!");
 }
 
 
@@ -54,5 +56,7 @@ int main()
 
     cout << "b1 = " << b1 << " b2 = " << b2 << '\n';
 
-    func(&b1);
+    add_pointer<decltype(b1)>::type bptr = &b1;
+    func(bptr);
+    //func(b2); // fails at static_assert for pointer type
 }
