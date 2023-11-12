@@ -56,5 +56,5 @@ int main()
 	class_check(m);
 	//class_check(arr);
 	array_check<const char[]>(arr);
-	//array_check<double[]>(&arr);
+	//array_check<double[]>(arr);
 }

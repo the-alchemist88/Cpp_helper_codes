@@ -56,22 +56,22 @@ object(of derived class) that has not constructed yet. Note that construction st
     c) For virtual function calls that are made inside base class dtor, becuase if otherwise, base class would try to use the members/resources of a destroyed
 object. Note that destruction is done in the reverse order of construction, first members/resources of derived class and then base class are destroyed.
 
-    d) When a member is used with scope resolution operator in base class. For ex, Base::a
+    d) When a member is used with scope resolution operator in base class. For example: Base::a
 
 4) Virtual dispatch mechanism has costs:
 
     a) For each polymorphic class a virtual function table is formed by compiler. It's the same table for all objects of this class. This
-structure is created during runtime and employs dynamic storage, therefore allocating and freeing this memory will come with a considerable cost.
+construct is created during runtime and employs dynamic storage, therefore allocating and freeing this memory will come with a considerable cost.
 
     b) Each polymorphic class object has a virtual pointer that points to its own virtual function table. You can check the size 
-difference between a polymorphic class and a class that has no virtual funcitons. Adding more than one virtual function won't change the class size.
-Consequently, when virtual dispatch mechanism is active, accessing to a overridden function shall require double dereferencing.
-Ex: virtPtr->table[idx]
+difference between a polymorphic class and a class that has no virtual funciton. Adding more than one virtual function won't change the class size.
+Consequently, when virtual dispatch mechanism is active, accessing to an overridden function shall require double dereferencing.
+Example: virtPtr->table[idx]
 
 5) Each time when a derived class object is used, the base class object should be replaceable with it in terms of functionality on compile-time.
 Opposite of this implementation is called improper inheritance. In some parts of code, due to virtual dispatch, which object to be used(base or derived class object)
 will be decided during run-time, therefore improper inheritence may cause a run-time error. This rule corresponds to the "L" part of SOLID principles which stands
-for Liskov Substition Principle(LSP).Its reminding motto is "Require no more, promise no less".
+for Liskov Substition Principle(LSP). Its reminding motto - "Require no more, promise no less".
 
 6) In C++ there are RTTI(Run-time Type Information) tools to determine the dynamic type of an object in run-time:
 
@@ -82,7 +82,7 @@ for Liskov Substition Principle(LSP).Its reminding motto is "Require no more, pr
 6) "Final" contextual keyword can be used by compilers to do devirtualization(an optimization about inferring which function will be called during compile-time, 
 when virtual functions/classes are involved)
 
-7) Herb Sutter's advice: Dtor of the polymorphic base classe should be either:
+7) Herb Sutter's advice: Dtor of the polymorphic base classe should be either;
 
     a) Public virtual, or
     b) Protected non-virtual.
