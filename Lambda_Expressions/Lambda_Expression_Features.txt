@@ -1,0 +1,102 @@
+LAMBDA EXPRESSION FEATURES
+
+- Function call operator of compiler generated type for lambda expression, has auto return type, which means return type will be deduced from return
+ expression:
+
+auto operator()(int x) const{};
+
+- The variables inside the lambda capture can be thought as non-static data members of compiler generated type:
+
+int capture{};
+
+auto comp_gen = [capture](int x){return capture * x;};
+
+class Compiler_Generated
+{
+public:
+    auto operator()(int x) const
+    {
+        return capture * x;
+    }
+private:
+	int capture;
+};
+
+- Function call operator of compiler generated type for lambda expression is a const member function, which means it cannot change the copy captured
+object. However if the object is captured by reference then it can change because function call opereator actually changes the referenced object, not
+closure type's data member:
+
+int x{ 10 };
+class Ref
+{
+public:
+	Ref(int& val): r(val){} // now r refers to object that is sent
+	auto operator()() const { return ++r; } // reference(r) doesn't change, can be thought as constant pointer(int* const r = &val)
+private:
+	int& r;
+};
+
+auto demo = Ref(a)();
+
+cout << "demo = " << demo << '\n'; // demo and x is 11
+cout << "x = " << x << '\n';
+
+- If mutate keyword is placed in lambda expression, then it rules out the const qualifier in function call operator:
+
+[x]()mutate{ ++x ;}
+
+- Function call operator returns a constant expression if it doesn't violate the rules of constexpr requirements, otherwise returns a non-constant
+expression(for example static variables cannot be used to initialize constexpr variables):
+
+constexpr int ci = []{static int x = 10; return x * x;}(); // error
+
+- In order to check whether a lamba expression returns a constant expression, use constexpr keyword inside lambda after paranthesis:
+
+constexpr int ci = []()constexpr{int x = 10; return x * x;}();
+
+- If any of the qualifiers below is used in lambda expression then paranthesis must be placed even if inside is empty:
+
+[]()mutable{code};
+[]()noexcept{code};
+[]()constexpr{code};
+[]()->int{code};
+
+- Until C++17 lambda default-ctor and copy-assignment operator are deleted.
+Since C++20 lambdas can be default-constructed and support copy-assignment when they have no state(statless - doesn't capture any object).
+
+auto f = [](int x){ return x;};
+decltype(f) g; // is valid since C++20
+
+- There is an implicit conversion from closure type(the type of lambda expression) to the function that the function call operator provides, if the 
+lambda is stateless:
+
+int (*fp)(int) = [](int a){return  a * a;};
+fp(20); // output 400
+
+
+This resembles a class with a conversion operator to a function pointer:
+
+using fptr = int(*)(int);
+
+class Compiler_Generated
+{
+    public:
+	    int operator ()(int a) const {return a*a};
+	    operator fptr() const;
+}
+
+- "positive lambda idiom" is employed simply converts a closure type into a function pointer type(lambda has to be stateless again). Turning back to
+previous Compiler_Generated class:
+
+Compiler_Generated m;
+
++m; // same as calling "+m.operator fptr()", now m is a function pointer type
+
++[](int a) {return a*a;}; // now closure type is a function pointer type 
+
+
+- Immediately Invoked Function Expression(IIFE) is a lambda expression that is mostly used in initializing constant variables, when the initilaizing 
+function will be called only one time for example, in order to prevent scope leakage for one-time used functions and be clear about purpose.
+
+int x = 5;
+const int y = [x](int a) {return x*a;}(10);
