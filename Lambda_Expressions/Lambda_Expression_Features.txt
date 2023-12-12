@@ -36,14 +36,14 @@ private:
 	int& r;
 };
 
-auto demo = Ref(a)();
+auto demo = Ref(x)();
 
 cout << "demo = " << demo << '\n'; // demo and x is 11
 cout << "x = " << x << '\n';
 
-- If mutate keyword is placed in lambda expression, then it rules out the const qualifier in function call operator:
+- If mutable keyword is placed in lambda expression, then it rules out the const qualifier in function call operator:
 
-[x]()mutate{ ++x ;}
+[x]()mutable{ ++x ;}
 
 - Function call operator returns a constant expression if it doesn't violate the rules of constexpr requirements, otherwise returns a non-constant
 expression(for example static variables cannot be used to initialize constexpr variables):
