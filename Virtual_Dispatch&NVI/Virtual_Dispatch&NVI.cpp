@@ -82,7 +82,7 @@ for Liskov Substition Principle(LSP). Its reminding motto - "Require no more, pr
 6) "Final" contextual keyword can be used by compilers to do devirtualization(an optimization about inferring which function will be called during compile-time, 
 when virtual functions/classes are involved)
 
-7) Herb Sutter's advice: Dtor of the polymorphic base classe should be either;
+7) Herb Sutter's advice: Dtor of a polymorphic base class should be either;
 
     a) Public virtual, or
     b) Protected non-virtual.

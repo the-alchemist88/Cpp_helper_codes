@@ -85,7 +85,7 @@ class Compiler_Generated
 	    operator fptr() const;
 }
 
-- "positive lambda idiom" is employed simply converts a closure type into a function pointer type(lambda has to be stateless again). Turning back to
+- "positive lambda idiom" simply converts a closure type into a function pointer type(lambda has to be stateless again). Turning back to
 previous Compiler_Generated class:
 
 Compiler_Generated m;
