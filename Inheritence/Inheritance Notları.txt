@@ -1,8 +1,9 @@
-DYNAMIC_CAST & TYPEID
+RTTI Araçları(DYNAMIC_CAST & TYPEID) Özet
+*-----------------------------------------------------*
 
 -dynamic_cast operatörü downcasting(taban sınıftan türemiş sınıfa dönüşüm)'in yapılıp yapılamayacığını sınar.
 -dynamic_cast'in operandı olan ifade polimorfik bir türe ilişkin olmak zorunda.
--dynamic_cast ayrıca hiyerarşiyi aşağı doğru tarar, yani türemiş sınıftan da kalıtım yoluyla elde edilmiş bir sınıf varsa
+-dynamic_cast ayrıca hiyerarşiyi aşağı doğru tarar, yani operand olan türemiş sınıftan da kalıtım yoluyla elde edilmiş bir sınıf varsa
 ve fonksiyona(*Car) o gönderilmişse onun türüne dönüşüm olacaktır.
 
 -typeid operatörünün operandı olan ifade polimorfik bir türe ilişkin olmak zorunda değil.
@@ -12,6 +13,10 @@ ve fonksiyona(*Car) o gönderilmişse onun türüne dönüşüm olacaktır.
 -İki ayrı sınıfın aynı kalıtım hiyerarşisindede olup olmadığını derleme zamanında anlamak için static_cast operatörü kullanılabilir.
 Aynı hiyerarşideki sınıfların static_cast ile birbirine dönüşümü legal olacaktır, bu şekilde başlık dosyalarını incelemeye gerek kalmaz.
 
+Public inheritance bir "is-a" ilişkisi sağlar. C++'ta bulunan diğer inheritance çeşitlerinde ise durum farklıdır.
+
+Inheritance çeşitleri(Private Inheritance & Protected Inheritance)
+----------------------------
 PRIVATE INHERITANCE
 
 1)
@@ -43,15 +48,18 @@ Private kalıtımda mümkün ama composition'da mümkün olmayan örnekler:
 EBO(Empty Base Optimization)
 
 PROTECTED INHERITANCE
-
+------------------------
 Private kalıtımı ile protected kalıtımı arasındaki en büyük fark:
 
 	base public 		--> 	derived private
 
 Bu durumda multi-level inheritance ile türetilen sınıflar bu öğelere erişebilir.
 
-MULTIPLE INHERTIANCE
 
+Konuyla ilgili Diğer Kavramlar(Multiple Inheritance & Virtual Inheritance)
+
+MULTIPLE INHERTIANCE
+-----------------------
 Taban sınıflar kalıtım sentaksında bildirimdeki sıra ile hayata gelir(ctor init listteki sıra ile değil, member'larda olduğu gibi)
 
 class Der : public BaseX, public BaseY // Bu sıra ile hayata gelir
@@ -74,6 +82,7 @@ using BaseX::foo;
 using BaseY::foo;
 
 VIRTUAL INHERITANCE
+---------------------
 
 Diamond(karo) formdaki hiyerarşide çıkan, türemiş sınıf türünden bir nesne(MathTeacher) tanımlandığında taban sınıf 
 nesnesinin(Person) iki kere hayata gelmesi problemini(ambiguity) çözmeye yönelik bir araçtır. Sentaksı:

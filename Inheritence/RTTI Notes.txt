@@ -1,0 +1,190 @@
+RTTI(Run Time type Identification)
+*---------------------------------------------------------------*
+
+The main advantage of dynamic polymorphism is being able to use the virtual base class(pointer or reference) without knowing its dynamic type. 
+This eliminates the dependancy of new codes(or top layer code -- overriders) to old codes(or low layer codes -- base class virtual functionalities).
+
+Tools for determining the dynamic type at runtime(RTTI tools):
+
+1)dynamic_cast
+---------------
+
+-dynamic_cast operator examines whether downcasting is safe or not.
+
+-Typically used for casting base class type to derived class type(downcasting).
+
+void fun(Car* cptr) // assume that Volvo is publicly derived from Car class so this functian can operate virtual dispatch
+{
+	if(auto* vptr = dynamic_cast<Volvo*>(cptr)) // if, at run-time, cptr points to an Volvo object then dynamic_cast is succssful and aptr points to that object
+		// code								   // otherwise dynamic_cast returns nullptr
+}										   
+
+-dynamic_cast operand(expression inside paranthesis) should be related to a polymorphic type, otherwise compiler will complain
+
+-If downcasting is applied by reference semantics, there won't be any check the whether dynamic_cast operator successfully worked or not. If unsuccessful,
+then compiler will throw exception(std::bad_cast) in this case. Usually pointer semantics are preffered.
+
+void car_game(Car& cr) 
+{
+	try
+	{
+		auto vr = dynamic_cast<Volvo>(cr);
+		vr.open_sunroof();
+		(void)getchar();
+	}
+	
+	catch(const exception& ex)
+	{
+		cout << "exception caught: " << ex.what() << '\n'; 
+	}
+	
+}				
+
+int main()
+{
+	Car* cpr = create_random_car();
+	fun(*car_game);
+}
+
+-The dynamic_cast operator scans down the hierarchy: if the type that will operand to dynamic_cast, is a type of a derived class that is lower
+in a multilevel inheritance hierarchy than the type to be casted, this is not a syntax error, it is converted to that type.
+
+void fun(Car* cptr) 
+{
+	if(auto* aptr = dynamic_cast<Volvo*>(cptr)) // assume Volvo ispublicly derived from Car class
+	// code
+}				
+
+int main()
+{
+	VolvoXC90 vxcp; // assume VolvoXC90 is publicly derived from Volvo class
+	
+	fun(&vxcp);	//  by this call dynamic_cast will casts cptr into VolvoXC90*, not Volvo*
+}
+
+
+2)typeid
+----------
+
+#include <typeinfo>
+
+Usage:
+	typeid(type)
+	typeid(expr)
+
+- The types of expressions that will be operand of typeid operator, don't have to be related with dynamic types unlike dynamic_cast operator. 
+
+- The expression of typeid operator is unevaluated context as in sizeof operator.
+
+-An expression formed with the tpyeid operator is actually a const reference to an object of type std::type_info.
+
+	typeid(Myclass); // type of this expression is const type_info
+	const type_info& ti = typeid(Myclass); // correct syntax
+	
+	Default ctor of class type_info doesn't exist and copy ctor is deleted. Only way to use an object of type std::type_info is to use typeid operator.
+	
+	There are two commonly used function of type_info class:
+	
+1)	operator== (to compare two types)
+	
+		class Myclass{};
+		Myclass mx;
+		
+		auto b = typeid(Myclass) == typeid(mx);
+		
+2)  name() (returns const char*)
+
+	returns the type as C-string. Implementation dependant(depends on compiler)
+	
+ - The behaviour of typeid operator changes to whether the types are polymorphic or non-polymorphic.
+ 
+class Base{
+	public:
+	virtual ~Base() = default; 
+};
+
+class Der{
+
+};
+
+int main()
+{
+	Der* myder;
+	Base* baseptr = &myder;
+	cout << (typeid(*baseptr) == typeid(Der)) << '\n'; // if Base was non-polymorphic then this expression would print 0, it would be valid but related to static type. Now it prints 1
+	cout << typeid(*baseptr).name() // if Base was non-polymorphic this would print class Base, Now it prints class Der
+}														
+
+-Unlike dynamic_cast operator, typeid operator doesn't scan down the inhertance hierarchy. It can be used as exact match of types. And for tis reason,
+dynamic_cast has more cost than typeid operator. 
+
+
+-Since typeid doesn't do any casting, static_cast can be used to access the derived class member functions. static_cast is valid for the types that are
+in the same hierarchy but programmer always need to check whether the dynamic_types match or not. Without checking the type, it would be undefined behaviour.
+
+void car_game(Car* cptr) 
+{
+	
+	if(typeid(Volvo) == typeid(*cptr))
+	{
+		auto vptr = static_cast<Volvo*>(cptr)
+	}
+
+	vp->open_sunroof();
+	(void)getchar();
+}				
+
+int main()
+{
+	Volvo vol;
+	car_game(&vol);
+}
+
+
+Other Related Topics
+*------------------------------------------------------------------------------------------*
+
+-There is a way to check if two classes in the same hierarchy in compile time, static_cast.
+
+static_cast<Der*>((Base*)0); // if this is valid, they Base and Der are in the same hierarchy
+
+-There a few keywords that form unevaluated context(for expressions which compiler doesn't produce code):
+
+sizeof, typeid, decltype
+
+ unevaluated context has two features:
+ 
+1)Eliminates side effects( sizeof(x++) --> x doesn't get incremented)
+
+2)Eliminates undefined behaviour( a[10]{}, sizeof(a[40]) --> not ub)
+
+
+
+covariance (All has the same meaning)
+variant return types
+covariant
+--------------------
+
+-When overriding virtual function of a base class, it is possible to use a different return type(it's syntax error) if condition is met:
+
+D and B being a class type and D is derived from B; if a Base class' virtual function's return type is B* or B& then Derived class' overrider
+function can have return type of D* or D&.
+
+class B {};
+class D: public B{};
+
+class Base
+{
+public:
+	virtual B* foo();
+};
+
+class Der: public Base
+{
+public:
+	D* foo() override;
+};
+
+
+In that case, by getting benefit of covariance, in our Car class(car.h), clone function's return type can be changed from Car* to <Derived Class Type*>
+and this will provide correct type in  compile time.
