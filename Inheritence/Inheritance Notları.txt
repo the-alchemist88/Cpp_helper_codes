@@ -7,21 +7,26 @@ RTTI Araçları(DYNAMIC_CAST & TYPEID) Özet
 ve fonksiyona(*Car) o gönderilmişse onun türüne dönüşüm olacaktır.
 
 -typeid operatörünün operandı olan ifade polimorfik bir türe ilişkin olmak zorunda değil.
--Eğer polimorfik türse, dinamik tür kavramı esas alınır ve hangi tür olduğu çalışma zamanında belirlenir, eğer polimorfik değilse, statik tür kavramı esas alınır.
+-Eğer polimorfik türse, dinamik tür kavramı esas alınır ve hangi tür olduğu çalışma zamanında belirlenir, eğer polimorfik değilse, statik tür kavramı
+esas alınır.
 -typeid ayrıca hiyerarşiyi taramaz, sadece operandı olan ifadenin türünü baz alır.
 
 -İki ayrı sınıfın aynı kalıtım hiyerarşisindede olup olmadığını derleme zamanında anlamak için static_cast operatörü kullanılabilir.
 Aynı hiyerarşideki sınıfların static_cast ile birbirine dönüşümü legal olacaktır, bu şekilde başlık dosyalarını incelemeye gerek kalmaz.
 
-Public inheritance bir "is-a" ilişkisi sağlar. C++'ta bulunan diğer inheritance çeşitlerinde ise durum farklıdır.
 
-Inheritance çeşitleri(Private Inheritance & Protected Inheritance)
-----------------------------
+INHERITANCE ÇEŞİTLERİ(Private Inheritance & Protected Inheritance)
+------------------------
+
+Public inheritance bir "is-a" ilişkisi sağlar, yani türemiş sınıf türünden taban sınıf türüne(pointer veya referans) bir örtülü dönüşüm(upcasting) yok.
+Taban sınıfın public arayüzü türemiş sınıfın public arayüzüne, taban sınıfın protected arayüzü türemiş sınıfın protected arayüzüne eklenir. Taban sınıfın
+private bölümüne erişim yoktur. C++'ta bulunan diğer inheritance çeşitlerinde ise durum farklıdır. Taban sınıfın private bölümü bütün kalıtım biçimlerinde
+türemiş sınıfa kapalıdır.
+
 PRIVATE INHERITANCE
+--------------------
 
-1)
-
-Public inheritance'ta, taban sınıfın arayüzleri aynı şekilde türemiş sınıfa eklenir:
+1)Public inheritance'ta, taban sınıfın arayüzleri aynı şekilde türemiş sınıfa eklenir:
 
 	base public 		--> 	derived public
 	base protected 		--> 	derived protected
@@ -29,13 +34,53 @@ Public inheritance'ta, taban sınıfın arayüzleri aynı şekilde türemiş sı
 Private inhertiance'ta ise:
 	
 	base public 		--> 	derived private
+	
+Bunun anlamı(private inheritance): Türemiş sınıf içinde taban sınıfın yine protected ve public bölümüne erişilebilir. Ancak artık client kodlar türemiş 
+sınıf üzerinden taban sınıfın kodlarını kullanamazlar.
 
 2)Bir is-a relationship yok. Türemiş sınıftan taban sınıfa örtülü dönüşüm yok. Upcasting, iki istisna dışında sentaks hatası :
 
 a)Türemiş sınıfın üye fonksiyonu içinde upcasting (örtülü olarak) geçerli
-b)Türemiş sınıfın friend'lik verdiği fonksiyonlarda geçerli 
+b)Türemiş sınıfın friend'lik verdiği fonksiyonlarda geçerli
 
-3)Private kalıtmı composition(containment)'a bir alternatif. İkisi arasındaki farklar:
+class Base
+{
+public:
+	void foo();
+};
+
+class Der : private Base
+{
+	void bar()
+	{
+		Der myder;
+
+		Base* bptr = &myder; // geçerli
+		Base& bref = myder; // geçerli
+	}
+
+	friend void func();
+	
+};
+
+void func()
+{
+	Der myder;
+
+	Base* bptr = &myder; // geçerli
+	Base& bref = myder; // geçerli
+}
+
+int main()
+{
+	Der myder;
+
+	Base* bptr = &myder; // geçersiz
+	Base& bref = myder; // geçersiz
+}
+
+
+3)Private kalıtmı composition(containment, yani bir sınıf türünden elemana sahip olması)'a bir alternatif. İkisi arasındaki farklar:
 
 a)Elemanımız olan sınıfın protected bölümüne erişemeyiz. Ancak private kalıtımda taban sınıfımızın protected bölümüne erişebilriz.
 b)Elemenımızın sanal fonksiyonu (doğrudan)override edemeyiz. Ancak private kalıtımda taban sınıfımızın sanal fonksiyonu override edebiliriz.
@@ -45,21 +90,79 @@ Private kalıtımda mümkün ama composition'da mümkün olmayan örnekler:
 - Bir sınıfın başka bir sınıf türünden iki tane elemanı olabilir.
 - Bir sınıfın başka bir sınıf türünden dizi elemanı olabilir.
 
+Private kalıtımında:
+a)Gloabal fonksiyonlarda upcasting geçerli değil.
+b)Türemiş sınıfın üye fonksiyonları içinde geçerli.
+c)Türemiş fonksiyonun friend'lik verdiği kodlar içinde geçerli.
+
 EBO(Empty Base Optimization)
+-------------------------------
+Boş bir sınıfın bellekte kapladığı alan 1 byte'tır. Eğer böyle bir sınıf type member olarak başka bir sınıfın içinde yer alırsa, alignment nedeniyle
+derleyici tarafından padding yapılabilir(ör:1 yerine 4 byte'lık yer kaplayabilir). Bu nedenden bu sınıftan kalıtım yapılması tercih edilir.
+
+Neden Boş sınıf oluşturulur?
+a)Sınıfın elemana sahip olmaması, bir interface'inin olmayacağı anlamına gelmiyor.
+b)Böyle sınıflar bazı tekniklerle overload resolution oluşturmak için kullanılır.
+c)Generic programlama paradigmasında empty class'lar yığun olarak kullanılır.
+
+Private inhertance'ın Herb Sutter tarafından kullanılan ilginç bir kullanım senaryosu daha var. Bu senaryoya "restricted polymorphism" de deniyor.
+Taban sınıftaki sanal fonksiyonun, virtual dispatch mekanizmasından sadece belirli fonksiyonların istifade etmesini sağlamak için kullanılır. 
+
+class Base
+{
+public:
+	virtual void vfunc();
+};
+
+class Der:private Base
+{
+public:
+	void vfunc() override;
+	friend void g1();
+};
+
+void foo(Base& r)
+{
+	r.vfunc();
+}
+
+void g1()
+{
+	Der1 myder;
+	foo1(myder); // geçerli, friend func
+}
+
+void g2()
+{
+	Der1 myder;
+	//foo1(myder); // geçersiz
+}
+
 
 PROTECTED INHERITANCE
 ------------------------
+
 Private kalıtımı ile protected kalıtımı arasındaki en büyük fark:
 
-	base public 		--> 	derived private
+	base public 		--> 	derived protected
 
 Bu durumda multi-level inheritance ile türetilen sınıflar bu öğelere erişebilir.
 
 
 Konuyla ilgili Diğer Kavramlar(Multiple Inheritance & Virtual Inheritance)
 
+
+
 MULTIPLE INHERTIANCE
 -----------------------
+
+class BaseX { int x;}
+class BaseY { int y;}
+
+class Der : public BaseX, BaseY {}
+
+Bunun anlamı class Der : public BaseX, private BaseY ile aynıdır. Der nesnesinin iki ayrı taban sınıfı var. Yani sizeof(Der) bu drummda 8 olacaktır.
+
 Taban sınıflar kalıtım sentaksında bildirimdeki sıra ile hayata gelir(ctor init listteki sıra ile değil, member'larda olduğu gibi)
 
 class Der : public BaseX, public BaseY // Bu sıra ile hayata gelir
@@ -70,16 +173,62 @@ class Der : public BaseX, public BaseY // Bu sıra ile hayata gelir
 İsim arama bütün sınıflarda(türemiş ve taban sınıflar) aynı anda yapılır, dolayısıyla function overloading olmaz(zaten scope'lar da farklı).
 Burada ambiguity'i engellemenin yolu: static_cast operatörü ya da nitelenmiş isim kullanmaktır. Ör:
 
-myder.BaseX::foo()
-myder.BaseY::foo(1,2)
+class BaseX
+{
+public:
+	void foo();
+};
 
-static_cast<BaseX&>(myder).foo();
-static_cast<BaseY&>(myder).foo(1,2);
+class BaseY
+{
+public:
+	int foo(int, int);
+};
+
+class Der : public BaseX, public BaseY
+{
+
+};
+
+int main()
+{
+	Der myder;
+
+	myder.BaseX::foo();
+	myder.BaseY::foo(1, 2);
+
+	static_cast<BaseX&>(myder).foo();
+	static_cast<BaseY&>(myder).foo(1, 2);
+}
 
 Eğer function overloading mekanizmasının çalışması isteniyorsa türemiş sınıf içinde iki taban sınıf için de using bildirimi yapılabilir:
 
-using BaseX::foo;
-using BaseY::foo;
+class BaseX
+{
+public:
+	void foo();
+};
+
+class BaseY
+{
+public:
+	int foo(int, int);
+};
+
+class Der : public BaseX, public BaseY
+{
+public:
+	using BaseX::foo;
+	using BaseY::foo;
+};
+
+int main()
+{
+	Der myder;
+
+	myder.foo();
+	myder.foo(5,6);
+}
 
 VIRTUAL INHERITANCE
 ---------------------
@@ -95,8 +244,40 @@ class MathTeacher: public Teacher, public Worker{ };
 
 Eğer virtual inheritance kullanılarak türetilen sınıf  çoklu kalıtımda başka bir sınıfla birlikte taban sınıf olacaksa, bu kendi taban 
 sınıfından bir tane koyulmasını sağlayacak. Bu sentaksta iki taban sınıfın da(Worker, Teacher) virtual inheritance youlya elde edilmesi gerek,
-aksi takdirde virtual inheritance mekanizması devreye girmeyecektir. Burada ortak taban sınıfa(Person) virtual base class denir.
+aksi takdirde virtual inheritance mekanizması devreye girmeyecektir. Burada ortak taban sınıfa(Person) virtual base class denir. 
+Virtual base class, kendisinden türemiş sınıflarının hepsinin ctor'ları tarafından initialize edilmek zorundadır.
 
+class Base // virtual base class
+{
+public:
+	Base(const char*) {}
+};
 
+class DerX: virtual public Base1
+{
+public:
+	DerX() : Base("DerX\n") {}
+
+};
+
+class DerY: virtual public Base1
+{
+public:
+	DerY() : Base("DerY\n") {}
+
+};
+
+class DerZ: public DerX, public DerY
+{
+public:
+	DerZ(): Base("DerZ\n") {}
+
+};
+
+class DerA : public DerZ
+{
+public:
+	DerA() : Base("DerZ\n") {}
+};
 
 
