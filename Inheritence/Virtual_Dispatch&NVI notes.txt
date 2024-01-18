@@ -1,10 +1,10 @@
 VIRTUAL FUNCTIONS & VIRTUAL DISPATCH MECHANISM
 *-----------------------------------------------------*
 
-Virtual dispatch is the process of selecting which implementation of a virtual function to call at run time.
+Virtual dispatch is the process of selecting which implementation of a virtual function to call at run time. Its main features:
 
 1) Virtual functions can be placed in public, protected and private sections of base class and can be orverriden also in each section of derived class.
-As long as they are called via pointer/reference to base class type, virtual dispatch mechanism will be on action. In this example:
+As long as they are called via pointer/reference to base class type, virtual dispatch mechanism will be on action. Referring to code in cpp file:
 void car_game(Car* p){ p->test_car();}
 
 2) Name lookup, context control and access control are related to static checks. These are done in compile-time.
@@ -15,7 +15,7 @@ Default arguments of function parameters are also evaluated in compile-time, the
     a) In object slicing(initializing a base class object with a derived class object)
 	
     b) For virtual function calls that are made inside base class ctors, becuase if otherwise, base class would try to use the members/resources of an
-object(of derived class) that has not constructed yet. Note that construction starts from base class and continues to derived classes in order.
+object(of derived class) that has not yet been constructed. Note that construction starts from base class and continues to derived classes in order.
 
     c) For virtual function calls that are made inside base class dtor, becuase if otherwise, base class would try to use the members/resources of a destroyed
 object. Note that destruction is done in the reverse order of construction, first members/resources of derived class and then base class are destroyed.

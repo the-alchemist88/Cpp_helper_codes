@@ -20,7 +20,7 @@ INHERITANCE ÇEŞİTLERİ(Private Inheritance & Protected Inheritance)
 
 Public inheritance bir "is-a" ilişkisi sağlar, yani türemiş sınıf türünden taban sınıf türüne(pointer veya referans) bir örtülü dönüşüm(upcasting) yok.
 Taban sınıfın public arayüzü türemiş sınıfın public arayüzüne, taban sınıfın protected arayüzü türemiş sınıfın protected arayüzüne eklenir. Taban sınıfın
-private bölümüne erişim yoktur. C++'ta bulunan diğer inheritance çeşitlerinde ise durum farklıdır. Taban sınıfın private bölümü bütün kalıtım biçimlerinde
+private bölümüne erişim yoktur. C++'ta görülen diğer inheritance çeşitlerinde ise durum farklıdır. Taban sınıfın private bölümü bütün kalıtım biçimlerinde
 türemiş sınıfa kapalıdır.
 
 PRIVATE INHERITANCE
