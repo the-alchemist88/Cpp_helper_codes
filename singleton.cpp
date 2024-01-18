@@ -14,12 +14,16 @@ public:
         return *mp;
     }
 
-    Singleton(Singleton&&) = delete;
+    Singleton(const Singleton&) = delete;
 
     void foo() { cout << "foo()\n"; };
     void bar() { cout << "bar()\n"; };
     void baz() { cout << "baz()\n"; };
 
+	~Singleton()
+	{
+		delete mp;
+	}
 
 private:
     Singleton() { cout << "Singleton object constructed\n"; };
@@ -36,7 +40,7 @@ public:
         return instance;
     }
 
-    Meyers_Singleton(Meyers_Singleton&&) = delete;
+    Meyers_Singleton(const Meyers_Singleton&) = delete;
 
     void foo() { cout << "m_foo()\n"; };
     void bar() { cout << "m_bar()\n"; };
