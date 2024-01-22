@@ -1,0 +1,243 @@
+Nested Types 
+-------------
+
+Nested type, member type, type member aynı anlamda: Bir sınıfın tanımının başka sınıf içinde yapılması. Nested type'lar:
+
+-Sınıfın kapsamı(scope) içindedir.
+-Erişim kontrlüne(access control) tabiidir.
+-Sınıf ile lojik olarak ilgisi vardır.
+
+Nested type'lar:
+
+-Strcuture / class
+-Enum class(scoped or unscoped)
+-Nested type alias
+
+olabilir.
+
+Nested type'ı içeren sınıfı ifade etmek için "enclosing type" terimi kullanılır. Bir sınıfın tanımının namespace(global alan) içinde yapılması ile
+başka bir sınıf içinde yapılması farklı isim arama kurallarına tabi olmalarına neden olur. Nested type;
+
+-Class scope'ta olduğu için isim aramaya(name lookup) kendine özgü kuralları olacaktır.
+-Enclosing type üzerinde erişim kontrolüne sahiptir.
+-Lojik açıdan enclosing type ile ilişkisi vurgulanmış olur. STL'de sık kullanılır:
+
+vector<int>::iterator
+vector<int>::value_type
+vector<int>::pointer_type
+
+Nested type'lara ilişkin kurallar C ve C++ dillerinde farklıdır.
+
+Hatırlatma: Üye bir fonksiyon içinde herhangi bir identifier için yapılan isim arama, önce blok içinde yapılır, sonra sınıf içinde yapılır. Sınıf içinde
+yapılan arama fonksiyonun bildirildiği/tanımlandığı yere kadar değil, tüm sınıf içinde yapılır.
+
+C++'ta için nested teype'lar için;
+
+1)Class scope'ta olduğu için scope resolution operatörü kullanılarak erişilir.
+
+class Enclosing
+{
+public:
+	class Nested{};
+};
+
+int main()
+{
+	Nested n; // sentaks hatası
+	Enclosing::Nested n; // geçerli
+}
+
+
+
+1)Nested type için isim arama yukarıdan aşağıya doğru yapılır.
+
+using type = double;
+
+class Myclass
+{
+public:
+	type mx; // mx'in türü double
+	using type = int;
+	type nx; // nx'in türü int
+};
+
+-Class scope içinde nested type bildiriminden önce kullanılamaz. Ancak isim arama fonksiyonlar için önce blok içinde sonra sınıf içinde yapılır.
+Ayrıca üye fonksiyonların parametre parantezinin içi ve blok içi class scope'ta kabul edilir. Ancak geri dönüş değeri türü eğer ismi ile nitelenmez
+ise sınıf içinde aranmaz.
+
+class Myclass
+{
+	//Nested n; // Geçersiz, böyle bir bildirim için isim arama yukarıdan aşağıya doğru
+	//Myclass::Nested n; // Geçersiz, yine yukarıdan aşağıya doğru arama
+	void foo(int i)
+	{
+		Nested n; // geçerli, üye fonksiyon
+	}
+	class Nested {};
+	Nested bar(Nested&);
+	
+
+	int mx;
+};
+
+Myclass::Nested Myclass::bar(Nested&)  // Parametre parantezi için class scope'ta sayıldığı için Myclass::Nested& yerine Nested& yazılabilir.
+{
+	Nested n; // Üye fonk içindeki Nested için de Myclass:: niteleyicisi gerekmez.
+	mx = 10;
+}
+
+Örnek 2:
+
+class Myclass
+{
+private:
+	class Nested
+	{
+		void foo(){};
+	};
+public:
+	static Nested foo() { return Nested{}; }
+};
+
+int main()
+{
+
+	//Nested n = Mclass::foo(); // error, identifier Nested not found
+	//Myclass::Nested n = Myclass::foo(); // error, cannot access private class declared in "Myclass"
+	auto x = Myclass::foo(); // Nested private olmasına rağmen geçerli. Erişim kontrolü identifierlar ile ilgilidir. 
+	x.foo(); // geçerli		 // Bir isim yoksa erişim kontrlü de yapılamaz. Burada auto olduğu için yapılmadı.
+	
+}
+
+
+3)Enclosing type, member type'ın private bölümüne erişemez, ancak member type enclosing type'ın private bölümüne erişebilir.
+
+class Mclass
+{
+private:
+	class Nested
+	{
+		int x{};
+		static int y;
+
+		int foo()
+		{
+			Mclass m;
+			m.a = 10; // geçerli, erişim izni var
+			//a = 20; // hata
+			b = 30;
+		}
+	};
+
+	int a{};
+	static int b;
+	void bar()
+	{
+		Nested n;
+		//n.x = 30; // hata, erişim izni yok ama friend bildirimiyle çözülebilir (add friend Myclass in Nested)
+		//Nested::y = 40; // hata, erişim izni yok erişim izni yok ama friend bildirimiyle çözülebilir
+	}
+};
+
+4) Nested type'ın üye fonksiyonu enclosing type içinde tanımlanamaz, ya Nested type içinde ya da namespace'te tanımlanır.
+
+class Berk
+{
+public:
+	
+	class Nested
+	{
+		int foo(int x) { return x; };
+		int fun(int);
+	};
+
+	//int Nested::fun(int y) { return y; }; // hata
+	
+};
+
+
+PIMPL idiom
+----------------------------
+
+Bir sınıfın private bölümünü client koddan gizlenebilir mi? Evet ancak neden gizlenmek istensin? 
+
+1) Bir sınıf eğer başka bir sınıf türünden elemanlara sahip olacaksa bunların kullanılabilmesi için başlık dosyalarının eklenmesi gerekir. Ancak onların
+görülmediği(o modül tarafından) bir durum oluşturulabilirse onların başlık dosyalarını eklemeye gerek kalmaz. Bu şekilde onlara bağımlı olunmadığı için 
+compile time süresi kısalır.
+
+2) Eğer başlık dosyalarında değişiklik yapılırsa, bu dosyalar zaten ekli olmadığı için yapılan değişiklikler için yeniden derleme gerekmez. 
+Örneğin Myclass sınıfının A sınıfı türünden bir nesnesi olsun, bu durumumda başlık ve implementasyon dosyaları aşağıdakine benzer olurdu:
+
+// A.h
+class A 
+{
+public:
+	A();
+	void funA();
+	int a;
+};
+
+
+// A.cpp
+#include "A.h"
+
+A::A() { std::cout << "A::A()\n"; };
+void A::funA()
+{ 
+	std::cout << "A::funA()\n";
+
+};
+
+
+// myclass.h (without PIMPL)
+#include "A.h"
+
+class Myclass
+{
+public:
+	Myclass() ;
+	void foo();
+private:
+	A ax;
+};
+
+
+// myclass.h (with PIMPL)
+class Myclass
+{
+public:
+	Myclass();
+	void foo();
+private:
+	struct pimpl;
+	std::unique_ptr<pimpl> mp;
+	//pimpl* mp;
+};
+
+// myclass.cpp (without PIMPL)
+#include "myclass.h"
+#include "A.h"
+
+Myclass::Myclass() = default;
+
+void Myclass::foo() 
+{
+	ax.funA();
+};
+
+
+// myclass.cpp (with PIMPL)
+#include "myclass.h"
+#include "A.h"
+
+struct Myclass::pimpl
+{
+	A ax;
+};
+
+Myclass::Myclass() : mp(new pimpl) {}
+
+void Myclass::foo()
+{
+	mp->ax.funA();
+}
