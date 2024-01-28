@@ -3,7 +3,7 @@ LAMBDA EXPRESSION FEATURES
 - Function call operator of compiler generated type for lambda expression, has auto return type, which means return type will be deduced from return
  expression:
 
-auto operator()(int x) const{};
+auto operator()(int x) const{return x}; // return type is int
 
 - The variables inside the lambda capture can be thought as non-static data members of compiler generated type:
 
