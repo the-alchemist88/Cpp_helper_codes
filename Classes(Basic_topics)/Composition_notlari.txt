@@ -1,12 +1,10 @@
 COMPOSITION(CONTAINMENT)
 --------------------------------
 
-Composition bir sınıfın başka bir sınıf türünden elemana sahip olması demektir. Nested type'tan farkları vardır. Nested type, sınıfın tanımının
-başka bir sınıf içinde bulunması durumunu anlatır. Composition ile ilgli temel olarak bilinmesi gerekenler(Member - sahip olunan, Owner - sahip olan sınıf):
+Composition bir sınıfın başka bir sınıf türünden elemana sahip olması demektir. Nested type'tan farkları vardır. Nested type, sınıfın tanımının başka
+bir sınıf içinde bulunması durumunu anlatır. Composition ile ilgli temel olarak bilinmesi gerekenler(Member - sahip olunan, Owner - sahip olan sınıf):
 
 1) Member arayüzü Owner arayüzüne direkt olarak eklenmez, ancak sahip olunan nesne yoluyla kendi fonksiyonları içinde çağırılabilir.
-
-
 
 class Member
 {
