@@ -1,2 +1,2 @@
 # Cpp_helper_codes
-This repo is used to explain C++ core concepts with examples
+This repo is used to explain C++ core features with examples
