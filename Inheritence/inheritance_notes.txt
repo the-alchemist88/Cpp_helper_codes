@@ -8,13 +8,64 @@ The base class to be inherited from, must be a complete type.
 
 In a derived class, writing a "using declaration" for member functions or data members of the base class can have two purposes:
 
-1) Incorporating the member functions or data members of the base class into the public interface of the derived class
+1) Adding the members(those not in private but possible protected) of the base class into the public interface of the derived class so that client codes
+of derived class can use them.
 
-2) Forming a function overloading mechanism between base class functions and derived class functions
+2) Forming a function overloading mechanism between base class functions and derived class functions. If the derived class has a function with the same
+name and parametres, then derived class functions will have the priority.
 
 
-Special member functions work similarly to compostion. For all implicitly declared - defaulted special functions written by the compiler in the derived
-class functions, their base class counterparts are called (like derived class default ctor --> Base class default ctor). However, in the derived class
+class Base
+{
+
+protected:
+	void foo(int x)
+	{
+		cout << "Base::foo(int x)\n";
+	}
+
+	void bar(int x)
+	{
+		cout << "Base::bar(int x)\n";
+	}
+
+	void baz(int x)
+	{
+		cout << "Base::baz(int x)\n";
+	}
+};
+
+class Derived
+{
+public:
+	void bar(double x)
+	{
+		cout << "Der::bar(double x)\n";
+	}
+
+	void baz(int x)
+	{
+		cout << "Derived::baz(int x)\n";
+	}
+
+	using Base::foo;
+	using Base::bar;
+
+};
+
+// test code
+int main()
+{
+	Der dx;
+
+	dx.foo(5);	// added base class function to derived class public interface
+	dx.bar(5);	// function overloading, base class object bar function called 
+	dx.bar(5.);	// function overloading, derived class object bar function called 
+	dx.baz(5);	// both derived and base have the same function, it's not ambiguity. Derived class function has priority.
+}
+
+Special member functions work similarly to composition. For all implicitly declared - defaulted special functions written by the compiler in the derived
+class functions, their base class counterparts are called (ex: derived class default ctor --> Base class default ctor). However, in the derived class
 if a member function is written by the programmer, calling its base class counterparts(ctors, assignment operators or dtor) in the derived class member
 function will be programmer's responsibility. Example:
 
@@ -123,6 +174,48 @@ int main()
 	cout << "\n";
 
 	db.Base::foo(5);		// calling Base class function through a derived object
+	db.foo(5);				// since it's a public inheritance derived class object also has bas class public functions
+}
+
+
+Since modern C++, "inherited ctor" syntax added to language. This feature saves the the programmer from the hassle of writing base class ctors for all
+all of its derived class counterparts. However, this is not feasible if base class ctors are placed in protected access control section.
+
+class Base
+{
+public:
+
+	Base() { cout << "Base()\n"; }
+
+	Base(int)
+	{
+		cout << "Base(int)\n";
+	}
+
+	Base(const char*)
+	{ 
+		cout << "Base(const char*)\n"; 
+	}
+
+	Base(int, char)
+	{
+		cout << "Base(const char*)\n";
+	}
+};
+
+class Der : public Base
+{
+public:
+	using Base::Base;
+}
+
+// test code
+int main()
+{
+	Der da;
+	Der db(5);
+	Der dc("Hello");
+	Der dd(2, 'c');
 }
 
 INHERITANCE ÇEŞİTLERİ(Private Inheritance & Protected Inheritance)

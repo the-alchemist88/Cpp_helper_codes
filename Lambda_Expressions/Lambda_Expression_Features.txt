@@ -1,5 +1,5 @@
 LAMBDA EXPRESSION FEATURES
-/******************************/
+*---------------------------*
 
 - General syntax of a lambda expression is: [](){} 
 

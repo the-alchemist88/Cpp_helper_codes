@@ -1,5 +1,63 @@
-VIRTUAL FUNCTIONS & VIRTUAL DISPATCH MECHANISM
-*-----------------------------------------------------*
+RUN-TIME POLYMORPHISM
+*----------------------*
+
+In C++, base class' member functions are divided into three categories when it comes to inheritance:
+
+1) Functions that give derived class both an interface and an implementation (which they cannot change)
+
+2) Functions that give derived class both an interface and an implementation by default(which they can change). These functions are called virtual
+functions.
+
+3) Functions that give derived class an interface but not an implementation. These functions are called pure virtual functions.
+
+class Airplane
+{
+	 void takeoff(); 			// (1)
+	 virtual void land(); 		// (2)
+	 virtual void fly() = 0; 	// (3)
+}
+
+class Airbus : public Airplane
+{
+
+}
+
+Polymorphic class: If a class has at least one virtual function, it's called polymorphic class
+
+Abstract class: If a class has a pure virtual function it's an abstract class. An object of type abstract class cannot be constructed, but a reference
+or pointer to abstract class can. If a derived class of an abstract base class, doesn't override the even one pure virtual function of it base class
+it also will be an abstract class. If a class is not abstract, then it's called a concrete class.
+
+In order to override a virtual function of a base class, derived class must implement a function with the same return type and signature. If derived 
+class declares a function with the same name and parameters with base class but with a diferrent return type then this situation generates
+a syntax error.If paramaters are different, this doesn't override the base function.
+
+class Base
+{
+public:
+
+	virtual int foo(int, int);
+};
+
+class Der : public Base
+{
+public:
+
+	//double foo(int, int); 	//syntax error
+	int foo(char, int); 		// valid but doesn't override
+	int foo(int, int) const; 	// const is the part of signature so doesn't override
+};
+
+
+VIRTUAL DISPATCH MECHANISM
+*--------------------------*
+
+When a virtual function is called via
+
+a) Reference or
+b) Pointer to base class
+
+which function to be called is decided at run time rather than compile time ---> late-binding(dydnamic binding).
 
 Virtual dispatch is the process of selecting which implementation of a virtual function to call at run time. Its main features:
 
@@ -15,10 +73,10 @@ Default arguments of function parameters are also evaluated in compile-time, the
     a) In object slicing(initializing a base class object with a derived class object)
 	
     b) For virtual function calls that are made inside base class ctors, becuase if otherwise, base class would try to use the members/resources of an
-object(of derived class) that has not yet been constructed. Note that construction starts from base class and continues to derived classes in order.
+object(of type derived class) that has not yet been constructed. Note that construction starts from base class and continues to derived classes in order.
 
     c) For virtual function calls that are made inside base class dtor, becuase if otherwise, base class would try to use the members/resources of a destroyed
-object. Note that destruction is done in the reverse order of construction, first members/resources of derived class and then base class are destroyed.
+object(of type derived class). Note that destruction is done in the reverse order of construction, first members/resources of derived class and then base class are destroyed.
 
     d) When a member is used with scope resolution operator in base class. For example: Base::a
 
@@ -37,7 +95,7 @@ Opposite of this implementation is called improper inheritance. In some parts of
 will be decided during run-time, therefore improper inheritence may cause a run-time error. This rule corresponds to the "L" part of SOLID principles which stands
 for Liskov Substition Principle(LSP). Its reminding motto - "Require no more, promise no less".
 
-6) There is no virtual ctor in C++, instead there is virtual clone idiom that constructs the exact same derived class object
+6) There is no virtual ctor in C++, instead there is virtual clone idiom that constructs the exact same derived class object. 
 However, dtors can be virtual and almost every time it should be virtual.
 
 7) In virtual dispatch mechanism, mostly objects with dynamic storage are used. They are typically managed and deleted via base class pointers.
