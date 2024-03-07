@@ -3,9 +3,9 @@ RUN-TIME POLYMORPHISM
 
 In C++, base class' member functions are divided into three categories when it comes to inheritance:
 
-1) Functions that give derived class both an interface and an implementation (which they cannot change)
+1) Functions that give derived class both an interface and an implementation (which they cannot modify)
 
-2) Functions that give derived class both an interface and an implementation by default(which they can change). These functions are called virtual
+2) Functions that give derived class both an interface and an implementation by default(which they can modify). These functions are called virtual
 functions.
 
 3) Functions that give derived class an interface but not an implementation. These functions are called pure virtual functions.
@@ -131,12 +131,16 @@ int main()
 
     a) Public virtual, or
     b) Protected non-virtual.
+	
+The issue these suggestion address is emergence of undefined behavior when the programmer tries to delete a derived object, which is initialized in heap,
+via a base pointer that is upcasted.
 
-First suggestion should be clear since it is obvious that for deletion of derived classes by base class pointers, base class dtor slould be accessible(public) at compile-time.
+First suggestion should be clear since it is obvious that in order to delete a derived class object via base class pointer, base class dtor slould be
+accessible(public) at compile-time. Also it should be virtual so that derived object dtor could be called before base class dtor using virtual dispatch.
 
-Second suggestion: If it is desired to guarantee to prevent deleting a derived class object by the destructor of a base class object, firstly there is
-no need for dtor of the base to be virtualy. Next, if the dtor of the base class put in protected session, client codes cannot call delete operator for base
-class pointers, but can call for derived class pointers.
+Second suggestion is based on preventing client codes to call base class destructor. If it is desired to prevent deleting a derived class object by the
+destructor of a base class object, firstly there is no need for dtor of the base to be virtual. Next, if the dtor of the base class put in protected 
+session, client codes cannot call delete operator for base class pointers, but can call for derived class pointers.
 
 class Base
 {
