@@ -43,10 +43,39 @@ class Der : public Base
 {
 public:
 
-	//double foo(int, int); 	//syntax error
+	//double foo(int, int); 	//syntax error, there is a way to make this legal --> covariance
 	int foo(char, int); 		// valid but doesn't override
 	int foo(int, int) const; 	// const is the part of signature so doesn't override
 };
+
+covariance (All has the same meaning)
+variant return types
+covariant
+--------------------
+
+-When overriding virtual function of a base class, it is possible to use a different return type(it's syntax error) if condition is met:
+
+D and B being a class type and D is derived from B; if a Base class' virtual function's return type is B* or B& then Derived class' overrider
+function can have return type of D* or D&.
+
+class B {};
+class D: public B{};
+
+class Base
+{
+public:
+	virtual B* foo();
+};
+
+class Der: public Base
+{
+public:
+	D* foo() override;
+};
+
+
+In that case, by getting benefit of covariance, in our Car class(car.h), clone function's return type can be changed from Car* to <Derived Class Type*>
+and this will provide correct type in  compile time.
 
 
 VIRTUAL DISPATCH MECHANISM
@@ -104,6 +133,23 @@ Base class dtor, only Base class dtor is called even if the argument is pointer 
 mechanism handled the deletion properly. But actually derived class object dtor never gets called. In order for derived types to call their own dtors at
 run-time, dtors should be virtual.
 
+8) Herb Sutter's advice: Dtor of a polymorphic base class should be either;
+
+    a) Public virtual, or
+    b) Protected non-virtual.
+	
+The issue this suggestion address is emergence of undefined behavior when the programmer tries to delete a derived object, which is initialized in heap,
+via a base pointer that is upcasted.
+
+First suggestion should be clear since it is obvious that in order to delete a derived class object via base class pointer, base class dtor slould be
+accessible(public) at compile-time. Also it should be virtual so that derived object dtor could be called before base class dtor using virtual dispatch.
+
+Second suggestion is based on preventing client codes to call base class destructor. If it is desired to prevent deleting a derived class object by the
+destructor of a base class object, firstly there is no need for dtor of the base to be virtual. Next, if the dtor of the base class put in protected 
+session, client codes cannot call delete operator for base class pointers, but can call for derived class pointers.
+
+Ex1:
+
 class Base
 {
 public:
@@ -118,29 +164,19 @@ public:
 
 void fdel(Base* bptr)
 {
-	delete bptr; // calls Base dtor, not Der dtor. delete operator takes its operand as static type. 
-}				 // undefined behaviour if the argument comes as Der*
+	delete bptr; 	// calls Base dtor, not Der dtor. delete operator takes its operand as static type. 
+}				 	// undefined behaviour if the argument comes as Der*
 
 int main()
 {
 	Der* derptr = new Der;
-	fdel(derptr); 
+	fdel(derptr);
+	
+	Base* baseptr = new Der;
+	delete baseptr;	// undefined behaviour
 }
 
-8) Herb Sutter's advice: Dtor of a polymorphic base class should be either;
-
-    a) Public virtual, or
-    b) Protected non-virtual.
-	
-The issue these suggestion address is emergence of undefined behavior when the programmer tries to delete a derived object, which is initialized in heap,
-via a base pointer that is upcasted.
-
-First suggestion should be clear since it is obvious that in order to delete a derived class object via base class pointer, base class dtor slould be
-accessible(public) at compile-time. Also it should be virtual so that derived object dtor could be called before base class dtor using virtual dispatch.
-
-Second suggestion is based on preventing client codes to call base class destructor. If it is desired to prevent deleting a derived class object by the
-destructor of a base class object, firstly there is no need for dtor of the base to be virtual. Next, if the dtor of the base class put in protected 
-session, client codes cannot call delete operator for base class pointers, but can call for derived class pointers.
+Ex2:
 
 class Base
 {

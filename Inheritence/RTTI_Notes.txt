@@ -173,34 +173,3 @@ sizeof, typeid, decltype
 1)Eliminates side effects( sizeof(x++) --> x doesn't get incremented)
 
 2)Eliminates undefined behaviour( a[10]{}, sizeof(a[40]) --> not ub)
-
-
-
-covariance (All has the same meaning)
-variant return types
-covariant
---------------------
-
--When overriding virtual function of a base class, it is possible to use a different return type(it's syntax error) if condition is met:
-
-D and B being a class type and D is derived from B; if a Base class' virtual function's return type is B* or B& then Derived class' overrider
-function can have return type of D* or D&.
-
-class B {};
-class D: public B{};
-
-class Base
-{
-public:
-	virtual B* foo();
-};
-
-class Der: public Base
-{
-public:
-	D* foo() override;
-};
-
-
-In that case, by getting benefit of covariance, in our Car class(car.h), clone function's return type can be changed from Car* to <Derived Class Type*>
-and this will provide correct type in  compile time.
