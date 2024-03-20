@@ -1,8 +1,12 @@
 RTTI(Run Time type Identification)
 *---------------------------------------------------------------*
 
+Run-time type information (RTTI) is a mechanism that allows the type of an object to be determined during program execution. RTTI was added to the C++ language because many vendors 
+of class libraries were implementing this functionality themselves. This caused incompatibilities between libraries. Thus, it became obvious that support for run-time type information
+was needed at the language level.
+
 The main advantage of dynamic polymorphism is being able to use the virtual base class(pointer or reference) without knowing its dynamic type. 
-This eliminates the dependancy of new codes(or top layer code -- overriders) to old codes(or low layer codes -- base class virtual functionalities).
+This eliminates the dependancy of new codes(or top layer code -- overriders) to old codes(or low layer codes -- base class virtual functions).
 
 Tools for determining the dynamic type at runtime(RTTI tools):
 
@@ -16,7 +20,9 @@ Tools for determining the dynamic type at runtime(RTTI tools):
 void fun(Car* cptr) // assume that Volvo is publicly derived from Car class so this functian can operate virtual dispatch
 {
 	if(auto* vptr = dynamic_cast<Volvo*>(cptr)) // if, at run-time, cptr points to an Volvo object then dynamic_cast is succssful and aptr points to that object
-		// code								   // otherwise dynamic_cast returns nullptr
+	{								    // otherwise dynamic_cast returns nullptr
+		// code
+	}
 }										   
 
 -dynamic_cast operand(expression inside paranthesis) should be related to a polymorphic type, otherwise compiler will complain
@@ -46,20 +52,40 @@ int main()
 	fun(*car_game);
 }
 
--The dynamic_cast operator scans down the hierarchy: if the type that will operand to dynamic_cast, is a type of a derived class that is lower
-in a multilevel inheritance hierarchy than the type to be casted, this is not a syntax error, it is converted to that type.
+-The dynamic_cast operator scans down the hierarchy: if the dynamic type that will be operand to dynamic_cast, is a type of a derived class that is lower
+in a multilevel inheritance hierarchy than the type to be casted, this is not a syntax error, it is converted to operand's dynamic type
 
-void fun(Car* cptr) 
+class Volvo : public Car
 {
-	if(auto* aptr = dynamic_cast<Volvo*>(cptr)) // assume Volvo ispublicly derived from Car class
-	// code
-}				
+public:
+	void foo()
+	{
+		cout << "Volvo foo()\n";
+	}
+};
+
+class VolvoXC90 : public Volvo
+{
+public:
+	void foo()
+	{
+		cout << "VolvoXC90 foo()\n";
+	}
+};
+
+void fun(Car* cptr)
+{
+	if (auto* dptr = dynamic_cast<Volvo*>(cptr))
+	{
+		dptr->foo();
+	}
+}		
 
 int main()
 {
-	VolvoXC90 vxcp; // assume VolvoXC90 is publicly derived from Volvo class
-	
-	fun(&vxcp);	//  by this call dynamic_cast will casts cptr into VolvoXC90*, not Volvo*
+	VolvoXC90 vxcp;
+
+	fun(&vxcp);	//  by this call dynamic_cast will cast cptr into VolvoXC90*, not Volvo*. Output : VolvoXC90 foo()
 }
 
 

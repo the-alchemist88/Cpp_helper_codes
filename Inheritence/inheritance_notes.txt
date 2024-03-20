@@ -237,6 +237,7 @@ PRIVATE INHERITANCE
 Private inhertiance'ta ise:
 	
 	base public 		--> 	derived private
+	base protected 		--> 	derived private
 	
 Bunun anlamı(private inheritance): Türemiş sınıf içinde taban sınıfın yine protected ve public bölümüne erişilebilir. Ancak artık client kodlar türemiş 
 sınıf üzerinden taban sınıfın kodlarını kullanamazlar.
@@ -433,8 +434,8 @@ int main()
 	myder.foo(5,6);
 }
 
-VIRTUAL INHERITANCE
----------------------
+DIAMOND FORMATION PROBLEM (DREADFUL DIAMOND OF DERIVATION)
+---------------------------
 
 Diamond(karo) formdaki hiyerarşide çıkan, türemiş sınıf türünden bir nesne(MathTeacher) tanımlandığında taban sınıf 
 nesnesinin(Person) iki kere hayata gelmesi problemini(ambiguity) çözmeye yönelik bir araçtır. Sentaksı:
@@ -482,5 +483,3 @@ class DerA : public DerZ
 public:
 	DerA() : Base("DerZ\n") {}
 };
-
-
