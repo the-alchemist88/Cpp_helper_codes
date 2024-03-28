@@ -14,7 +14,7 @@ public:
         return *mp;
     }
 
-    Singleton(const Singleton&) = delete; // now move members implicitly-declared and deleted
+    Singleton(const Singleton&) = delete; // now move members are not declared
 
     void foo() { cout << "foo()\n"; };
     void bar() { cout << "bar()\n"; };
@@ -42,7 +42,7 @@ public:
         return instance;
     }
 
-    Meyers_Singleton(const Meyers_Singleton&) = delete; // now move members implicitly-declared and deleted
+    Meyers_Singleton(const Meyers_Singleton&) = delete; // now move members are not declared
 
     void foo() { cout << "m_foo()\n"; };
     void bar() { cout << "m_bar()\n"; };

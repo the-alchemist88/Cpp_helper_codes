@@ -1,17 +1,16 @@
 #include <iostream>
 
-using namespace std;
-
 class Myclass
 {
 public:
-    Myclass() { cout << "Myclass()\n"; };
-    Myclass(const Myclass&) { cout << "Myclass(const Myclass&)\n"; };
-    //Myclass(const Myclass&) = delete; // uncommenting this line will cause compiler throw error because of f_NRVO funciton
+    Myclass() { std::cout << "Myclass()\n"; };
+    Myclass(const Myclass&) { std::cout << "Myclass(const Myclass&)\n"; };
+    //Myclass(const Myclass&) = delete; // uncommenting this line will cause compiler to throw error because of f_NRVO funciton
 };
 
 
 Myclass f_URVO() // URVO - unnamed return value optimization
+				 // In C++17 and later, URVO is mandatory and no longer considered a form of copy elision
 {
     return Myclass{};
 }
