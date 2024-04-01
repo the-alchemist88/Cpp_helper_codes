@@ -1,0 +1,282 @@
+Conversion constructor
+------------------------------------------------
+
+It is such a constructor that, in addition to its main raison d'être, it implicitly converts a non-class expression into a class type. Simply, they are ctors with parameters.
+
+To understand what the compiler is doing in the background, the following code will help:
+
+class Myclass
+{
+public:
+	Myclass()
+	{
+		std::cout << "Myclass() for this: " << this << '\n';
+	}
+
+	~Myclass()
+	{
+		std::cout << "~Myclass() for this: " << this << '\n';
+	}
+
+	Myclass(int x) // Conversion ctor
+	{
+		std::cout << "Myclass(int x) x = " << x << " for this: " << this << '\n'; // address of the temporary object to be created by converting from int to Myclass
+	}
+
+	Myclass& operator=(const Myclass& other)
+	{
+		std::cout << "Myclass copy asignment for this: " << this << "\n";
+		std::cout << "&other = " << &other << "\n";
+		return *this;
+	}
+};
+
+int main()
+{
+	Myclass m;
+	std::cout << "&m = " << &m << "\n";
+	m = 35;
+	(void)getchar();
+	// dtor of m wıll be called
+}
+
+
+User Defined Conversion(UDC)
+-----------------------------
+
+Type conversions performed by the compiler by calling functions defined by the programmer for non-standard type conversions are called UDC.
+These functions are:
+
+1)Conversion constructor
+2)Type-cast operator function
+
+C++ has a very important rule about implicit conversions:
+
+1) standard conversion + UDC --> OK
+2) UDC + standard conversion --> OK
+
+3) UDC + UDC --> not OK !!!
+
+Example:
+
+class A
+{
+public:
+	A(int){};
+};
+
+class B
+{
+public:
+	B(int){};
+	B(A){};
+};
+
+class C
+{
+public:
+	C(B){};
+};
+
+int main()
+{
+	A ax = 5;		// valid : UDC (int --> A)
+	B bx = ax;		// valid : UDC (A --> B)
+	B bx1 = 7.5;	// valid : standard conversion(double --> int) + UDC (int --> B)
+	C cx = ax;		// error ! : UDC(A --> B) + UDC(B --> C) 
+	C cx1 = static_cast<B>(10); // valid : excplicit conversion + UDC
+	C cx2(B());		// most vexing parse! This is a function declaration with return type of class C and parameter type of B(*)() 
+					// B() expression goes through function to pointer decay
+	
+}
+
+However this feature can lead to quite absurd and unintentional conversions made by the programmer:
+
+class Myclass
+{
+public:
+	Myclass() {};
+	Myclass(bool) {};
+};
+
+int main()
+{
+	Myclass m;
+
+	double dval{ 2.7 };
+	auto pd = &dval;
+
+	m = pd; // valid !
+}
+
+In order to prevent unwanted conversions, usually one parameter ctors of classes are declared with "explicit" keyword. This can be thought as "explicit only", meaning only explicit
+conversions can employ UDC. Note that "explicit" keyword forbids only implicit conversions with copy initialization syntax. It also possible to make other ctors explicit.
+
+class Myclass
+{
+public:
+	explicit Myclass(int) {};
+};
+
+int main()
+{
+	Myclass m1{1};
+	Myclass m2(2);
+	Myclass m3(3.); 
+	Myclass m4 = 10; // error! one paremeter ctor is explicit
+	Myclass m5 = static_cast<Myclass>(5); // valid, explicit conversion
+}
+
+There are some cases where compiler doesn't generate code for copying intentionally even in the cpp file there are obvious copy operations.
+
+Until C++17 copy elison was a compiler optimization. In C++17 standard some cases of copy elison became mandotory and they are called as mandatory copy elision. Actually even if
+this name denotes an elision, there is no elision of any copying here since omitting it became mandatory by the standard.
+
+Example:
+
+class Myclass
+{
+public:
+	Myclass()
+	{
+		std::cout << "Myclass()\n";
+	}
+
+	explicit Myclass(int x)
+	{
+		std::cout << "Myclass(int x)\n";
+	}
+
+	Myclass(Myclass&& other)
+	{
+		std::cout << "Myclass(Myclass&& other)";
+	}
+
+	Myclass(const Myclass& other) 
+	{
+		std::cout << "Myclass(const Myclass& other)\n";
+	}
+};
+
+void func(Myclass mx){}
+
+int main()
+{
+	func(Myclass{10}); 	// copy elison
+						// first a temporary object constructed with Myclass(int x) ctor. Then since it is an r value, move ctor gets called to construct the function parameter mx
+	Myclass m;			
+	func(m);
+}
+
+Without any copy elision this code would give the following output(can be tested with "-fno-elide-constructors" option in GCC):
+
+Myclass(int x)
+Myclass(Myclass&& other)
+
+But instead output is (since C++17 compiled):
+
+Myclass(int x)
+
+Copy Elision Cases:
+-------------------
+
+Case 1:
+
+If a function has a paramater of any class type and this function is called via a PR value expression such as a temporary object expression, since C++17, compiler applies mandatory
+copy elision. It takes "Myclass{10}" argument as an initalizer expression for "Myclass mx" object when calling "func(Myclass{10})". In other words, temporary object doesn't get
+materialized.
+
+Case 2:
+
+Retrurn Value Optimization(RVO)
+---------------------------------
+
+a) Unnamed Return Value Optimization(URVO)
+
+In the initialization of an object, when the source object is a nameless temporary and is of the same class type (ignoring cv-qualification) as the target object.
+When the nameless temporary is the operand of a return statement, this variant of copy elision is known as URVO
+(In C++17 and later, URVO is mandatory and no longer considered a form of copy elision)
+
+
+b) Named Return Value Optimization(NRVO)
+
+In a return statement, when the operand is the name of a non-volatile object with automatic storage duration, which isn't a function parameter or a catch
+clause parameter, and which is of the same class type (ignoring cv-qualification) as the function return type. This variant of copy elision is known as NRVO.
+
+Example:
+
+class Myclass
+{
+public:
+    Myclass() { std::cout << "Myclass()\n"; };
+    Myclass(const Myclass&) { std::cout << "Myclass(const Myclass&)\n"; };
+    //Myclass(const Myclass&) = delete; // uncommenting this line will cause compiler to throw error because of f_NRVO funciton
+};
+
+
+Myclass f_URVO() // URVO - unnamed return value optimization
+				 // In C++17 and later, URVO is mandatory and no longer considered a form of copy elision
+{
+    return Myclass{};
+}
+
+Myclass f_NRVO() // NRVO - named return value optimization
+{                // NRVO is not mandatory, also a callable copy/move ctor is required even if f_NRVO doesn't call it
+    Myclass m;
+    return m;
+}
+
+int main()
+{
+    auto obj1 = f_URVO();  
+    auto obj2 = f_NRVO();
+}
+
+Output:
+
+Myclass()
+Myclass()
+
+-------------------------------------------------------------------------
+
+Without any copy elision in this code, there should be 2 copy/move ctors for each object initialization. First, for the initializing object with return expression where the function is
+called, second is for initializion of obj1 and obj2. Since function call expressions are PR value expressions, move ctor is first choice for obj1 and obj2.
+
+Output with -fno-elide-constructors option in GCC:
+
+Myclass()
+Myclass(Myclass&& other)
+Myclass(Myclass&& other)
+Myclass()
+Myclass(Myclass&& other)
+Myclass(Myclass&& other)
+
+
+Copy ctor, move ctor and copy elision
+--------------------------------------
+If we compare copy ctor, move ctor and copy elision in terms of efficiency;
+
+1) move ctor and copy ctor have the same cost if an object doesn't have any element to do deep copy. Example:
+
+
+class Myclass
+{
+	int arr[100];
+	double x,y,z;
+}
+
+For this class; compiler generated, implicitly declared defaulted move ctor and copy ctor won't have any difference.
+
+class Myclass
+{
+	int arr[100];
+	double x,y,z;
+	string str;
+}
+
+However for this class moving and copying will differ because of string element. Move ctor will change the pointers inside of string object but copy ctor will do deep copy.
+
+2) Nevertheless copy elision is the most favourable among three in terms of efficiency, because it doesn't construct any object. It uses the same object - zero cost.
+
+In conclusion, temporary objects should be encouraged to be used whenever they meet the requirements instead of named objects because they make copy elision possible(in arguments
+of function and return expressions). This is a considerable efficiency advantage.

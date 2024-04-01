@@ -1,0 +1,35 @@
+Points to follow for reading the code:
+
+1) Start reading from the variable name
+2) Start inwards and move outwards
+3) Reading is from right to left
+4) Read the right first without going over the parenthesis
+5) Then go left without going over the other parenthesis
+6) [] – read as array of
+7) * – read as pointer to
+8) () – read as function returning
+
+
+char *ptr : ptr is a pointer to char type
+
+int **ptr:  ptr is a pointer to a pointer to int type
+
+int (*ptr)[5]: ptr is a pointer to array of size 5 where each element is of int type.
+
+char *ptr[5]: ptr is an array of size 5 where each element points to pointer to character type.
+
+char *(*ptr)[5]: ptr is a pointer to array of size 5 where each element is a pointer to char type
+
+void *fun(): fun is a function returning a pointer to void.
+
+int (*fun)(): fun is a pointer to function returning int type.
+
+int *(*ptr)()[]: ptr is a pointer to function returning an array of pointer to integers
+
+int (*(*ptr[])())(void) – ptr is array of pointer to function returning pointer to int that takes no parameters
+
+char (*(*var())[])(): var is a function returning a pointer to an array of pointer to function returning char.
+
+int *(*(**fun [][5])())[]: fun is an array[5] of pointer to pointer to function returning pointer to array of pointer to int
+
+float (*(*ptr[5])())(void (*)(char, char *)): ptr is an array of size 5 where each element is a function pointer that takes no parameter and returns a pointer to function that takes two parameters and returns float
