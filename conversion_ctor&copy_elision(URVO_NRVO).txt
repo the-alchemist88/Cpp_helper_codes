@@ -221,7 +221,7 @@ Myclass f_URVO() // URVO - unnamed return value optimization
 }
 
 Myclass f_NRVO() // NRVO - named return value optimization
-{                // NRVO is not mandatory, also a callable copy/move ctor is required even if f_NRVO doesn't call it
+{				 // NRVO is not mandatory, also a callable copy/move ctor is required even if f_NRVO doesn't call it
     Myclass m;
     return m;
 }
@@ -239,8 +239,9 @@ Myclass()
 
 -------------------------------------------------------------------------
 
-Without any copy elision in this code, there should be 2 copy/move ctors for each object initialization. First, for the initializing object with return expression where the function is
-called, second is for initializion of obj1 and obj2. Since function call expressions are PR value expressions, move ctor is first choice for obj1 and obj2.
+Without any copy elision in this code, 2 copy/move ctors should be called for each object initialization. First is for constructing the temporary objects(via return expression)
+that will initialize obj1 and obj2 where the functions are called, second is for constructing of obj1 and obj2. Since function call expressions are PR value expressions, move ctor 
+is first choice for obj1 and obj2.
 
 Output with -fno-elide-constructors option in GCC:
 

@@ -29,7 +29,7 @@ public:
 	}
 private:
 	Member mx;
-	Member(3,5,7)
+	Member(3,5,7);
 	
 };
 
@@ -66,7 +66,7 @@ public:
 		return *this;
 	}
 	
-		Myclass& operator=(Myclass&& rhs) 
+	Myclass& operator=(Myclass&& rhs) 
 	{
 		ax = std::move(rhs.ax);
 		bx = std::move(rhs.bx);
@@ -82,7 +82,7 @@ private:
 	
 };
 
-4) Programcı Owner copy ctor ve move ctor'u kendi yazıyorsa, Member'ın hangi ctor'unun çağırlacağına karar veren kodu kendisi yazmalıdır.
+4) Programcı Owner'ın copy ctor ve move ctor'unu kendisi yazıyorsa, Member'ın hangi ctor'unun çağırlacağına karar veren kodu da kendisi yazmalıdır.
 Benzer durum atama operatör fonksiyonları için de geçerlidir.
 
 class Member

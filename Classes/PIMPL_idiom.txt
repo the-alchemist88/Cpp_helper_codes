@@ -1,0 +1,85 @@
+PIMPL idiom
+----------------------------
+
+Bir sınıfın private bölümünü client koddan gizlenebilir mi? Evet ancak neden gizlenmek istensin? 
+
+1) Bir sınıf eğer başka bir sınıf türünden elemanlara sahip olacaksa bunların kullanılabilmesi için başlık dosyalarının eklenmesi gerekir. Ancak onların
+görülmediği(o modül tarafından) bir durum oluşturulabilirse onların başlık dosyalarını eklemeye gerek kalmaz. Bu şekilde onlara bağımlı olunmadığı için 
+compile time süresi kısalır.
+
+2) Eğer başlık dosyalarında değişiklik yapılırsa, bu dosyalar zaten ekli olmadığı için yapılan değişiklikler için yeniden derleme gerekmez. 
+Örneğin Myclass sınıfının A sınıfı türünden bir nesnesi olsun, bu durumumda başlık ve implementasyon dosyaları aşağıdakine benzer olurdu:
+
+// A.h
+class A 
+{
+public:
+	A();
+	void funA();
+	int a;
+};
+
+
+// A.cpp
+#include "A.h"
+
+A::A() { std::cout << "A::A()\n"; };
+void A::funA()
+{ 
+	std::cout << "A::funA()\n";
+
+};
+
+
+// myclass.h (without PIMPL)
+#include "A.h"
+
+class Myclass
+{
+public:
+	Myclass() ;
+	void foo();
+private:
+	A ax;
+};
+
+
+// myclass.h (with PIMPL)
+class Myclass
+{
+public:
+	Myclass();
+	void foo();
+private:
+	struct pimpl;
+	std::unique_ptr<pimpl> mp;
+	//pimpl* mp;
+};
+
+// myclass.cpp (without PIMPL)
+#include "myclass.h"
+#include "A.h"
+
+Myclass::Myclass() = default;
+
+void Myclass::foo() 
+{
+	ax.funA();
+};
+
+
+// myclass.cpp (with PIMPL)
+#include "myclass.h"
+#include "A.h"
+
+struct Myclass::pimpl
+{
+	A ax;
+};
+
+Myclass::Myclass() : mp(new pimpl) {}
+
+void Myclass::foo()
+{
+	mp->ax.funA();
+}
