@@ -1,0 +1,128 @@
+Temporary Objects
+----------------------
+
+Temporary object: Even in the source code there is no named object of this type, but in the code that the compiler generates(in assembly code) there is an object constructed.
+
+There are two ways to construct a temporary object:
+
+1) Via the code that stimulate the compiler to form one:
+
+const int& x = 45; //lvalue ref cannot be bound to an rvalue expression. Therefore x is bound to a temporary oject(type of int) that the compiler initialized with 45 integer literal
+				   //in the background
+
+2) Directly using temporary object syntax:
+
+int();
+int{};
+int(45);
+int(14);
+
+Myclass();
+Myclass{};
+
+
+Example for first method:
+
+class Myclass
+{
+public:
+	Myclass()
+	{
+		std::cout << "Myclass() called for this: " << this << "\n";
+	}
+
+	Myclass(int x)
+	{
+		std::cout << "Myclass(int x) called for this: " << this << "(x = " << x << ")\n";
+	}
+
+	~Myclass()
+	{
+		std::cout << "~Myclass() called for this: " << this << "\n";
+	}
+};
+
+int main()
+{
+
+	Myclass mx;
+	mx = 10;
+}
+
+Output:
+
+Myclass() called for this: 0000006F371DFCA4
+Myclass(int x) called for this: 0000006F371DFD84(x = 10)
+~Myclass() called for this: 0000006F371DFD84
+~Myclass() called for this: 0000006F371DFCA4
+---------------------------------------------------------------
+
+In the output, two objects of Myclass type are constructed even if in the source code there is only one. Because in the assignment statement a temporary object of type Myclass is
+constructed with Myclass(int x ) constructor and just after the end of this statement it's destroyed.
+
+Value category of expressions that generate a temporary object is R value(PR value-->Rvalue).
+
+When a reference (const L value reference or R values reference) is bound to a temporary object (in a PR value expression category) the life of the temporary object is fixed to scope
+of the referring name. That is, the temporary object is not destroyed until the end of the scope of the referring name. This rule is called life extension. The first example was a
+typical case of life extension:
+
+const int& x = 45;
+
+The life of a temporary object ends just after running the code of statement where it was constructed(if there is no life extension).
+
+
+Move-ing Operations
+------------------
+
+void func(std::string&& r) // r value reference parameter function, this functions main purpose is moving from r. Usually this is declared with an lvalue overload.
+{
+	std::string s1 = r; // doesn't move, value category of expression 'r' is an lvalue --> copy ctor of string class is called
+						// data type of r is std::string&&
+
+	std::cout << "r.length(): " << r.length() << '\n';
+	std::cout << "s1.length(): " << s1.length() << '\n';
+
+
+	std::cout << "\nNow moved\n\n";
+	std::string s2 = std::move(r); // does move, expression 'std::move(s)' is xvalue --> move ctor of string class is called
+
+	std::cout << "r.length(): " << r.length() << '\n';
+	std::cout << "s2.length(): " << s2.length() << '\n';
+
+}
+
+int main()
+{
+	std::string s(10'000, 'A');
+
+	std::string&& r = std::move(s); // doesn't move, just binds r vlaue reference to x value of s
+
+	std::cout << "r.length(): " << r.length() << '\n';
+	std::cout << "s.length(): " << s.length() << '\n';
+
+	std::cout << "\nfunc gets called\n\n";
+	func(std::move(s));
+}
+
+Output:
+
+r.length(): 10000
+s.length(): 10000
+
+func gets called
+
+r.length(): 10000
+s1.length(): 10000
+
+Now moved
+
+r.length(): 0
+s2.length(): 10000
+--------------------------
+
+Moved-from state: Value is unknown. However, object must be in a valid state: Invariants are not corrupted after move operation. This means:
+
+1) Reassignable
+2) Calling the destructor of shouldn't cause any issues. Its resources are already stolen so its dtor shouldn't try to release its resource.
+
+Even if the standard library doesn't reassure about the value of a moved-from object, it practically makes the object as if it is default initialized.

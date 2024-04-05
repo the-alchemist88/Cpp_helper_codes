@@ -127,7 +127,7 @@ int main()
 	Myclass m5 = static_cast<Myclass>(5); // valid, explicit conversion
 }
 
-There are some cases where compiler doesn't generate code for copying intentionally even in the cpp file there are obvious copy operations.
+There are some cases where compiler doesn't generate code for copying intentionally even in source file there are obvious copy operations.
 
 Until C++17 copy elison was a compiler optimization. In C++17 standard some cases of copy elison became mandotory and they are called as mandatory copy elision. Actually even if
 this name denotes an elision, there is no elision of any copying here since omitting it became mandatory by the standard.
