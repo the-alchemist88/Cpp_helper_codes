@@ -68,11 +68,44 @@ typical case of life extension:
 
 const int& x = 45;
 
+
+Another example for life extension:
+
+class Myclass
+{
+public:
+	Myclass()
+	{
+		std::cout << "Myclass() called for this: " << this << "\n";
+	}
+
+	~Myclass()
+	{
+		std::cout << "~Myclass() called for this: " << this << "\n";
+	}
+};
+
+
+int main()
+{
+	Myclass&& r = Myclass{};
+
+	std::cout << "main function continues\n";
+}
+
+Output:
+
+Myclass() called for this: 0000009AEF8FFAA4
+main function continues
+~Myclass() called for this: 0000009AEF8FFAA4
+---------------------------------------------------------------------------
+
+
 The life of a temporary object ends just after running the code of statement where it was constructed(if there is no life extension).
 
 
 Move-ing Operations
-------------------
+--------------------
 
 void func(std::string&& r) // r value reference parameter function, this functions main purpose is moving from r. Usually this is declared with an lvalue overload.
 {
