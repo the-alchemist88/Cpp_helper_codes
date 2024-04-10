@@ -1,0 +1,72 @@
+Inline Expansion(Inline Optimization)
+-------------------------------------
+
+When a function definition is located in the same translation unit with its declaration then compiler will have the ability to put its compiled code at the site of function call.
+This technique is called inline expansion. It's effectiveness mostly comes from eliminating the function call and return procedures such as recording the stack address,
+constructing the parameters, moving the stack pointer and recording return adress arranging the stack etc. It can significantly affect the run time if it is applied for small-coded
+and frequently called functions. For the functions that has large code body, it won't be considerable since function call and return procedures will be small cost comparing to
+function itself. If the compiler cannot can reach the function definition in the same translation unit, it is certain that cannot do inline expansion.
+
+***There is no direct connection between the inline keyword and inline expansion***
+If a definition of a function to be located in a header file, in order to make inline expansion possible for this function, inline keyword must be added to this function definition.
+ 
+The purpose of inline expansion is not only to get rid of the function call and return procedures. If the compiler can see the definition of the function, it can work on a larger
+code block by considering the statements before and after it together, and can perform more efficient optimizations. Example:
+
+statement 1; // can do a separate optimization with previous statements
+statement 2; //
+statement 3; //
+fun(); 		 // definition is in another cpp file
+statement 4; // can do a separate optimization with following statements
+statement 5; // 
+
+However;
+
+statement 1; // can do a comprehensive optimization including all the statements and fun
+statement 2; //
+statement 3; //
+fun(); 		 // definition is in this cpp file
+statement 4; // 
+statement 5; // 
+
+
+ODR(One Definition Rule) and Inline functions
+-----------------------------------------------
+
+ODR: An entity, such as functions, classes or global variables, should have only one definition in a program. Sometimes ODR violation cannot be detected by the compiler
+(when definitions are in differenet translation units) and in some special cases even the linker may not detect it and throw an error. However, this situation is called "no diagnostic
+required" that means compiler doesn't have to send a warning message. But the program still is ill-formed - compilers and linkers can throw error or even without an error message
+this is an undefined behavior.
+
+This rule has an exception:
+
+When an entity is inline and has the same definition(token by token) in all translation units then this situation doesn't violate ODR. This is usually applied via headers.
+
+Bost and C++ standard library uses header-only libraries.
+
+There are cases when a function is implicity inline.
+
+- constexpr functions
+- member functions of classes
+- friend function
+- template functions
+
+The question about whether making a function inline in header file or not, mainly depends on answer of this:
+  Dependencies of header file will increase because probably there are class objects that this header fil, so if it is ok then do it
+  
+or a reason for defining class member functions in a cpp file rather than inside the class in the as implicitly inline can be hiding the implementation from the client.
+
+
+Since C++17 standard, inline variable feature added to the language, thus it is also possible to make global variables or static data members inline.
+Before C++17 suh workaround was used in the header for global variables:
+
+// func.h
+int& func()
+{
+	static int ival {20};
+	return ival;
+}
+
+Now possible to write:
+
+inline int ival{20};
