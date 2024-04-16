@@ -15,12 +15,12 @@ Tools for determining the dynamic type at runtime(RTTI tools):
 
 -dynamic_cast operator examines whether downcasting is safe or not.
 
--Typically used for casting base class type to derived class type(downcasting).
+-Typically used for casting pointer/reference to base class type, to pointer/reference to toderived class type(downcasting).
 
 void fun(Car* cptr) // assume that Volvo is publicly derived from Car class so this functian can operate virtual dispatch
 {
 	if(auto* vptr = dynamic_cast<Volvo*>(cptr)) // if, at run-time, cptr points to an Volvo object then dynamic_cast is succssful and aptr points to that object
-	{								    // otherwise dynamic_cast returns nullptr
+	{								    		// otherwise dynamic_cast returns nullptr
 		// code
 	}
 }										   

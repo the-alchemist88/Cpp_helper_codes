@@ -1,3 +1,51 @@
+UPCASTING AND DOWNCASTING
+---------------------------
+Upcasting
+----------
+Upcasting is converting a derived-class reference or pointer to a base-class  pointer (reference). In other words, upcasting allows us to treat a derived type as though it were its
+base type. It is always allowed for public inheritance, without an explicit type cast. This is a result of the is-a relationship between the base and derived classes. Ex:
+
+Derived d;
+Base* b = &d; 
+
+Upcasting allows us to treat a derived type as though it were its base type. That's how we decouple ourselves from knowing about the exact type we are dealing with. Ex:
+
+void fun(Base* bp)
+{
+	bp->foo();
+}
+
+int main()
+{
+	Derived d;
+	fun(&d); // function call at runtime
+}
+
+
+Upcasting can cause object slicing when a derived class object is passed by value as a base class object, as in foo(Base derived_obj).
+
+Because implicit upcasting makes it possible for a base-class pointer (reference) to refer to a base-class object or a derived-class object, there is the need for dynamic binding. 
+That's why we have virtual member functions(explained below).
+
+Pointer/Reference : known at compile time.
+Object type		  : not known until run time.
+
+Downcasting
+------------
+The opposite process, converting a base-class pointer (reference) to a derived-class pointer (reference) is called downcasting. Downcasting is not allowed without an explicit type
+cast. The reason for this restriction is that the is-a relationship is not, in most of the cases, symmetric. A derived class could add new data members, and the class member functions
+that used these data members wouldn't apply to the base class.
+
+Object Slicing
+--------------
+When a derived class object is passed by value as a base class object, as in foo(Base derived_obj), the base class copy constructor is called. So, the specific behaviors of a derived
+class object are sliced off. We're left with a base class object. In other words, if we upcast to an object instead of a pointer or reference, the objectis sliced. As a result, all
+that remains is the subobject that corresponds to the destination type of our cast.
+
+Derived d;
+Base b = d;
+
+
 RUN-TIME POLYMORPHISM
 *----------------------*
 
