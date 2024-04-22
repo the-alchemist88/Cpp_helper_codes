@@ -102,7 +102,7 @@ Usage:
 
 - The expression of typeid operator is unevaluated context as in sizeof operator.
 
--An expression formed with the tpyeid operator is actually a const reference to an object of type std::type_info.
+- An expression formed with the tpyeid operator is actually a const reference to an object of type std::type_info.
 
 	typeid(Myclass); // type of this expression is const type_info
 	const type_info& ti = typeid(Myclass); // correct syntax
@@ -122,31 +122,38 @@ Usage:
 
 	returns the type as C-string. Implementation dependant(depends on compiler)
 	
- - The behaviour of typeid operator changes to whether the types are polymorphic or non-polymorphic.
+- The behaviour of typeid operator depends on whether the types are polymorphic or non-polymorphic. Ex:
  
 class Base{
 	public:
 	virtual ~Base() = default; 
 };
 
-class Der{
+class Der : public Base
+{
 
 };
 
 int main()
 {
-	Der* myder;
+	Der myder;
 	Base* baseptr = &myder;
-	cout << (typeid(*baseptr) == typeid(Der)) << '\n'; // if Base was non-polymorphic then this expression would print 0, it would be valid but related to static type. Now it prints 1
-	cout << typeid(*baseptr).name() // if Base was non-polymorphic this would print class Base, Now it prints class Der
-}														
+	std::cout << (typeid(*baseptr) == typeid(Der)) << '\n'; // if Base was non-polymorphic then this expression would print 0, it would be valid but related to static type
+	std::cout << typeid(*baseptr).name(); // if Base was non-polymorphic this would print class Base
+}
 
--Unlike dynamic_cast operator, typeid operator doesn't scan down the inhertance hierarchy. It can be used as exact match of types. And for tis reason,
-dynamic_cast has more cost than typeid operator. 
+Output:
+
+1
+Der
+													
+
+- Unlike dynamic_cast operator, typeid operator doesn't scan down the inhertance hierarchy, it can be used to find exact match of types. Therefore dynamic_cast has more cost than
+typeid operator. 
 
 
--Since typeid doesn't do any casting, static_cast can be used to access the derived class member functions. static_cast is valid for the types that are
-in the same hierarchy but programmer always need to check whether the dynamic_types match or not. Without checking the type, it would be undefined behaviour.
+- Since typeid doesn't do any casting, static_cast can be used to access the derived class member functions. static_cast is valid for the types that are in the same hierarchy but 
+programmer always need to check whether the dynamic_types match or not. Without checking the type, it can be undefined behaviour.
 
 void car_game(Car* cptr) 
 {
@@ -169,17 +176,16 @@ int main()
 RTTI Tools(DYNAMIC_CAST & TYPEID) Summary
 *-----------------------------------------------------*
 
--The dynamic_cast operator tests whether downcasting (conversion from base class to derived class) is possible.
--The expression that is the operand of dynamic_cast must be of a polymorphic type.
--dynamic_cast also scans down the hierarchy, i.e. if there is an inherited class from the derived class that is the operand and the function(*Car) will
+- dynamic_cast operator tests whether downcasting (conversion from base class to derived class) is possible.
+- The expression that is the operand of dynamic_cast must be of a polymorphic type.
+- dynamic_cast also scans down the hierarchy, i.e. if there is an inherited class from the derived class that is the operand and the function(*Car) will
 be transformed to its type if it is passed to it.
 
--The expression that is the operand of the typeid operator does not have to be of a polymorphic type.
--If it is a polymorphic type, the dynamic type concept is admitted and the type is determined at runtime, if it is not polymorphic, the static type
-concept is taken as a basis.
--typeid also does not scan the hierarchy, it is based on only the type of the expression which is its operand.
+- The expression that is the operand of the typeid operator does not have to be of a polymorphic type.
+- If it is a polymorphic type, the dynamic type concept is applied and the type is determined at runtime, if it is not polymorphic, the static type concept is taken as a basis.
+- typeid also does not scan the hierarchy, it is based on only the type of the expression which is its operand.
 
--The static_cast operator can be used to determine at compile time whether two different classes are in the same inheritance hierarchy.
+- The static_cast operator can be used to determine at compile time whether two different classes are in the same inheritance hierarchy.
 It will be legal to cast classes in the same hierarchy to each other with static_cast, so there will be no need to examine the header files.
 
 

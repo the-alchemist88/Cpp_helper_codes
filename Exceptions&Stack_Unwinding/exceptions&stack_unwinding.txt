@@ -30,10 +30,69 @@ Notes:
 -------
 - std::terminate calls std::abort
 
-- Stack unwinding doesn't applied if the exception cannnot get caught.
+- Stack unwinding doesn't get engaged if the exception cannnot get caught.
 
-- The parameter of catch block(exception objecy) is initialized by throw statement. Thus, copy elision might kick in during this process. However this parameter is typically 
+- The parameter of catch block(exception object) is initialized by throw statement. Thus, copy elision might kick in during this process. However this parameter is typically 
 <const exception&> since copy ctor of exception class can also throw exception that leads to calling std::terminate.
+
+- Dtors of classes are implicitly no throw. Move ctor and move assignment operators desired to be no throw since compiler can do optimizations.
+
+- Ctors may throw exceptions since it is possible to fail when obtaining resources. Note that an object comes to life only if one of its ctors is fully executed. Therefore smart
+pointers is critical when obtaining resources in ctors so that they can be released during stack unwinding. Ex:
+
+class Myclass
+{
+public:
+    Myclass(int n) : mp{ new int[n]} // memory allocated
+    {
+        //code
+        throw std::runtime_error{ "runtime_error!" }; // but this object doesn't come to life
+    }
+
+    ~Myclass() // dtor doesn't get called since ctor code couldn't run completely, memory leak..
+    {
+        std::cout << "dtor called\n";
+        delete[]mp;
+    }
+
+private:
+    int* mp;
+};
+
+
+int main()
+{
+    try
+    {
+        Myclass m{ 56 };
+    }
+    catch(const exception& ex)
+    {
+        std::cout << "exception caught: " << ex.what();
+    }
+}
+
+Output:
+
+exception caught: runtime_error!
+
+- If ctor of a dynamically allocated object throws exception, memory that operator new allocates, deallocated by the compiler, programmer is not responsible for this.
+
+class Myclass
+{
+	Myclass()
+	{
+		// code
+		throw std::exception;
+	}
+}
+
+int main()
+{
+	Myclass* p = new Myclass; // this is a two phase process: 1) operator new allocates memory for the object
+							  //                              2) ctor of the object is called, in this phase memory is already allocated
+}
+ 
 
 Resoruce utilised: https://learn.microsoft.com/en-us/cpp/cpp/exceptions-and-stack-unwinding-in-cpp?view=msvc-170
 Article Date: 11/14/2022

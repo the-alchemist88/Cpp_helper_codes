@@ -1,0 +1,49 @@
+void foo()
+{
+    try
+    {
+        throw std::out_of_range{ "out_of_range" };
+    }
+    catch(const std::exception& ex)
+    {
+        std::cout << "exception caugt in foo function\n";
+        std::cout << "the address of the exception is: " << &ex << "\n";
+        throw ex; // 1st scenerio -> compiler constructs another object, addresses are different in following catch block. Cannot keep the dynamic type ,
+        //throw; // 2nd scenerio -> rethrow statement throws the same object
+    }
+}
+
+int main()
+{
+    try
+    {
+        foo();
+    }
+    catch (const std::out_of_range& ex) // 2nd scenerio
+    {
+        std::cout << "exception caugt in main function: std::out_of_range\n" ;
+        std::cout << "the address of the exception is: " << &ex << "\n";
+    }
+    catch (const std::exception& ex) // 1st scenerio -> object slicing
+    {
+        std::cout << "exception caugt in main function: std::exception\n";
+        std::cout << "the address of the exception is: " << &ex << "\n";
+    }
+    
+}
+
+/*
+Possible output for 1st scenerio:
+
+exception caugt in foo function
+the address of the exception is: 00000059BBCFFC18
+exception caugt in main function: std::exception
+the address of the exception is: 00000059BBCFFC48
+
+Possible output for 2nd scenerio:
+
+exception caugt in foo function
+the address of the exception is: 00000083F939FB68
+exception caugt in main function: std::out_of_range
+the address of the exception is: 00000083F939FB68
+*/
