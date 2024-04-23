@@ -155,23 +155,51 @@ typeid operator.
 - Since typeid doesn't do any casting, static_cast can be used to access the derived class member functions. static_cast is valid for the types that are in the same hierarchy but 
 programmer always need to check whether the dynamic_types match or not. Without checking the type, it can be undefined behaviour.
 
-void car_game(Car* cptr) 
+class Base 
 {
-	
-	if(typeid(Volvo) == typeid(*cptr))
-	{
-		auto vptr = static_cast<Volvo*>(cptr)
-	}
+public:
+    virtual ~Base() = default;
+};
 
-	vp->open_sunroof();
-	(void)getchar();
-}				
+class Der: public Base
+{
+public:
+    void bar()
+    {
+        std::cout << "Der bar()\n";
+    }
+};
+
+
+void func(Base* bptr)
+{
+    if (auto b = typeid(*bptr) == typeid(Der))
+    {
+        auto vptr = static_cast<Der*>(bptr);  // calling directly bptr->baz() without casting, may cause undefined behaviour if base class doesn't have that function for example
+
+        vptr->bar();
+    }
+}
 
 int main()
 {
-	Volvo vol;
-	car_game(&vol);
+    Der myder;
+    func(&myder);
+	
+	try
+    {
+        func(nullptr); // if argument is nullptr at runtime typeid operator throws exception of type bad_typeid
+    }
+    catch(const bad_typeid& ex)
+    {
+        cout << "exception caught: " << ex.what();
+    }
 }
+
+Output
+
+Der bar()
+exception caught: std::bad_typeid
 
 RTTI Tools(DYNAMIC_CAST & TYPEID) Summary
 *-----------------------------------------------------*
