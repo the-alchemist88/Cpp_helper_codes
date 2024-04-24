@@ -1,0 +1,155 @@
+Noexcept keyword
+----------------
+
+Noexcept keyword has two overloads(different usage)
+
+1) Noexcept specifier
+2) Noexcept operator
+
+Noexcept specifier
+------------------
+Used to provide noexcept guarantee for a function. If it has argument, it must be a constant expression and type of bool or convertable to bool. If the argument evaluates to true 
+then it denotes a no throw guarantee.
+
+syntax -> void fun(T param) noexcept(constant expression); 
+
+Ex:
+
+void foo(int) noexcept; 		-> no throw guarantee
+void foo(int) noexcept(true); 	-> no throw guarantee
+
+
+void bar(int); 					-> can throw exception
+void bar(int) noexcept(false); 	-> can throw exception
+
+
+- noexcept specifier is a part of function signature. It must be placed both in function declaration and definition. However it cannot be used to overload a function.
+
+void foo(int);
+void foo(int) noexcept; // syntax error
+
+- noexcept can be used for overriding virutal functions. However since it is a promise for no throw, its exisntance in base class and absence in derived class at the same time,
+will cause an error, thus overriding must be done only by adding noexcept in derivde class function. Exammple2 below.
+
+- If a function with noexcept guarantee throws an exception in runtime(because compiler may not detect it), this exception cannot be caught. std::terminate is called.
+
+- If dtor of any class throws and propogates exception, std::terminate is called.
+
+
+Noexcept operator
+------------------
+Noexcept operator checks whether its operand may or may not throw exception by generating a compile time expression. It is unevaluated context as typeid, decltype, sizeof operator.
+
+Ex:
+
+void foo(int) noexcept (noexcept(sizeof(int) > 2))
+			  --------  --------
+			  specifier operator
+
+
+
+
+Example1:
+
+void foo()
+{
+    throw std::runtime_error{ "runtime_error!" };
+}
+
+void bar()
+{
+    throw; // this is a rethrow statement and throws the object that is caught inside catch clause
+}
+
+void baz()
+{
+    try
+    {
+        foo();
+    }
+    catch (const std::exception& ex)
+    {
+        // code
+        std::cout << "exception caugt in baz()\n";
+        std::cout << ex.what() << '\n';
+        bar();
+    }
+}
+
+int main()
+{
+    try
+    {
+        baz();
+    }
+    catch (const exception& ex)
+    {
+        std::cout << "exception caugt in main()\n";
+        std::cout << ex.what();
+    }
+}
+
+Output:
+
+exception caugt in baz()
+runtime_error!
+exception caugt in main()
+runtime_error!
+
+Example:
+
+class Myclass
+{
+
+};
+
+int main()
+{
+    Myclass m;
+	
+	constexpt b = noexcept(m.~Myclass()); // b == true, since dtors don't throw
+}
+
+Example2:
+
+class Base
+{
+public:
+    virtual void fun()
+    {
+        std::cout << "Base fun()\n";
+    };
+};
+
+class Derived: public Base
+{
+public:
+    virtual void fun() noexcept override
+    {
+        std::cout << "Derived fun()\n";
+    };
+};
+
+int main()
+{
+    Derived d;
+    Base* b = &d;
+    b->fun();
+}
+
+Output:
+
+Derived fun()
+
+Example3(function pointers):
+
+void fun1 (int);
+void fun2 (int) noexcept;
+
+int main()
+{
+    void (*fp1)(int) = fun1;
+    void (*fp2)(int) noexcept = fun2;
+    fp1 = fun2;
+    fp2 = fun1; // error, the function that f2 points to must be noexcept
+}
