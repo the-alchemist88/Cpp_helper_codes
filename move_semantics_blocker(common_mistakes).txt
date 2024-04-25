@@ -1,0 +1,74 @@
+In C++ syntax an R value reference can be const( ex: const Myclass&&) but it doesn't have any usage semantically. In move members, argument
+that will be moved from, will change naturally such as making its pointer null or changing its size, however a const reference doesn't allow this. 
+
+class Myclass
+{
+public:
+    Myclass() = default;
+    Myclass(const Myclass&) = default;
+
+    Myclass& operator=(const Myclass&)
+    {
+        std::cout << "operator=(const Myclass&)\n";
+        return *this;
+    }
+
+    Myclass& operator=(Myclass&&)
+    {
+        std::cout << "operator=(Myclass&&)\n";
+        return *this;
+    }
+};
+
+// Let's recall some function overloading rules
+void func(Myclass&&) { std::cout << "Myclass&&\n"; }
+void func(const Myclass&&) { std::cout << "const Myclass&&\n"; }
+void func(Myclass&) { std::cout << "Myclass&\n"; }
+void func(const Myclass&) { std::cout << "const Myclass&\n"; }
+
+Myclass foo()
+{
+    Myclass x;
+    return x;
+}
+
+const Myclass const_foo() // return type is const, thus blocks move members according to function overloading rules
+{                         // never qualify return type with const !!!
+    Myclass x;
+    return x;
+}
+
+Myclass pess_foo()        // may block copy elision, don't use pessimistic move 
+{                               
+    Myclass x;
+    return std::move(x);  // this syntax is called pessimistic move
+}
+
+
+int main()
+{
+    Myclass m;
+    const Myclass cm;
+
+    func(m);
+    func(cm);
+
+    func(std::move(m));
+    func(std::move(cm));
+
+    std::cout << "\n";
+
+    Myclass mx;
+    mx = foo();         // did move
+    mx = const_foo();   // did copy
+}
+
+Output:
+-------
+Myclass&
+const Myclass&
+Myclass&&
+const Myclass&&
+
+operator=(Myclass&&)
+operator=(const Myclass&)
