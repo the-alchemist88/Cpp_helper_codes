@@ -1,5 +1,5 @@
-In C++ syntax an R value reference can be const( ex: const Myclass&&) but it doesn't have any usage semantically. In move members, argument
-that will be moved from, will change naturally such as making its pointer null or changing its size, however a const reference doesn't allow this. 
+In C++ syntax an R value reference can be const( ex: const Myclass&&) but it doesn't have any usage semantically. In move members, argument that will be moved from, will change
+naturally such as making its pointer null or changing its size, however a const reference function parameter doesn't allow this. Ex:
 
 class Myclass
 {
@@ -58,9 +58,8 @@ int main()
 
     std::cout << "\n";
 
-    Myclass mx;
-    mx = foo();         // did move
-    mx = const_foo();   // did copy
+    m = foo();         // calls move assignment
+    m = const_foo();   // calls copy assignment
 }
 
 Output:
@@ -72,3 +71,32 @@ const Myclass&&
 
 operator=(Myclass&&)
 operator=(const Myclass&)
+
+
+Additionaly common misconception about references is mistaking the data type of an R value reference name and its value category. Ex:
+
+class Myclass{};
+
+void val(const Myclass&)
+{
+    std::cout << "value category - L value\n";
+}
+
+void val(Myclass&&)
+{
+    std::cout << "value category - R value\n";
+}
+
+int main()
+{
+	Myclass m;
+
+    Myclass&& rref = std::move(m);
+
+    val(rref);
+}
+
+Output
+--------
+
+value category - L value
