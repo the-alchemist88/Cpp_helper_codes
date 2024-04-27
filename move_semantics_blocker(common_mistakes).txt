@@ -38,10 +38,11 @@ const Myclass const_foo() // return type is const, thus blocks move members acco
     return x;
 }
 
-Myclass pess_foo()        // may block copy elision, don't use pessimistic move 
+Myclass pess_foo()        // blocks NRVO, don't use pessimistic move 
 {                               
     Myclass x;
-    return std::move(x);  // this syntax is called pessimistic move
+    return std::move(x);  // this syntax is called pessimistic move, programmer ties to trigger move semantics by changing the value category of a named object but it is unnecessary
+						  // since function call expression will be X value when function returns even without employing std::move()
 }
 
 
