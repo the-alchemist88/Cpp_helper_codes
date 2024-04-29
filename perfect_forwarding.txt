@@ -1,0 +1,114 @@
+Perfect Forwarding
+----------------------
+
+Perfect forwarding is a technique that is used when passing the exact same argument(in terms of value category, type and value) to another function inside
+a function. The below example demonstrates how is it possible by taking an example of non-template, one parameter function with four selected overloads. 
+Forwarding function is named as "call_fun" and forwarded-to function is named as "fun". In order to perfectly forward all overloads, the programmer need to write a
+corresponding overload. Also the programmer need to give special care for value categories of function arguments when passing them(e.g. in call_fun(Myclass&& r)). 
+Besides, if this was a multi-paramater function that would require to write much more forwarding functions in order to handle all overload combinations. 
+
+foo(param1);                            --> requries 4 overloads in this example
+foo(param1, param2);                    --> requries 16 overloads in this example
+foo(param1, param2, param3);            --> requries 64 overloads in this example
+foo(param1, param2, param3, param2);    --> requries 256 overloads in this example
+
+However there is a better way in C++ : perfect forwarding syntax. The function template "pff_fun(T&& arg)" is an example of this. As shown in the example
+both all three calls ar made actually to the same corresponding overload of "fun". For functions with multiple parameters perfect forwarding syntax is as follows:
+
+template<typename T, typename U>
+void pff_fun(T&& arg1, U&& arg2)
+{
+    fun(std::forward<T>(arg), std::forward<U>(arg));
+}
+
+
+Ex:
+
+class Myclass {};
+
+void fun(Myclass&)
+{
+    std::cout << "fun(Myclass&)\n";
+}
+
+void fun(const Myclass&)
+{
+    std::cout << "fun(const Myclass&)\n";
+}
+
+void fun(Myclass&&)
+{
+    std::cout << "fun(Myclass&&)\n";
+}
+
+void fun(const Myclass&&)
+{
+    std::cout << "fun(const Myclass&&)\n";
+}
+
+void call_fun(Myclass& r)
+{
+    fun(r);
+}
+
+void call_fun(const Myclass& r)
+{
+    fun(r);
+}
+
+void call_fun(Myclass&& r)
+{
+    fun(std::move(r));
+}
+
+void call_fun(const Myclass&& r)
+{
+    fun(std::move(r));
+}
+
+template<typename T>
+void pff_fun(T&& arg)
+{
+    fun(std::forward<T>(arg));
+    cout << '\n';
+}
+
+int main()
+{
+    Myclass m{};
+    const Myclass cm{};
+
+    fun(m);
+    call_fun(m);
+    pff_fun(m);
+
+    fun(cm);
+    call_fun(cm);
+    pff_fun(cm);
+
+    fun(std::move(m));
+    call_fun(std::move(m));
+    pff_fun(std::move(m));
+
+    fun(std::move(cm));
+    call_fun(std::move(cm));
+    pff_fun(std::move(cm));
+}
+
+Output
+------
+fun(Myclass&)
+fun(Myclass&)
+fun(Myclass&)
+
+fun(const Myclass&)
+fun(const Myclass&)
+fun(const Myclass&)
+
+fun(Myclass&&)
+fun(Myclass&&)
+fun(Myclass&&)
+
+fun(const Myclass&&)
+fun(const Myclass&&)
+fun(const Myclass&&)

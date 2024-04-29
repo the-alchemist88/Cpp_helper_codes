@@ -1,4 +1,4 @@
-a', /* This code snippet shows the technique that STL uses which allow algorithms being able to take not only template containers(vector, list etc.)
+/* This code snippet shows the technique that STL uses which allow algorithms being able to take not only template containers(vector, list etc.)
 but also C-type arrays as range parameters(beg, end) employing IteratorTraits struct */
 
 #include <iostream>
