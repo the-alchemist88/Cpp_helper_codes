@@ -1,0 +1,35 @@
+RAII(Resource Acquisition is Initialization)
+--------------------------------------------
+
+Unlike managed languages, C++ doesn't have automatic garbage collection , an internal process that releases heap memory and other resources as a program runs. A C++ program is 
+responsible for returning all acquired resources to the operating system. Failure to release an unused resource is called a leak . Leaked resources are unavailable to other programs
+until the process exits.
+
+Modern C++ avoids using heap memory as much as possible by declaring objects on the stack. When a resource is too large for the stack, then it should be owned by an object. As the 
+object gets initialized, it acquires the resource it owns. The object is then responsible for releasing the resource in its destructor. 
+
+The owning object itself is declared on the stack. The principle that objects own resources is also known as "resource acquisition is initialization," or RAII.
+
+Resource Acquisition Is Initialization or RAII, is a C++ programming technique which binds the life cycle of a resource that must be acquired before use (allocated heap memory,
+thread of execution, open socket, open file, locked mutex, disk space, database connection—anything that exists in limited supply) to the lifetime of an object.
+
+RAII guarantees that the resource is available to any function that may access the object (resource availability is a class invariant, eliminating redundant runtime tests). It also
+guarantees that all resources are released when the lifetime of their controlling object ends, in reverse order of acquisition. Likewise, if resource acquisition fails (the 
+constructor exits with an exception), all resources acquired by every fully-constructed member and base subobject are released in reverse order of initialization. This leverages
+the core language features (object lifetime, scope exit, order of initialization and stack unwinding) to eliminate resource leaks and guarantee exception safety. Another name for
+this technique is Scope-Bound Resource Management (SBRM), after the basic use case where the lifetime of an RAII object ends due to scope exit.
+
+RAII can be summarized as follows:
+
+-encapsulate each resource into a class, where
+
+	the constructor acquires the resource and establishes all class invariants or throws an exception if that cannot be done,
+	the destructor releases the resource and never throws exceptions;
+
+-always use the resource via an instance of a RAII-class that either
+
+	has automatic storage duration or temporary lifetime itself, or
+	has lifetime that is bounded by the lifetime of an automatic or temporary object.
+	
+Resources: https://en.cppreference.com/w/cpp/language/raii
+		   https://learn.microsoft.com/vi-vn/cpp/cpp/object-lifetime-and-resource-management-modern-cpp?view=msvc-160
