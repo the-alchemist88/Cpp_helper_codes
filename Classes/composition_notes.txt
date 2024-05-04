@@ -1,12 +1,10 @@
 Composition(Containment)
 --------------------------------
 
-Composition means that a class has elements of another class type. It differs from nested types. Nested type means that the definition of a class is contained within another class definition. 
-Terms used for denoting classes which are in compostion relationship are - Member, Owner. Basic features to know about composition:
+Composition means that a class has data members of another class type. It differs from nested types. Nested type means that the definition of a class is contained within another class definition. 
+Terms used for denoting classes which are in compostion relationship are - Member and Owner. Basic features to know about composition:
 
-
-Member's interface is not directly attached to the Owner's interface, but Member's functions can be called inside Owner's functions.
-1) Member arayüzü Owner arayüzüne direkt olarak eklenmez, ancak Owner sahip olunan nesne yoluyla kendi fonksiyonları içinde çağırılabilir.
+1) Member's interface is not directly attached to the Owner's interface, but Member's functions can be called inside Owner's functions.
 
 class Member
 {
@@ -31,11 +29,9 @@ public:
 
 private:
 	Member mx;
-	Member my{ 3, 5, 7 }; // Reminder: Default in-class initializers for class members require {} - based initializer syntax or = - based initializer syntax
-						  // There's no ()-based syntax for such initializers.
+	Member my{ 3, 5, 7 }; // Reminder: Default in-class initializers for class members require "{}" or "="  based initializer syntax. There's no "()" based syntax for such initializers.
+	
 	void baz() { std::cout << "Owner baz()\n"; };
-
-
 };
 
 int main()
