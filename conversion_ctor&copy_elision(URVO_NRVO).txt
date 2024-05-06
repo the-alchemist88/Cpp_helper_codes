@@ -33,12 +33,21 @@ public:
 
 int main()
 {
-	Myclass m;
-	std::cout << "&m = " << &m << "\n";
-	m = 35;
-	(void)getchar();
-	// dtor of m wıll be called
-}
+	Myclass m;								// no-args ctor will be called
+	std::cout << "&m = " << &m << "\n";		// address of m
+	m = 35;									// Firstly, a temporary object will be created by Myclass(int x) ctor.
+											// Then copy assignment operator will be called for copying from temporary object to m. Compare the address of objects copied from and copied to, on the output	
+}											// dtor of m will be called
+
+Possible Output
+----------------
+Myclass() for this: 000000682FB6F5D4
+&m = 000000682FB6F5D4
+Myclass(int x) x = 35 for this: 000000682FB6F6B4
+Myclass copy asignment for this: 000000682FB6F5D4
+&other = 000000682FB6F6B4
+~Myclass() for this: 000000682FB6F6B4
+~Myclass() for this: 000000682FB6F5D4
 
 
 User Defined Conversion(UDC)
@@ -197,7 +206,6 @@ In the initialization of an object, when the source object is a nameless tempora
 When the nameless temporary is the operand of a return statement, this variant of copy elision is known as URVO
 (In C++17 and later, URVO is mandatory and no longer considered a form of copy elision)
 
-
 b) Named Return Value Optimization(NRVO)
 
 In a return statement, when the operand is the name of a non-volatile object with automatic storage duration, which isn't a function parameter or a catch
@@ -233,7 +241,7 @@ int main()
 }
 
 Output:
-
+-------
 Myclass()
 Myclass()
 
