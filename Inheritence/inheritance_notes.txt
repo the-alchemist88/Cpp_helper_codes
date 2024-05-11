@@ -251,14 +251,18 @@ Base(const char*)
 INHERITANCE ÇEŞİTLERİ(Public, Private, Protected Inheritance)
 -------------------------------------------------------------------
 
-Public inheritance bir "is-a" ilişkisi sağlar,  Taban sınıfın public arayüzü türemiş sınıfın public arayüzüne, taban sınıfın protected arayüzü türemiş sınıfın
-protected arayüzüne eklenir. Taban sınıfın private bölümüne erişim yoktur. C++'ta görülen diğer inheritance çeşitlerinde ise durum farklıdır. Taban sınıfın private 
-bölümü bütün kalıtım biçimlerinde türemiş sınıfa kapalıdır.
+Public Inheritance
+------------------
+- Public inheritance bir "is-a" ilişkisi sağlar, türemiş sınıftan taban sınıfa referans/pointer sentaksiyla örtülü dönüşüm geçerli.
+- Taban sınıfın public arayüzü türemiş sınıfın public arayüzüne, taban sınıfın protected arayüzü türemiş sınıfın protected arayüzüne eklenir.
+- Taban sınıfın private bölümü bütün kalıtım biçimlerinde türemiş sınıfa kapalıdır.
 
+C++'ta görülen diğer inheritance çeşitlerinde ise durum biraz farklıdır.
+ 
 PRIVATE INHERITANCE
 --------------------
 
-1)Public inheritance'ta, taban sınıfın arayüzleri aynı şekilde türemiş sınıfa eklenir:
+- Public inheritance'ta, taban sınıfın arayüzleri aynı şekilde türemiş sınıfa eklenir:
 
 	base public 		--> 	derived public
 	base protected 		--> 	derived protected
@@ -271,7 +275,7 @@ Private inhertiance'ta ise:
 Bunun anlamı(private inheritance): Türemiş sınıf içinde taban sınıfın yine protected ve public bölümüne erişilebilir. Ancak artık client kodlar türemiş 
 sınıf üzerinden taban sınıfın kodlarını kullanamazlar.
 
-2)Bir is-a relationship yok. Türemiş sınıftan taban sınıfa örtülü dönüşüm yok. Upcasting, iki istisna dışında sentaks hatası :
+- Bir is-a relationship yok. Türemiş sınıftan taban sınıfa örtülü dönüşüm yok. Upcasting, iki istisna dışında sentaks hatası:
 
 a)Türemiş sınıfın üye fonksiyonu içinde upcasting (örtülü olarak) geçerli
 b)Türemiş sınıfın friend'lik verdiği fonksiyonlarda geçerli
@@ -313,18 +317,20 @@ int main()
 }
 
 
-3)Private kalıtmı composition(containment, yani bir sınıf türünden elemana sahip olması)'a bir alternatif. İkisi arasındaki farklar:
+- Private kalıtmı composition(containment, yani bir sınıf türünden elemana sahip olması)'a bir alternatif. İkisi arasındaki farklar:
 
 a)Elemanımız olan sınıfın protected bölümüne erişemeyiz. Ancak private kalıtımda taban sınıfımızın protected bölümüne erişebilriz.
-b)Elemenımızın sanal fonksiyonu (doğrudan)override edemeyiz. Ancak private kalıtımda taban sınıfımızın sanal fonksiyonu override edebiliriz.
-c)Elemeanımızın türüne sınıf türünden dönüşüm yok. Ancak private kalıtımda sınırlı da olsa türemiş sınıftan taban sınıfa dönüşüm var(2. madde).
+b)Elemenımızın sanal fonksiyonunu(doğrudan) override edemeyiz. Ancak private kalıtımda taban sınıfımızın sanal fonksiyonu override edebiliriz.
+c)Elemanımızın türüne sınıf türünden dönüşüm yok. Ancak private kalıtımda sınırlı da olsa türemiş sınıftan taban sınıfa dönüşüm var(2. madde).
 
 Private kalıtımda mümkün ama composition'da mümkün olmayan örnekler:
-- Bir sınıfın başka bir sınıf türünden iki tane elemanı olabilir.
-- Bir sınıfın başka bir sınıf türünden dizi elemanı olabilir.
 
-Private kalıtımında:
-a)Gloabal fonksiyonlarda upcasting geçerli değil.
+a) Bir sınıfın başka bir sınıf türünden iki tane elemanı olabilir.
+b) Bir sınıfın başka bir sınıf türünden dizi elemanı olabilir.
+
+Özet olarak private kalıtımında upcasting için:
+
+a)Gloabal fonksiyonlarda geçerli değil.
 b)Türemiş sınıfın üye fonksiyonları içinde geçerli.
 c)Türemiş fonksiyonun friend'lik verdiği kodlar içinde geçerli.
 
@@ -409,13 +415,20 @@ Burada ambiguity'i engellemenin yolu: static_cast operatörü ya da nitelenmiş 
 class BaseX
 {
 public:
-	void foo();
+	void foo()
+	{
+		std::cout << "BaseX foo()\n";
+	}
 };
 
 class BaseY
 {
 public:
-	int foo(int, int);
+	int foo(int, int)
+	{
+		std::cout << "BaseY foo(int, int)\n";
+		return {};
+	}
 };
 
 class Der : public BaseX, public BaseY
@@ -434,18 +447,32 @@ int main()
 	static_cast<BaseY&>(myder).foo(1, 2);
 }
 
+Output:
+-------
+BaseX foo()
+BaseY foo(int, int)
+BaseX foo()
+BaseY foo(int, int)
+
 Eğer function overloading mekanizmasının çalışması isteniyorsa türemiş sınıf içinde iki taban sınıf için de using bildirimi yapılabilir:
 
 class BaseX
 {
 public:
-	void foo();
+	void foo()
+	{
+		std::cout << "BaseX foo()\n";
+	}
 };
 
 class BaseY
 {
 public:
-	int foo(int, int);
+	int foo(int, int)
+	{
+		std::cout << "BaseY foo(int, int)\n";
+		return {};
+	}
 };
 
 class Der : public BaseX, public BaseY
@@ -460,7 +487,7 @@ int main()
 	Der myder;
 
 	myder.foo();
-	myder.foo(5,6);
+	myder.foo(5, 6);
 }
 
 DIAMOND FORMATION PROBLEM (DREADFUL DIAMOND OF DERIVATION)
@@ -470,45 +497,62 @@ Diamond(karo) formdaki hiyerarşide çıkan, türemiş sınıf türünden bir ne
 nesnesinin(Person) iki kere hayata gelmesi problemini(ambiguity) çözmeye yönelik bir araçtır. Sentaksı:
 
 class Person{};
-class Worker: virtual public Person{};
-class Teacher: virtual public Person{};
-class MathTeacher: public Teacher, public Worker{ };
+class Employee:  virtual public Person{};
+class Engineer:  virtual public Person{};
+class Developer: public Employee, public Engineer{};
 
 
-Eğer virtual inheritance kullanılarak türetilen sınıf  çoklu kalıtımda başka bir sınıfla birlikte taban sınıf olacaksa, bu kendi taban 
-sınıfından bir tane koyulmasını sağlayacak. Bu sentaksta iki taban sınıfın da(Worker, Teacher) virtual inheritance youlya elde edilmesi gerek,
-aksi takdirde virtual inheritance mekanizması devreye girmeyecektir. Burada ortak taban sınıfa(Person) virtual base class denir. 
-Virtual base class, kendisinden türemiş sınıflarının hepsinin ctor'ları tarafından initialize edilmek zorundadır.
+Eğer virtual inheritance kullanılarak türetilen sınıf(Employee ve Engineer), çoklu kalıtımda başka bir sınıfla birlikte taban sınıf olacaksa,
+virtual inheritance sentaksi kendi taban  sınıfından bir tane koyulmasını sağlayacak. Bu sentaksta iki taban sınıfın da(Employee ve Engineer) 
+virtual inheritance youlya elde edilmesi gerek, aksi takdirde virtual inheritance mekanizması devreye girmeyecektir. Burada ortak taban sınıfa(Person) 
+virtual base class denir. Virtual base class, kendisinden türemiş sınıflarının hepsinin ctor'ları tarafından initialize edilmek zorundadır.
 
-class Base // virtual base class
+class Person // virtual base class
 {
 public:
-	Base(const char*) {}
+	Person(const char* arg)
+	{
+		std::cout << arg << '\n';
+	}
 };
 
-class DerX: virtual public Base1
+class Employee : virtual public Person
 {
 public:
-	DerX() : Base("DerX\n") {}
-
+	Employee() : Person("Employee") {}
 };
 
-class DerY: virtual public Base1
+class Engineer : virtual public Person
 {
 public:
-	DerY() : Base("DerY\n") {}
-
+	Engineer() : Person("Engineer") {}
 };
 
-class DerZ: public DerX, public DerY
+class Developer : public Employee, public Engineer
 {
 public:
-	DerZ(): Base("DerZ\n") {}
-
+	Developer() : Person("Developer") {}
 };
 
-class DerA : public DerZ
+class Senior_Developer : public Developer
 {
 public:
-	DerA() : Base("DerZ\n") {}
+	Senior_Developer() : Person("Senior_Developer") {}
 };
+
+int main()
+{
+	Person per{"Person"};
+	Engineer eng;
+	Employee emp;
+	Developer dev;
+	Senior_Developer Sdev;
+}
+
+Output:
+-------
+Person
+Engineer
+Employee
+Developer
+Senior_Developer
