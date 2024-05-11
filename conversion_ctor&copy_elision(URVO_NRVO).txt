@@ -136,9 +136,10 @@ int main()
 	Myclass m5 = static_cast<Myclass>(5); // valid, explicit conversion
 }
 
-There are some cases where compiler doesn't generate code for copying intentionally even in source file there are obvious copy operations.
+There are some cases where compiler doesn't generate code for copying intentionally even in source file  even when the language syntax visually suggests a copy/move
+(e.g. copy initialization), no copy/move is performed.
 
-Until C++17 copy elison was a compiler optimization. In C++17 standard some cases of copy elison became mandotory and they are called as mandatory copy elision. Actually even if
+Until C++17 "copy elison" was a compiler optimization. In C++17 standard some cases of copy elison became mandotory and they are called as mandatory copy elision. Actually even if
 this name denotes an elision, there is no elision of any copying here since omitting it became mandatory by the standard.
 
 Example:
@@ -171,10 +172,8 @@ void func(Myclass mx){}
 
 int main()
 {
-	func(Myclass{10}); 	// copy elison
-						// first a temporary object constructed with Myclass(int x) ctor. Then since it is an r value, move ctor gets called to construct the function parameter mx
-	Myclass m;			
-	func(m);
+	func(Myclass{10}); 	// Straightforward thinking, first a temporary object should be constructed with Myclass(int x) ctor.
+						// Then since it is an r value, move ctor gets called to construct the function parameter mx. However this is atypical copy elision case.
 }
 
 Without any copy elision this code would give the following output(can be tested with "-fno-elide-constructors" option in GCC):
@@ -182,7 +181,7 @@ Without any copy elision this code would give the following output(can be tested
 Myclass(int x)
 Myclass(Myclass&& other)
 
-But instead output is (since C++17 compiled):
+But instead the output is(since C++17 compiled):
 
 Myclass(int x)
 
@@ -203,8 +202,7 @@ Retrurn Value Optimization(RVO)
 a) Unnamed Return Value Optimization(URVO)
 
 In the initialization of an object, when the source object is a nameless temporary and is of the same class type (ignoring cv-qualification) as the target object.
-When the nameless temporary is the operand of a return statement, this variant of copy elision is known as URVO
-(In C++17 and later, URVO is mandatory and no longer considered a form of copy elision)
+When the nameless temporary is the operand of a return statement, this variant of copy elision is known as URVO(In C++17 and later, URVO is mandatory and no longer considered a form of copy elision)
 
 b) Named Return Value Optimization(NRVO)
 
@@ -252,7 +250,7 @@ that will initialize obj1 and obj2 where the functions are called, second is for
 is first choice for obj1 and obj2.
 
 Output with -fno-elide-constructors option in GCC:
-
+---------------------------------------------------
 Myclass()
 Myclass(Myclass&& other)
 Myclass(Myclass&& other)
@@ -288,4 +286,4 @@ However for this class moving and copying will differ because of string element.
 2) Nevertheless copy elision is the most favourable among three in terms of efficiency, because it doesn't construct any object. It uses the same object - zero cost.
 
 In conclusion, temporary objects should be encouraged to be used whenever they meet the requirements instead of named objects because they make copy elision possible(in arguments
-of function and return expressions). This is a considerable efficiency advantage.
+of functions and return expressions). This is a considerable efficiency advantage.

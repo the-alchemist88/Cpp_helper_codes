@@ -72,13 +72,12 @@ class Airbus : public Airplane
 
 Polymorphic class: If a class has at least one virtual function, it's called polymorphic class
 
-Abstract class: If a class has a pure virtual function it's an abstract class. An object of type abstract class cannot be constructed, but a reference
-or pointer to abstract class can. If a derived class of an abstract base class, doesn't override the even one pure virtual function of it base class
-it also will be an abstract class. If a class is not abstract, then it's called a concrete class.
+Abstract class: If a class has a pure virtual function it's an abstract class. An object of type abstract class cannot be constructed, but a reference or pointer to abstract class 
+can. If a derived class of an abstract base class, doesn't override the even one pure virtual function of it base class it also will be an abstract class. If a class is not abstract, then it's called a concrete class.
 
-In order to override a virtual function of a base class, derived class must implement a function with the same return type and signature. If derived 
-class declares a function with the same name and parameters with base class but with a diferrent return type then this situation generates
-a syntax error.If paramaters are different, this doesn't override the base function.
+In order to override a virtual function of a base class, derived class must implement a function with the same return type and signature. If derived class declares a function with 
+the same name and parameters with base class but with a diferrent return type then this situation causes a syntax error. If paramaters are different, this doesn't override the base
+virtual function.
 
 class Base
 {
@@ -91,7 +90,7 @@ class Der : public Base
 {
 public:
 
-	//double foo(int, int); 	//syntax error, there is a way to make this legal --> covariance
+	//double foo(int, int); 	// syntax error, there is a way to make this legal --> covariance
 	int foo(char, int); 		// valid but doesn't override
 	int foo(int, int) const; 	// const is the part of signature so doesn't override
 };
@@ -101,9 +100,9 @@ variant return types
 covariant
 --------------------
 
--When overriding virtual function of a base class, it is possible to use a different return type(it's syntax error) if condition is met:
+-When overriding virtual function of a base class, it is possible to use a different return type(usual case is syntax error) if condition is met:
 
-D and B being a class type and D is derived from B; if a Base class' virtual function's return type is B* or B& then Derived class' overrider
+D and B being a class type and D is derived from B; if a base class' virtual function's return type is B* or B& then derived class' overrider
 function can have return type of D* or D&.
 
 class B {};

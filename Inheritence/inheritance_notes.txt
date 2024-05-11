@@ -174,8 +174,31 @@ int main()
 	cout << "\n";
 
 	db.Base::foo(5);		// calling Base class function through a derived object
-	db.foo(5);				// since it's a public inheritance derived class object also has bas class public functions
+	db.foo(5);				// since it's a public inheritance, derived class object also has base class public functions
 }
+
+Output:
+-------
+Base()
+Der()
+
+Base(int, int)
+Der(int, int)
+
+Base(const Base& rhs)
+Der(const Der& rhs)
+
+Base(Base&& rhs)
+Der(Der&& rhs)
+
+Base& operator=(const Base& rhs)
+Der& operator=(const Der& rhs)
+
+Base& operator=(Base&& rhs)
+Der& operator=(Der&& rhs)
+
+Base::foo(int x)
+Base::foo(int x)
 
 
 Since modern C++, "inherited ctor" syntax added to language. This feature saves the the programmer from the hassle of writing base class ctors for all
@@ -207,7 +230,7 @@ class Der : public Base
 {
 public:
 	using Base::Base;
-}
+};
 
 // test code
 int main()
@@ -218,13 +241,19 @@ int main()
 	Der dd(2, 'c');
 }
 
-INHERITANCE ÇEŞİTLERİ(Private Inheritance & Protected Inheritance)
+Output:
+-------
+Base()
+Base(int)
+Base(const char*)
+Base(const char*)
+
+INHERITANCE ÇEŞİTLERİ(Public, Private, Protected Inheritance)
 -------------------------------------------------------------------
 
-Public inheritance bir "is-a" ilişkisi sağlar, yani türemiş sınıf türünden taban sınıf türüne(pointer veya referans) bir örtülü dönüşüm(upcasting) yok.
-Taban sınıfın public arayüzü türemiş sınıfın public arayüzüne, taban sınıfın protected arayüzü türemiş sınıfın protected arayüzüne eklenir. Taban sınıfın
-private bölümüne erişim yoktur. C++'ta görülen diğer inheritance çeşitlerinde ise durum farklıdır. Taban sınıfın private bölümü bütün kalıtım biçimlerinde
-türemiş sınıfa kapalıdır.
+Public inheritance bir "is-a" ilişkisi sağlar,  Taban sınıfın public arayüzü türemiş sınıfın public arayüzüne, taban sınıfın protected arayüzü türemiş sınıfın
+protected arayüzüne eklenir. Taban sınıfın private bölümüne erişim yoktur. C++'ta görülen diğer inheritance çeşitlerinde ise durum farklıdır. Taban sınıfın private 
+bölümü bütün kalıtım biçimlerinde türemiş sınıfa kapalıdır.
 
 PRIVATE INHERITANCE
 --------------------
@@ -442,7 +471,7 @@ nesnesinin(Person) iki kere hayata gelmesi problemini(ambiguity) çözmeye yöne
 
 class Person{};
 class Worker: virtual public Person{};
-class Teacher: virtual public Person{ };
+class Teacher: virtual public Person{};
 class MathTeacher: public Teacher, public Worker{ };
 
 
