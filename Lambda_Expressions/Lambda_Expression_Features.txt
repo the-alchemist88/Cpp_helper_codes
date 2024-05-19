@@ -14,8 +14,8 @@ auto b = [](){};
 lambda expression, the "{}" brackets in the lambda expression will be the same as in the function block.
 
 - Local variables with automatic lifetime cannot be used directly in a lambda expression, but local variables with static lifetime and global variables
-can be used. However, if "captured", a local variable can be used in a lambda expression. This requires the compiler to add a data element of this type 
-to the class and initializes the value with the value of the captured local variable. "Capturing" is done via placing the local variable inside lambda
+can be used. However, if "captured", a local variable can be used in a lambda expression. This requires for the compiler to add a data element of this type 
+to the class and initialize the value with the value of the captured local variable. "Capturing" is done via placing the local variable inside lambda
 introducer "[]".
 
 - Function call operator of compiler generated type for lambda expression, has auto return type, which means return type will be deduced from return

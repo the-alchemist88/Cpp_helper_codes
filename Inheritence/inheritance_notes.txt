@@ -505,7 +505,7 @@ class Developer: public Employee, public Engineer{};
 Eğer virtual inheritance kullanılarak türetilen sınıf(Employee ve Engineer), çoklu kalıtımda başka bir sınıfla birlikte taban sınıf olacaksa,
 virtual inheritance sentaksi kendi taban  sınıfından bir tane koyulmasını sağlayacak. Bu sentaksta iki taban sınıfın da(Employee ve Engineer) 
 virtual inheritance youlya elde edilmesi gerek, aksi takdirde virtual inheritance mekanizması devreye girmeyecektir. Burada ortak taban sınıfa(Person) 
-virtual base class denir. Virtual base class, kendisinden türemiş sınıflarının hepsinin ctor'ları tarafından initialize edilmek zorundadır.
+virtual base class denir. nameVirtual base class, kendisinden türemiş sınıflarının hepsinin ctor'ları tarafından initialize edilmek zorundadır.
 
 class Person // virtual base class
 {

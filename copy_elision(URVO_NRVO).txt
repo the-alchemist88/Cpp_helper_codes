@@ -119,7 +119,7 @@ int main()
 }
 
 In order to prevent unwanted conversions, usually one parameter ctors of classes are declared with "explicit" keyword. This can be thought as "explicit only", meaning only explicit
-conversions can employ UDC. Note that "explicit" keyword forbids only implicit conversions with copy initialization syntax. It also possible to make other ctors explicit.
+conversions can employ UDC. Note that "explicit" keyword forbids only implicit conversions with copy initialization syntax. It is also possible to make other ctors explicit.
 
 class Myclass
 {
@@ -257,6 +257,21 @@ Myclass(Myclass&& other)
 Myclass()
 Myclass(Myclass&& other)
 Myclass(Myclass&& other)
+
+
+Note that although Myclass has user defined copy ctor, compiler calls move ctor for f_NRVO() even it has copy syntax in return statement, in other words it returns an L value
+expression and return type is Myclass thus it should use copy initialization, but instead move ctor kicks in. It is not new rule, since modern C++ this case is applied as shown.
+However, some programmers that are unaware of this rule,  may want to reassure calling move ctor by using std::move(name) in return statement. This usage is called peeimistic move
+and must be avoided since it can block NRVO. Ex:
+
+Pessimistic Move
+----------------
+Myclass pess_foo()        // blocks NRVO, don't use pessimistic move 
+{                               
+    Myclass x;
+    return std::move(x);  // programmer ties to trigger move semantics by changing the value category of a named object
+						  // however "return x" already triggers move ctor not copy ctor
+}
 
 
 Copy ctor, move ctor and copy elision
