@@ -9,7 +9,7 @@ Derived d;
 Base* b = &d; 
 
 Upcasting allows us to treat a derived type as though it were its base type. That's how we decouple ourselves from knowing about the exact type we are dealing with. Ex:
-
+````
 void fun(Base* bp)
 {
 	bp->foo();
@@ -20,7 +20,7 @@ int main()
 	Derived d;
 	fun(&d); // function call at runtime
 }
-
+```
 
 Upcasting can cause object slicing when a derived class object is passed by value as a base class object, as in foo(Base derived_obj).
 
