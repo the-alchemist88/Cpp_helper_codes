@@ -2,8 +2,8 @@ UPCASTING AND DOWNCASTING
 ---------------------------
 Upcasting
 ----------
-Upcasting is converting a derived-class reference or pointer to a base-class  pointer (reference). In other words, upcasting allows us to treat a derived type as though it were its
-base type. It is always allowed for public inheritance, without an explicit type cast. This is a result of the is-a relationship between the base and derived classes. Ex:
+Upcasting is converting a derived-class reference or pointer to a base-class  pointer (reference). In other words, upcasting allows us to treat a derived class as though it was its
+base class. It is always allowed for public inheritance, without an explicit type cast. This is a result of is-a relationship between the base and derived classes. Ex:
 
 Derived d;
 Base* b = &d; 
@@ -60,7 +60,7 @@ functions.
 
 class Airplane
 {
-	 void takeoff(); 			// (1)
+	 void takeoff(); 		// (1)
 	 virtual void land(); 		// (2)
 	 virtual void fly() = 0; 	// (3)
 }
@@ -185,7 +185,7 @@ run-time, dtors should be virtual.
     a) Public virtual, or
     b) Protected non-virtual.
 	
-The issue this suggestion address is emergence of undefined behavior when the programmer tries to delete a derived object, which is initialized in heap,
+The issue this suggestion addresses is emergence of undefined behavior when the programmer tries to delete a derived object, which is initialized in heap,
 via a base pointer that is upcasted.
 
 First suggestion should be clear since it is obvious that in order to delete a derived class object via base class pointer, base class dtor slould be
