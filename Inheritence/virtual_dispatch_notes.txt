@@ -9,6 +9,7 @@ Derived d;
 Base* b = &d; 
 
 Upcasting allows us to treat a derived type as though it were its base type. That's how we decouple ourselves from knowing about the exact type we are dealing with. Ex:
+
 ```
 void fun(Base* bp)
 {
