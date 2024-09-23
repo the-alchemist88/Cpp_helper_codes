@@ -29,8 +29,6 @@ int capture{};
 
 auto comp_gen = [capture](int x){return capture * x;};
 
-
-
 class Compiler_Generated
 {
 public:
@@ -46,7 +44,6 @@ private:
 object. However, if the object is captured by reference then it can change because function call opereator actually changes the referenced to object, not
 closure type's data member:
 
-
 int x{ 10 };
 
 auto comp_gen = [&x](){return ++x;};
@@ -56,14 +53,12 @@ auto comp_gen = [&x](){return ++x;};
 class Ref
 {
 public:
-	Ref(int& val): r(val){} 				// now r refers to object that is sent to this ctor
-	auto operator()() const { return ++r; } // reference(r) doesn't change - it cannot refer to another object, can be thought as constant pointer(int* const r = &val) 
-											// "++r" expression doesn't cause incompatability with const member function
+	Ref(int& val): r(val){} 		// now r refers to object that is sent to this ctor
+	auto operator()() const { return ++r; } // reference-ness of "r" didn't get modified - it cannot refer to another object, can be thought as constant pointer(int* const r = &val) 
+						// "++r" expression doesn't cause incompatability with const member function
 private:
 	int& r;
 };
-
-
 
 auto demo = Ref(x)();
 
@@ -108,9 +103,9 @@ using fptr = int(*)(int);
 
 class Compiler_Generated
 {
-    public:
-	    int operator ()(int a) const {return a*a};
-	    operator fptr() const;
+public:
+	int operator ()(int a) const {return a*a};
+	operator fptr() const;
 }
 
 - "positive lambda idiom" simply converts a closure type into a function pointer type(lambda has to be stateless again). Turning back to
@@ -121,7 +116,6 @@ Compiler_Generated m;
 +m; // same as calling "+m.operator fptr()", now m is a function pointer type
 
 +[](int a) {return a*a;}; // now closure type is a function pointer type 
-
 
 - Immediately Invoked Function Expression(IIFE) is a lambda expression that is mostly used in initializing constant variables, when the initilaizing 
 function will be called only one time for example, in order to prevent scope leakage for one-time used functions and be clear about purpose.
