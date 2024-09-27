@@ -65,7 +65,7 @@ int main()
 }
 
 Special member functions work similarly to composition. For all implicitly declared - defaulted special functions written by the compiler in the derived
-class functions, their base class counterparts are called (ex: derived class default ctor --> Base class default ctor). However, in the derived class
+class functions, their base class counterparts are called (ex: Derived class default ctor --> Base class default ctor). However, in the derived class,
 if a member function is written by the programmer, calling its base class counterparts(ctors, assignment operators or dtor) in the derived class member
 function will be programmer's responsibility. Example:
 
