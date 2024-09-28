@@ -12,8 +12,7 @@ In a derived class, writing a "using declaration" for member functions or data m
 of derived class can use them.
 
 2) Forming a function overloading mechanism between base class functions and derived class functions. If the derived class has a function with the same
-name and parametres, then derived class functions will have the priority.
-
+name and parametres, then derived class functions will have the priority. Example:
 
 class Base
 {
@@ -50,7 +49,6 @@ public:
 
 	using Base::foo;
 	using Base::bar;
-
 };
 
 // test code
@@ -149,32 +147,20 @@ public:
 int main()
 {
 
-	Der da;					// default ctor
-
+	Der da;			// default ctor
 	cout << "\n";
-
-	Der db(3, 5);			// (int, int) ctor
-
+	Der db(3, 5);		// (int, int) ctor
 	cout << "\n";
-
-	Der dc = db;			// copy ctor
-
+	Der dc = db;		// copy ctor
 	cout << "\n";
-
 	Der dd = std::move(da);	// move ctor
-
 	cout << "\n";
-
-	da = dd;				// copy assignment operator
-
+	da = dd;		// copy assignment operator
 	cout << "\n";
-
-	db = std::move(dc);		// move assignment operator
-
+	db = std::move(dc);	// move assignment operator
 	cout << "\n";
-
-	db.Base::foo(5);		// calling Base class function through a derived object
-	db.foo(5);				// since it's a public inheritance, derived class object also has base class public functions
+	db.Base::foo(5);	// calling Base class function through a derived object
+	db.foo(5);		// since it's a public inheritance, derived class object also has base class public functions
 }
 
 Output:
@@ -199,7 +185,6 @@ Der& operator=(Der&& rhs)
 
 Base::foo(int x)
 Base::foo(int x)
-
 
 Since modern C++, "inherited ctor" syntax added to language. This feature saves the the programmer from the hassle of writing base class ctors for all
 all of its derived class counterparts. However, this is not feasible if base class ctors are placed in protected access control section.
