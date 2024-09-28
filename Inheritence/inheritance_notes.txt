@@ -53,13 +53,20 @@ public:
 // test code
 int main()
 {
-	Der dx;
+	Derived dx;
 
 	dx.foo(5);	// added base class function to derived class public interface
 	dx.bar(5);	// function overloading, base class object bar function called 
 	dx.bar(5.);	// function overloading, derived class object bar function called 
 	dx.baz(5);	// both derived and base have the same function, it's not ambiguity. Derived class function has priority.
 }
+
+Output
+------
+Base::foo(int x)
+Base::bar(int x)
+Der::bar(double x)
+Derived::baz(int x)
 
 Special member functions work similarly to composition. For all implicitly declared - defaulted special functions written by the compiler in the derived
 class functions, their base class counterparts are called (ex: Derived class default ctor --> Base class default ctor). However, in the derived class,
