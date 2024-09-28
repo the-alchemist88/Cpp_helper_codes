@@ -16,7 +16,6 @@ name and parametres, then derived class functions will have the priority. Exampl
 
 class Base
 {
-
 protected:
 	void foo(int x)
 	{
@@ -34,7 +33,7 @@ protected:
 	}
 };
 
-class Derived
+class Derived: public Base
 {
 public:
 	void bar(double x)
@@ -64,13 +63,12 @@ int main()
 
 Special member functions work similarly to composition. For all implicitly declared - defaulted special functions written by the compiler in the derived
 class functions, their base class counterparts are called (ex: Derived class default ctor --> Base class default ctor). However, in the derived class,
-if a member function is written by the programmer, calling its base class counterparts(ctors, assignment operators or dtor) in the derived class member
-function will be programmer's responsibility. Example:
+if a special member function is defined by the user, calling its base class counterparts(ctors, assignment operators or dtor) in the derived class member
+function will be user's responsibility. Example:
 
 class Base
 {
 public:
-
 	Base() { cout << "Base()\n"; }
 
 	Base(int, int) { cout << "Base(int, int)\n"; }
@@ -106,7 +104,6 @@ public:
 class Der : public Base
 {
 public:
-
 	Der() { cout << "Der()\n"; }
 
 	Der(int x, int y) : Base(x, y)
@@ -131,7 +128,6 @@ public:
 		Base::operator=(rhs);
 		cout << "Der& operator=(const Der& rhs)\n";
 		return *this;
-
 	}
 
 	Der& operator=(Der&& rhs) noexcept
@@ -140,13 +136,11 @@ public:
 		cout << "Der& operator=(Der&& rhs)\n";
 		return *this;
 	}
-
 };
 
 // test code
 int main()
 {
-
 	Der da;			// default ctor
 	cout << "\n";
 	Der db(3, 5);		// (int, int) ctor
@@ -192,7 +186,6 @@ all of its derived class counterparts. However, this is not feasible if base cla
 class Base
 {
 public:
-
 	Base() { cout << "Base()\n"; }
 
 	Base(int)
@@ -280,9 +273,7 @@ class Der : private Base
 		Base* bptr = &myder; // geçerli
 		Base& bref = myder; // geçerli
 	}
-
 	friend void func();
-	
 };
 
 void func()
@@ -338,7 +329,7 @@ public:
 	virtual void vfunc();
 };
 
-class Der:private Base
+class Der: private Base
 {
 public:
 	void vfunc() override;
@@ -362,7 +353,6 @@ void g2()
 	//foo1(myder); // geçersiz
 }
 
-
 PROTECTED INHERITANCE
 ------------------------
 
@@ -374,8 +364,6 @@ Bu durumda multi-level inheritance ile türetilen sınıflar bu öğelere erişe
 
 
 Konuyla ilgili Diğer Kavramlar(Multiple Inheritance & Virtual Inheritance)
-
-
 
 MULTIPLE INHERTIANCE
 -----------------------
