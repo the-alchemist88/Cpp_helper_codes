@@ -16,18 +16,16 @@ int y = x + 4;
 int a[x]; // ok
 int b[y]; // error, y is not a constant expression
 
-
 Constexpr keyword
 ------------------
 
-- A constexpr variable can only be initialized by constant expressions.
+- A constexpr variable can only be initialized by a constant expressions.
 
 constexpr int x = 10; // x's type is const int
 
 Ex:
 int main()
 {
-
 	int i{};
 	const int ci{};
 	constexpr int cxi = 5;
@@ -74,15 +72,14 @@ int main()
 	*p2 = 20; // error
 }
 
-Constexpr functions
+Constexpr Functions
 --------------------
-Every function cannot be constexpr function, here are some restrictions:
+Every function cannot be a constexpr function, here are some restrictions about a function that is to be qualified as constexpr:
 
-1) Cannot have static variables
-2) the type of return value, paramaters and local variables should be literal type
+1) Cannot have static variables,
+2) the type of return expression, paramaters and local variables should be literal type.
 
-
-The main feature of constexpr functions: if the return type, types of passed arguments and local variables are literal type than return value can be obtained at compile time
+The main feature of constexpr functions: if the return type, types of passed arguments and local variables are literal type than return value can be obtained at compile time.
 
 Since compiler can generate return values of constexpr functions in compile time, they will require less operations during run time.
 
