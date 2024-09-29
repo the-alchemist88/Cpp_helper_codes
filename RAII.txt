@@ -31,5 +31,5 @@ RAII can be summarized as follows:
 	has automatic storage duration or temporary lifetime itself, or
 	has lifetime that is bounded by the lifetime of an automatic or temporary object.
 	
-Resources: https://en.cppreference.com/w/cpp/language/raii
-		   https://learn.microsoft.com/vi-vn/cpp/cpp/object-lifetime-and-resource-management-modern-cpp?view=msvc-160
+Resources: 	https://en.cppreference.com/w/cpp/language/raii
+		https://learn.microsoft.com/vi-vn/cpp/cpp/object-lifetime-and-resource-management-modern-cpp?view=msvc-160
