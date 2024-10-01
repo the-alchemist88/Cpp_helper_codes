@@ -56,8 +56,8 @@ int main()
 	Derived dx;
 
 	dx.foo(5);	// added base class function to derived class public interface
-	dx.bar(5);	// function overloading, base class object bar function called 
-	dx.bar(5.);	// function overloading, derived class object bar function called 
+	dx.bar(5);	// function overloading, base class object bar function ced 
+	dx.bar(5.);	// function overloading, derived class object bar function ced 
 	dx.baz(5);	// both derived and base have the same function, it's not ambiguity. Derived class function has priority.
 }
 
@@ -68,9 +68,9 @@ Base::bar(int x)
 Der::bar(double x)
 Derived::baz(int x)
 
-Special member functions work similarly to composition. For all implicitly declared - defaulted special functions written by the compiler in the derived
-class functions, their base class counterparts are called (ex: Derived class default ctor --> Base class default ctor). However, in the derived class,
-if a special member function is defined by the user, calling its base class counterparts(ctors, assignment operators or dtor) in the derived class member
+Special member functions work similarly to composition. For  implicitly declared - defaulted special functions written by the compiler in the derived
+class functions, their base class counterparts are ced (ex: Derived class default ctor --> Base class default ctor). However, in the derived class,
+if a special member function is defined by the user, cing its base class counterparts(ctors, assignment operators or dtor) in the derived class member
 function will be user's responsibility. Example:
 
 class Base
@@ -160,7 +160,7 @@ int main()
 	cout << "\n";
 	db = std::move(dc);	// move assignment operator
 	cout << "\n";
-	db.Base::foo(5);	// calling Base class function through a derived object
+	db.Base::foo(5);	// cing Base class function through a derived object
 	db.foo(5);		// since it's a public inheritance, derived class object also has base class public functions
 }
 
@@ -188,7 +188,7 @@ Base::foo(int x)
 Base::foo(int x)
 
 Since modern C++, "inherited ctor" syntax added to language. This feature saves the the programmer from the hassle of writing base class ctors for all
-all of its derived class counterparts. However, this is not feasible if base class ctors are placed in protected access control section.
+of its derived class counterparts. However, this is not feasible if base class ctors are placed in protected access control section.
 
 class Base
 {
@@ -298,7 +298,6 @@ int main()
 	Base* bptr = &myder; // geçersiz
 	Base& bref = myder; // geçersiz
 }
-
 
 - Private kalıtmı composition(containment, yani bir sınıf türünden elemana sahip olması)'a bir alternatif. İkisi arasındaki farklar:
 
