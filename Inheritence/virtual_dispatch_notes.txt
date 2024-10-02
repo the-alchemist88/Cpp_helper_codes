@@ -74,7 +74,7 @@ class Airbus : public Airplane
 Polymorphic class: If a class has at least one virtual function, it's called polymorphic class
 
 Abstract class: If a class has a pure virtual function it's an abstract class. An object of type abstract class cannot be constructed, but a reference or pointer to abstract class 
-can. If a derived class of an abstract base class, doesn't override the even one pure virtual function of it base class it also will be an abstract class. If a class is not abstract, then it's called a concrete class.
+can. If a derived class of an abstract base class, doesn't override all of the virtual functions of its base class then it also will be an abstract class. If a class is not abstract, then it's called as concrete class.
 
 In order to override a virtual function of a base class, derived class must implement a function with the same return type and signature. If derived class declares a function with 
 the same name and parameters with base class but with a diferrent return type then this situation causes a syntax error. If paramaters are different, this doesn't override the base
