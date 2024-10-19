@@ -187,8 +187,8 @@ Der& operator=(Der&& rhs)
 Base::foo(int x)
 Base::foo(int x)
 
-Since modern C++, "inherited ctor" syntax added to language. This feature saves the the programmer from the hassle of writing base class ctors for all
-of its derived class counterparts. However, this is not feasible if base class ctors are placed in protected access control section.
+Since modern C++, "inherited ctor" syntax added to language. This feature saves the the programmer from the hassle of defining derived class ctors for all
+of its base class counterparts. However, this is not feasible if base class ctors are placed in protected access control section.
 
 class Base
 {
@@ -207,7 +207,7 @@ public:
 
 	Base(int, char)
 	{
-		cout << "Base(const char*)\n";
+		cout << "Base(int, char)\n";
 	}
 };
 
@@ -231,7 +231,7 @@ Output:
 Base()
 Base(int)
 Base(const char*)
-Base(const char*)
+Base(int, char)
 
 INHERITANCE ÇEŞİTLERİ(Public, Private, Protected Inheritance)
 -------------------------------------------------------------------
