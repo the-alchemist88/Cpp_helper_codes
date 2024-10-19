@@ -57,8 +57,8 @@ functions.
 
 class Airplane
 {
-	 void takeoff(); 			// (1)
-	 virtual void land(); 		// (2)
+	 void takeoff() {}; 		// (1)
+	 virtual void land() {}; 	// (2)
 	 virtual void fly() = 0; 	// (3)
 }
 
@@ -66,7 +66,7 @@ class Airbus : public Airplane
 {
 }
 
-Polymorphic class: If a class has at least one virtual function, it's called polymorphic class
+Polymorphic class: If a class has at least one virtual function, it's called polymorphic class.
 
 Abstract class: If a class has a pure virtual function it's an abstract class. An object of type abstract class cannot be constructed, but a reference or pointer to abstract class 
 can. If a derived class of an abstract base class, doesn't override all of the virtual functions of its base class then it also will be an abstract class. If a class is not abstract, 
@@ -96,7 +96,7 @@ variant return types
 covariant
 --------------------
 
--When overriding virtual function of a base class, it is possible to use a different return type(usual case is syntax error) if condition is met:
+When overriding virtual function of a base class, it is possible to use a different return type(usual case is syntax error) if this condition is met:
 
 D and B being a class type and D is derived from B; if a base class' virtual function's return type is B* or B& then derived class' overrider
 function can have return type of D* or D&.
@@ -122,17 +122,17 @@ and this will provide correct type in  compile time.
 VIRTUAL DISPATCH MECHANISM
 *--------------------------*
 
-When a virtual function is called via
+When a virtual function is called via;
 
 a) Reference or
 b) Pointer to base class
 
-which function to be called is decided at run time rather than compile time ---> late-binding(dydnamic binding).
+which function to be called is decided at run time rather than compile time ---> late-binding(dynamic binding).
 
 Virtual dispatch is the process of selecting which implementation of a virtual function to call at run time. Its main features:
 
 1) Virtual functions can be placed in public, protected and private sections of base class and can be orverriden also in each section of derived class.
-As long as they are called via pointer/reference to base class type, virtual dispatch mechanism will be on action. Referring to code in cpp file:
+As long as they are called via pointer/reference to base class type, virtual dispatch mechanism will be on action. Referring to the code in cpp file:
 void car_game(Car* p){ p->test_car();}
 
 2) Name lookup, context control and access control are related to static checks. These are done in compile-time.
