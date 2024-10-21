@@ -19,18 +19,17 @@ private:
 class Owner
 {
 public:
-	//foo();			// syntax error		
+	//foo();				// syntax error		
 	void foo() { std::cout << "Owner foo()\n"; };		
 	void fun()
 	{
 		mx.foo();
-		//my.bar(); 	// syntax error, private
+		//my.bar(); 		// syntax error, private
 	}
 
 private:
 	Member mx;
-	Member my{ 3, 5, 7 }; // Reminder: Default in-class initializers for class members require "{}" or "="  based initializer syntax. There's no "()" based syntax for such initializers.
-	
+	Member my{ 3, 5, 7 }; 	// Reminder: Default in-class initializers for class members require "{}" or "="  based initializer syntax. There's no "()" based syntax for such initializers.
 	void baz() { std::cout << "Owner baz()\n"; };
 };
 
@@ -51,14 +50,14 @@ Member foo()
 3) The special member functions that the compiler writes for Owner are passed directly to Member. In other words, whatever is called for Owner also called for Member.
 (Rule of zero)
 
-Owner							Member
-------------					----------
+Owner					Member
+------------				----------
 Default ctor	------->		Default ctor
 Copy ctor     	------->		Copy ctor
 Move ctor     	------->		Default ctor
 Copy assign.    ------->		Copy assign.
 Move assign.    ------->		Move assign.
-Dtor		    ------->		Dtor
+Dtor			------->		Dtor
 
 A possible example of how compiler generated special member functions look like:
 
@@ -78,7 +77,6 @@ public:
 		ax = rhs.ax;
 		bx = rhs.bx;
 		cx = rhs.cx;
-
 		return *this;
 	}
 
@@ -87,7 +85,6 @@ public:
 		ax = std::move(rhs.ax);
 		bx = std::move(rhs.bx);
 		cx = std::move(rhs.cx);
-
 		return *this;
 	}
 
@@ -103,20 +100,9 @@ The same also applies to assignment operator functions.
 class Member
 {
 public:
-	Member()
-	{
-		cout << "Member()\n";
-	}
-
-	Member(const Member& rhs)
-	{
-		cout << "Member(const Member& rhs)\n";
-	}
-
-	Member(Member&&)
-	{
-		cout << "Member(Member&&)\n";
-	}
+	Member() { cout << "Member()\n"; }
+	Member(const Member& rhs) { cout << "Member(const Member& rhs)\n"; }
+	Member(Member&&) { cout << "Member(Member&&)\n"; }
 };
 
 class Owner
@@ -125,12 +111,10 @@ public:
 	Owner() = default;
 	Owner(const Owner& rhs) : ival(rhs.ival) /*, mx(rhs.mx)*/  {} // Owner copy ctor calls Member default ctor - not usually desired, uncommenting between /*..*/ will do proper coding
 	Owner(Owner&& rhs) : ival(std::move(ival)) /*, mx(std::move(mx))*/ {} // Owner move ctor calls Member default ctor - not usually desired, uncommenting between /*..*/ will do proper coding
-
 	Owner& operator=(const Owner& rhs)
 	{
 		ival = rhs.ival;
 		//mx = rhs.mx; // programmer should add this line and also copy ctor of Member class, if s/he intents to write copy ctor of Owner
-
 		return *this;
 	}
 
@@ -138,7 +122,6 @@ private:
 	int ival;
 	Member mx;
 };
-
 
 int main()
 {
