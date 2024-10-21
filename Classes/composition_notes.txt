@@ -24,7 +24,7 @@ public:
 	void fun()
 	{
 		mx.foo();
-		//my.bar(); // syntax error, private
+		//my.bar(); 	// syntax error, private
 	}
 
 private:
