@@ -18,13 +18,12 @@ private:
 
 class Owner
 {
-public:
-	//foo();				// syntax error		
+public:	
 	void foo() { std::cout << "Owner foo()\n"; };		
 	void fun()
 	{
 		mx.foo();
-		//my.bar(); 		// syntax error, private
+		//my.bar(); 	// syntax error, private
 	}
 
 private:
