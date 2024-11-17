@@ -4,8 +4,8 @@ Conversion constructor
 It is such a constructor that, in addition to its main raison d'être, it implicitly converts a non-class expression into a class type. Simply, they are ctors with parameters.
 
 To understand what the compiler is doing in the background, the following code will help:
-##
-		
+
+```bash		
 class Myclass
 {
 public:
@@ -39,6 +39,7 @@ int main()
 	m = 35;									// Firstly, a temporary object will be created by Myclass(int x) ctor.
 											// Then copy assignment operator will be called for copying from temporary object to m. Compare the address of objects copied from and copied to, on the output	
 }											// dtor of m will be called
+```
 
 Possible Output
 ----------------
