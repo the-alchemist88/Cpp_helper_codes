@@ -34,10 +34,10 @@ public:
 
 int main()
 {
-	Myclass m;					// no-args ctor will be called
+	Myclass m;								// no-args ctor will be called
 	std::cout << "&m = " << &m << "\n";		// address of m
-	m = 35;						// Firstly, a temporary object will be created by Myclass(int x) ctor. Then copy assignment operator will be called for copying from temporary object to m
-}							// Compare the address of objects copied from and copied to, on the output. dtor of m will be called
+	m = 35;									// Firstly, a temporary object will be created by Myclass(int x) ctor. Then copy assignment operator will be called for copying from temporary object to m
+}											// Compare the address of objects copied from and copied to, on the output. dtor of m will be called
 ```
 
 Possible Output
@@ -68,7 +68,7 @@ C++ has a very important rule about implicit conversions:
 3) UDC + UDC --> not OK !!!
 
 Example:
-```bash
+```
 class A
 {
 public:
@@ -102,7 +102,7 @@ int main()
 ```
 
 However this feature can lead to quite absurd and unintentional conversions made by the programmer:
-
+```
 class Myclass
 {
 public:
@@ -119,7 +119,7 @@ int main()
 
 	m = pd; // valid !
 }
-
+```
 In order to prevent unwanted conversions, usually one parameter ctors of classes are declared with "explicit" keyword. This can be thought as "explicit only", meaning only explicit
 conversions can employ UDC. Note that "explicit" keyword forbids only implicit conversions with copy initialization syntax. It is also possible to make other ctors explicit.
 
