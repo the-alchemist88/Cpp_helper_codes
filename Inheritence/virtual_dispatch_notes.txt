@@ -20,7 +20,7 @@ int main()
 	fun(&d); // function call at runtime
 }
 
-Upcasting can cause object slicing(explained below) when a derived class object is passed by value to a function, such as foo(Base derived_obj), which takes type of base class.
+Upcasting can cause object slicing(explained below) when a derived class object is passed by value to a function which takes type of base class, such as foo(Base derived_obj).
 
 Since implicit upcasting makes it possible for a base-class pointer/reference to refer to a both base-class object and derived-class object, the need for dynamic binding arises.
 That's why we have virtual member functions(explained below).
