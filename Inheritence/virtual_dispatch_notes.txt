@@ -129,7 +129,7 @@ b) Pointer to base class
 
 which function to be called is decided at run time rather than compile time ---> late-binding(dynamic binding).
 
-Virtual dispatch is the process of selecting which implementation of a virtual function to call at run time. Its main features:
+Virtual dispatch is the process of selecting which implementation of a virtual function to call at run time. Its main characteristics are:
 
 1) Virtual functions can be placed in public, protected and private sections of base class and can be orverriden also in each section of derived class.
 As long as they are called via pointer/reference to base class type, virtual dispatch mechanism will be on action. Referring to the code in cpp file:
