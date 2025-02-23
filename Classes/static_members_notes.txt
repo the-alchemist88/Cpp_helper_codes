@@ -4,8 +4,8 @@ Static Members
 1) Static Data Memebers
 -----------------------
 
-Static members of classes don't belong to the class object. They are global entities, however, when declared inside a class, they are located in class scope thus name lookup rules
-will change accordingly. Also access control will be applied to them as other members. In addition, via in-class declaration, their logical relation with the class is emphasized.
+Static members of classes don't belong to the class object. They are global entities, however, since they are located in class scope, name lookup rules
+will change accordingly. Also, access control will be applied to them as other members. By in-class declaration, their logical relation with the class is emphasized.
 
 - Their storage is not inside class object.
 
@@ -56,7 +56,7 @@ public:
 
 // Myclass.cpp
 int Myclass::x; // Note that static keyword shouldn't be placed in definition otherwise compiler will complain(similar to explicit keyword usage)
-				// Default init will firstly make x zero-initialized here as for all static storage variables
+		// Default init will firstly make x zero-initialized here as for all static storage variables
 
 
 - A class cannot have a data member of incomplete type. However a static data member can be an incomplete type.
