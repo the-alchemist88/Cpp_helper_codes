@@ -91,8 +91,8 @@ Characteristics of auto type deduction are:
    ```
 
 3) `auto&& x = expr;`	-->	This is a universal reference. Type of x depends on the value category of expr:
-								- if L value then type of x dedeuced as T& according to reference collapsing rules
-								- if R value(PR value or X value) then type of x dedeuced as T&& according to reference collapsing rules
+	- if L value then type of x dedeuced as T& according to reference collapsing rules
+	- if R value(PR value or X value) then type of x dedeuced as T&& according to reference collapsing rules
    ```
    template<typename T>
    void func(T x);
