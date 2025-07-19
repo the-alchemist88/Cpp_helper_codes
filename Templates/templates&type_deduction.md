@@ -1,7 +1,7 @@
-#Generic Programming and Templates
+# Generic Programming and Templates
 ----------------------------------
 
-##Templates - 1
+## Templates - 1
 -------------
 
 Briefly speaking, generic programming denotes the style of programming that is independent of types. For example in C language void* type is used for eliminating dependency to types.
@@ -34,7 +34,7 @@ In order for the compiler to write the code of template, it needs to know the ty
    Class Template Argument Deduction - CTAD (C++17)
 3) Default template argument --> template<typename T = int>
 
-#Function Templates
+# Function Templates
 ------------------
 
 Function templates are functions that are parameterized so that they represent a family of functions.
@@ -43,7 +43,7 @@ The keyword typename introduces a type parameter.
 
 The process of replacing template parameters by concrete types is called instantiation. It results in a specalization(instance) of a template.
 
-#Translation of Templates
+# Translation of Templates
 ------------------------
 Templates are "compiled" in several phases:
 
@@ -59,7 +59,7 @@ Templates are "compiled" in several phases:
 double-checked.
 
 Ex:
-```
+``` `#000000`
 template<typename T>
 void func(T x)
 {
