@@ -59,9 +59,7 @@ Templates are "compiled" in several phases:
 double-checked.
 
 Ex:
-`#ffffff` `#000000`
 ```cpp
-`#000000` `#000000`
 template<typename T>
 void func(T x)
 {
@@ -94,14 +92,14 @@ template<typename T>	// equivalent function template
 void func(T& x);
 
 3) auto&& x = expr;		// this is a universal reference. Type of x depends on the value category of expr:
-						// 		if L value then type of x dedeuced as T& according to reference collapsing rules
-						//		if R value(PR value or X value) then type of x dedeuced as T&& according to reference collapsing rules
+				// if L value then type of x dedeuced as T& according to reference collapsing rules
+				// if R value(PR value or X value) then type of x dedeuced as T&& according to reference collapsing rules
 						
 template<typename T>	// equivalent function template 
 void func(T x);
 
 Ex:
-
+```cpp
 int main()
 {
     int x{};
@@ -123,9 +121,9 @@ int main()
     auto&& var9 = ca;   // type is const int(&)[10]. ca is L value expression, according to reference collapsing rules var sloud be lvalue ref
     auto&& var10 = 10;  // type is int&&
 }
-
+```
 There is a practical method to check the type of an expression in templates:
-
+```cpp
 template<typename T>
 class TypeTeller;
 
@@ -155,12 +153,11 @@ int main()
     bar(arr);
     baz(arr);
 }
-
+```
 In the example above Since TypeTeller is a forward declaration(incomplete class), compiler will complain. However, in the error message it also adds the type information of template
 parameter T, for each function call. Ex:
-
+```cpp
 #include <initializer_list>
-
 
 template<typename T>
 void func1(T)
@@ -186,12 +183,12 @@ int main()
     func1(initList); // // ok, type of T is std::initializer_list<int>
     func2({ 1, 3, 5, 7 }); // ok, T deduced as int
 }
-
+```
 So the only real difference between auto and template type deduction is that auto assumes that a braced initializer represents a std::initializer_list, but template type deduction
 doesn’t.
 
 Examples of template paramter type mismatch situations:
-
+```cpp
 template<typename T>
 void func1(T, T)
 {
@@ -211,8 +208,7 @@ int main()
 	
 	func2(x,x);   // error, T can be int or int&
 }
-
-
+```
 
 Resources Utilised:
 
