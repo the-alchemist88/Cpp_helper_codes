@@ -45,7 +45,6 @@ Function templates are functions that are parameterized so that they represent a
 Templates are _compiled_ in several phases:
 
 1. Without instantiation at definition time, the template code itself is checked for correctness ignoring the template parameters. This includes:
-
 	- Syntax errors are discovered, such as missing semicolons.
 	- Using unknown names (type names, function names, …) that don’t depend on template parameters are discovered.
 	- Static assertions that don’t depend on template parameters are checked.
@@ -79,10 +78,10 @@ In auto type deduction, type deduction is made for the keyword **auto** not for 
 Characteristics of auto type deduction are:
 
 1) `auto x = expr;`	-->	cv qualifiers and refs drop. Array and function decay occur. Equivalent function template is:
-
-   `template<typename T>
-  	
-   void func(T x);`
+	```
+   template<typename T>
+   void func(T x);
+ 	```
 
 
 2) `auto& x  = expr;`	-->	cv qualifiers don't drop. Array and function decay don't occur. Cannot be bound to R value expression. Equivalent function template is:
@@ -92,8 +91,8 @@ Characteristics of auto type deduction are:
    ```
 
 3) `auto&& x = expr;`	-->	This is a universal reference. Type of x depends on the value category of expr:
-				- if L value then type of x dedeuced as T& according to reference collapsing rules
-				- if R value(PR value or X value) then type of x dedeuced as T&& according to reference collapsing rules
+								- if L value then type of x dedeuced as T& according to reference collapsing rules
+								- if R value(PR value or X value) then type of x dedeuced as T&& according to reference collapsing rules
    ```
    template<typename T>
    void func(T x);
