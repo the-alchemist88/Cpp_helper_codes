@@ -59,8 +59,9 @@ Templates are "compiled" in several phases:
 double-checked.
 
 Ex:
+`#ffffff` `#000000`
 ```cpp
-`#000000 afsdfsfsg`
+`#000000` `#000000`
 template<typename T>
 void func(T x)
 {
