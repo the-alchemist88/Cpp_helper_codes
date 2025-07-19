@@ -29,10 +29,11 @@ template< comma-separated-list-of-parameters >
 
 In order for the compiler to write the code of template, it needs to know the types of arguments that corresponds to template parameters. There are three ways of doing this for compiler:
 
-1) Explicit template argument --> vector<int> x{1, 2, 3}
-2) Deduction: Template Argument Deduction - TAD (It was applicable only for function templates until C++17)
-   Class Template Argument Deduction - CTAD (C++17)
-3) Default template argument --> template<typename T = int>
+1) Explicit template argument --> `vector<int> x{1, 2, 3}`
+2) Deduction:
+   - Template Argument Deduction - TAD (It was applicable only for function templates until C++17)
+   - Class Template Argument Deduction - CTAD (C++17)
+4) Default template argument --> `template<typename T = int>`
 
 # Function Templates
 ------------------
@@ -82,26 +83,23 @@ In auto type deduction, type deduction is made for the keyword **auto** not for 
 Characteristics of auto type deduction are:
 
 1) `auto x = expr;`	-->	cv qualifiers and refs drop. Array and function decay occur. Equivalent function template is:
-```
-   template<typename T>   	
-   void func(T x);
-```
 
-3) `auto& x  = expr;`	-->	cv qualifiers don't drop. Array and function decay don't occur. Cannot be bound to R value expression. Equivalent function template is:
+   `template<typename T>`   	
+   `void func(T x);`
 
-   ```
-   template<typename T>
-   void func(T& x);
-   ```
 
-4) `auto&& x = expr;`		this is a universal reference. Type of x depends on the value category of expr:
-				if L value then type of x dedeuced as T& according to reference collapsing rules
-				if R value(PR value or X value) then type of x dedeuced as T&& according to reference collapsing rules
-Equivalent function template is:
-```
-template<typename T> 
-void func(T x);
-```
+2) `auto& x  = expr;`	-->	cv qualifiers don't drop. Array and function decay don't occur. Cannot be bound to R value expression. Equivalent function template is:
+   
+   `template<typename T>`
+   `void func(T& x);`
+
+3) `auto&& x = expr;`	-->	This is a universal reference. Type of x depends on the value category of expr:
+				- if L value then type of x dedeuced as T& according to reference collapsing rules
+				- if R value(PR value or X value) then type of x dedeuced as T&& according to reference collapsing rules
+
+   `template<typename T>`
+   `void func(T x);`
+
 Ex:
 ```cpp
 int main()
