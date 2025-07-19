@@ -45,7 +45,7 @@ The process of replacing template parameters by concrete types is called instant
 
 # Translation of Templates
 ------------------------
-Templates are "compiled" in several phases:
+Templates are _compiled_ in several phases:
 
 1. Without instantiation at definition time, the template code itself is checked for correctness ignoring the template parameters. This includes:
 
@@ -82,23 +82,26 @@ In auto type deduction, type deduction is made for the keyword **auto** not for 
 Characteristics of auto type deduction are:
 
 1) `auto x = expr;`	-->	cv qualifiers and refs drop. Array and function decay occur. Equivalent function template is:
-
-   `template<typename T>`   	
-   void func(T x);`
+```
+   template<typename T>   	
+   void func(T x);
+```
 
 3) `auto& x  = expr;`	-->	cv qualifiers don't drop. Array and function decay don't occur. Cannot be bound to R value expression. Equivalent function template is:
 
-   `template<typename T>
-   void func(T& x);`
+   ```
+   template<typename T>
+   void func(T& x);
+   ```
 
 4) `auto&& x = expr;`		this is a universal reference. Type of x depends on the value category of expr:
 				if L value then type of x dedeuced as T& according to reference collapsing rules
 				if R value(PR value or X value) then type of x dedeuced as T&& according to reference collapsing rules
 Equivalent function template is:
-`		
+```
 template<typename T> 
 void func(T x);
-`
+```
 Ex:
 ```cpp
 int main()
