@@ -59,7 +59,8 @@ Templates are "compiled" in several phases:
 double-checked.
 
 Ex:
-``` `#000000`
+```cpp
+`#000000`
 template<typename T>
 void func(T x)
 {
@@ -73,7 +74,7 @@ int main()
 
 }
 ```
-##Template Argument Deduction(TAD)
+## Template Argument Deduction(TAD)
 -------------------------------
 Auto type deduction and TAD is the same with one exception (std::initializer_list)
 
