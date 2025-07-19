@@ -19,7 +19,7 @@ instructions as templates. This style of coding is called Template Meta Programm
 
 Template parameters can be:
 
-- type parameter   		--> template<typename T>
+- type parameter   	--> template<typename T>
 - non-type parameter 	--> template<int n>
 - template parameter 	--> parameter itself is a template (rare usage)
 
@@ -38,11 +38,7 @@ In order for the compiler to write the code of template, it needs to know the ty
 # Function Templates
 ------------------
 
-Function templates are functions that are parameterized so that they represent a family of functions.
-
-The keyword typename introduces a type parameter.
-
-The process of replacing template parameters by concrete types is called instantiation. It results in a specalization(instance) of a template.
+Function templates are functions that are parameterized so that they represent a family of functions. The keyword **typename** introduces a type parameter. The process of replacing template parameters by concrete types is called instantiation. It results in a _specalization_(instance) of a template.
 
 # Translation of Templates
 ------------------------
@@ -50,9 +46,9 @@ Templates are _compiled_ in several phases:
 
 1. Without instantiation at definition time, the template code itself is checked for correctness ignoring the template parameters. This includes:
 
-– Syntax errors are discovered, such as missing semicolons.
-– Using unknown names (type names, function names, …) that don’t depend on template parameters are discovered.
-– Static assertions that don’t depend on template parameters are checked.
+	- Syntax errors are discovered, such as missing semicolons.
+	- Using unknown names (type names, function names, …) that don’t depend on template parameters are discovered.
+	- Static assertions that don’t depend on template parameters are checked.
 
 2. If there are multiple template parameters, ambguity conditions are checked.
 
@@ -215,8 +211,6 @@ int main()
 }
 ```
 
-Resources Utilised:
-
+Resources utilised:
 1) C++Templates[Vandevoorde-Josuttis]
-
 2) Effective_Modern_C++[Scott_Meyers]
