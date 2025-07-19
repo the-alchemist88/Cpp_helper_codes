@@ -17,11 +17,11 @@ instructions as templates. This style of coding is called Template Meta Programm
 - concepts(C++20)
 
 
-Template paramters can be:
+Template parameters can be:
 
-- type paramater   		--> template<typename T>
-- non-type paramater 	--> template<int n>
-- template paramater 	--> parameter itself is a template (rare usage)
+- type parameter   		--> template<typename T>
+- non-type parameter 	--> template<int n>
+- template parameter 	--> parameter itself is a template (rare usage)
 
 Syntax: 
 
@@ -90,16 +90,18 @@ Characteristics of auto type deduction are:
 
 
 2) `auto& x  = expr;`	-->	cv qualifiers don't drop. Array and function decay don't occur. Cannot be bound to R value expression. Equivalent function template is:
-   
-   `template<typename T>`
-   `void func(T& x);`
+   ```
+   template<typename T>
+   void func(T& x);
+   ```
 
 3) `auto&& x = expr;`	-->	This is a universal reference. Type of x depends on the value category of expr:
 				- if L value then type of x dedeuced as T& according to reference collapsing rules
 				- if R value(PR value or X value) then type of x dedeuced as T&& according to reference collapsing rules
-
-   `template<typename T>`
-   `void func(T x);`
+   ```
+   template<typename T>
+   void func(T x);
+   ```
 
 Ex:
 ```cpp
