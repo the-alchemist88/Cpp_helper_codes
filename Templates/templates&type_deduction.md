@@ -88,6 +88,8 @@ Auto type deduction and TAD is the same with one exception (std::initializer_lis
 3) `auto&& x = expr;`	-->	This is a universal reference. Type of x depends on the value category of expr:
 	- if L value then type of x dedeuced as T& according to reference collapsing rules
 	- if R value(PR value or X value) then type of x dedeuced as `T&&` according to reference collapsing rules
+ - 
+Equivalent function template is:
    ```
    template<typename T>
    void func(T&& x);
