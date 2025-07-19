@@ -88,7 +88,7 @@ Auto type deduction and TAD is the same with one exception (std::initializer_lis
 3) `auto&& x = expr;`	-->	This is a universal reference. Type of x depends on the value category of expr:
 	- if L value then type of x dedeuced as T& according to reference collapsing rules
 	- if R value(PR value or X value) then type of x dedeuced as `T&&` according to reference collapsing rules
- - 
+
 Equivalent function template is:
    ```
    template<typename T>
@@ -184,7 +184,7 @@ int main()
 So the only real difference between auto and template type deduction is that auto assumes that a braced initializer represents a std::initializer_list, but template type deduction
 doesn’t.
 
-Examples of template paramter type mismatch situations:
+Examples of template parameter type mismatch situations:
 ```cpp
 template<typename T>
 void func1(T, T)
