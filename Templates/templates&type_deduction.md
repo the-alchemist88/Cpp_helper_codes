@@ -60,7 +60,7 @@ double-checked.
 
 Ex:
 ```cpp
-`#000000`
+`#000000 afsdfsfsg`
 template<typename T>
 void func(T x)
 {
