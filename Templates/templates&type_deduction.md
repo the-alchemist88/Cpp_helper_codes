@@ -84,7 +84,8 @@ Characteristics of auto type deduction are:
 
 1) `auto x = expr;`	-->	cv qualifiers and refs drop. Array and function decay occur. Equivalent function template is:
 
-   `template<typename T>   	
+   `template<typename T>
+  	
    void func(T x);`
 
 
