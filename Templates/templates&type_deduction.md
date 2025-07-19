@@ -81,19 +81,19 @@ In auto type deduction, type deduction is made for the keyword auto not for vari
 
 Type deduction is made for auto 
 
-1) ```cpp auto x = expr;``` 		// cv qualifiers and refs drop. Array and function decay occur.
+1) ```auto x = expr;``` 		cv qualifiers and refs drop. Array and function decay occur.
+```
+template<typename T>```    		equivalent function template 
+void func(T x);```
 
-```cpptemplate<typename T>```    // equivalent function template 
-```cppvoid func(T x);```
+2) ```auto& x  = expr```;		cv qualifiers don't drop. Array and function decay don't occur. Cannot be bound to R value expression
 
-2) auto& x  = expr;		// cv qualifiers don't drop. Array and function decay don't occur. Cannot be bound to R value expression
+```template<typename T>			equivalent function template 
+void func(T& x);```
 
-template<typename T>	// equivalent function template 
-void func(T& x);
-
-3) auto&& x = expr;		// this is a universal reference. Type of x depends on the value category of expr:
-				// if L value then type of x dedeuced as T& according to reference collapsing rules
-				// if R value(PR value or X value) then type of x dedeuced as T&& according to reference collapsing rules
+3) ```auto&& x = expr;```		this is a universal reference. Type of x depends on the value category of expr:
+					if L value then type of x dedeuced as T& according to reference collapsing rules
+					if R value(PR value or X value) then type of x dedeuced as T&& according to reference collapsing rules
 						
 template<typename T>	// equivalent function template 
 void func(T x);
