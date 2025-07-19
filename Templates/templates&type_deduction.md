@@ -71,18 +71,13 @@ int main()
 ```
 ## Template Argument Deduction(TAD)
 -------------------------------
-Auto type deduction and TAD is the same with one exception (std::initializer_list)
-
-In auto type deduction, type deduction is made for the keyword **auto** not for the variable name.
-
-Characteristics of auto type deduction are:
+Auto type deduction and TAD is the same with one exception (std::initializer_list). In auto type deduction, type deduction is made for the keyword **auto** not for the variable name. Characteristics of auto type deduction are:
 
 1) `auto x = expr;`	-->	cv qualifiers and refs drop. Array and function decay occur. Equivalent function template is:
-	```
+   ```
    template<typename T>
    void func(T x);
- 	```
-
+   ```
 
 2) `auto& x  = expr;`	-->	cv qualifiers don't drop. Array and function decay don't occur. Cannot be bound to R value expression. Equivalent function template is:
    ```
@@ -92,10 +87,10 @@ Characteristics of auto type deduction are:
 
 3) `auto&& x = expr;`	-->	This is a universal reference. Type of x depends on the value category of expr:
 	- if L value then type of x dedeuced as T& according to reference collapsing rules
-	- if R value(PR value or X value) then type of x dedeuced as T&& according to reference collapsing rules
+	- if R value(PR value or X value) then type of x dedeuced as `T&&` according to reference collapsing rules
    ```
    template<typename T>
-   void func(T x);
+   void func(T&& x);
    ```
 
 Ex:
@@ -154,7 +149,7 @@ int main()
     baz(arr);
 }
 ```
-In the example above Since TypeTeller is a forward declaration(incomplete class), compiler will complain. However, in the error message it also adds the type information of template
+In the example above, since _TypeTeller_ is a forward declaration(incomplete class), compiler will complain. However, in the error message it also adds the type information of template
 parameter T, for each function call. Ex:
 ```cpp
 #include <initializer_list>
