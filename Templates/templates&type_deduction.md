@@ -81,10 +81,10 @@ In auto type deduction, type deduction is made for the keyword auto not for vari
 
 Type deduction is made for auto 
 
-1) auto x = expr; 		// cv qualifiers and refs drop. Array and function decay occur.
+1) ```cpp auto x = expr;``` 		// cv qualifiers and refs drop. Array and function decay occur.
 
-template<typename T>    // equivalent function template 
-void func(T x);
+```cpptemplate<typename T>```    // equivalent function template 
+```cppvoid func(T x);```
 
 2) auto& x  = expr;		// cv qualifiers don't drop. Array and function decay don't occur. Cannot be bound to R value expression
 
