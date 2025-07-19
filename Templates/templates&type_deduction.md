@@ -84,8 +84,8 @@ Characteristics of auto type deduction are:
 
 1) `auto x = expr;`	-->	cv qualifiers and refs drop. Array and function decay occur. Equivalent function template is:
 
-   `template<typename T>`   	
-   `void func(T x);`
+   `template<typename T>   	
+   void func(T x);`
 
 
 2) `auto& x  = expr;`	-->	cv qualifiers don't drop. Array and function decay don't occur. Cannot be bound to R value expression. Equivalent function template is:
