@@ -77,29 +77,28 @@ int main()
 -------------------------------
 Auto type deduction and TAD is the same with one exception (std::initializer_list)
 
-In auto type deduction, type deduction is made for the keyword auto not for variable name.
+In auto type deduction, type deduction is made for the keyword **auto** not for the variable name.
 
-Type deduction is made for auto 
+Characteristics of auto type deduction are:
 
-1) `auto x = expr;`		cv qualifiers and refs drop. Array and function decay occur.
+1) `auto x = expr;`	-->	cv qualifiers and refs drop. Array and function decay occur. Equivalent function template is:
 
-   `template<typename T>`   	equivalent function template
-   
-   `void func(T x);`
+   `template<typename T>`   	
+   void func(T x);`
 
-3) `auto& x  = expr;`		cv qualifiers don't drop. Array and function decay don't occur. Cannot be bound to R value expression
+3) `auto& x  = expr;`	-->	cv qualifiers don't drop. Array and function decay don't occur. Cannot be bound to R value expression. Equivalent function template is:
 
-   `template<typename T>`	equivalent function template
-   
-   `void func(T& x);`
+   `template<typename T>
+   void func(T& x);`
 
 4) `auto&& x = expr;`		this is a universal reference. Type of x depends on the value category of expr:
 				if L value then type of x dedeuced as T& according to reference collapsing rules
 				if R value(PR value or X value) then type of x dedeuced as T&& according to reference collapsing rules
-						
-template<typename T>	// equivalent function template 
+Equivalent function template is:
+`		
+template<typename T> 
 void func(T x);
-
+`
 Ex:
 ```cpp
 int main()
