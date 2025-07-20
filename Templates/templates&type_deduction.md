@@ -112,11 +112,12 @@ int main()
     auto var5 = ca;     // type is const const int*
 
     auto& var6 = 5;     // error, cannot be bound to R value expression
-    auto&& var7 = 5;    // type is const const int&&
-    auto& var8 = var7;  // type is const const int&. The name that is type of R value reference(var7), forms nevertheless an L value expression
+    auto&& var7 = 5;    // type is int&&
+    auto& var8 = var7;  // type is int&. The name that is type of R value reference(var7), forms nevertheless an L value expression
 
-    auto&& var9 = ca;   // type is const int(&)[10]. ca is L value expression, according to reference collapsing rules var sloud be lvalue ref
-    auto&& var10 = 10;  // type is int&&
+    auto&& var9 = a;  	 // type is int(&)[10]
+    auto&& var10 = ca;   // type is const int(&)[10]. ca is L value expression, according to reference collapsing rules var sloud be lvalue ref
+
 }
 ```
 There is a practical method to check the type of an expression in templates:
