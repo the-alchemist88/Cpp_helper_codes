@@ -1,5 +1,4 @@
-Composition(Containment)
---------------------------------
+# Composition(Containment)
 
 Composition means that a class has data members of another class type. It differs from nested types. Nested type means that the definition of a class is contained within another class definition. 
 Terms used for denoting classes which are in compostion relationship are - Member and Owner. Basic features to know about composition:
@@ -39,8 +38,7 @@ int main()
 	mo.fun();
 }
 ```
-Output
-------
+**Output**
 Owner foo()
 Member foo()
 
@@ -49,14 +47,14 @@ Member foo()
 3) The special member functions that the compiler writes for Owner are passed directly to Member. In other words, whatever is called for Owner also called for Member.
 (Rule of zero)
 
-Owner					Member
+<ins>Owner</ins>			<ins>Member</ins>
 ------------				----------
 Default ctor	------->		Default ctor
 Copy ctor     	------->		Copy ctor
 Move ctor     	------->		Default ctor
 Copy assign.    ------->		Copy assign.
 Move assign.    ------->		Move assign.
-Dtor			------->		Dtor
+Dtor		------->		Dtor
 
 A possible example of how compiler generated special member functions look like:
 ```
@@ -129,8 +127,7 @@ int main()
 	Owner o3 = std::move(o1);
 }
 ```
-Output
--------
+**Output**
 Member()
 Member()
 Member()
