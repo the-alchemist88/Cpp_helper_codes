@@ -47,14 +47,15 @@ Member foo()
 3) The special member functions that the compiler writes for Owner are passed directly to Member. In other words, whatever is called for Owner also called for Member.
 (Rule of zero)
 
-<ins>Owner</ins>			<ins>Member</ins>  
-------------				----------
-Default ctor	------->		Default ctor  
-Copy ctor     	------->		Copy ctor  
-Move ctor     	------->		Default ctor  
-Copy assign.    ------->		Copy assign.  
-Move assign.    ------->		Move assign.  
-Dtor		------->		Dtor  
+
+| Owner  		| Member |
+| ------:		| -----------:|
+| Default ctor  	| Default ctor  |
+| Copy ctor 		| Copy ctor |
+| Move ctor    		| Default ctor |
+| Copy assign.    	| Copy assign. |
+| Move assign.    	| Move assign. |
+| Dtor    		| Dtor |
 
 A possible example of how compiler generated special member functions look like:
 ```
