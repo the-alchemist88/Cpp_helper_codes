@@ -5,7 +5,7 @@ Composition means that a class has data members of another class type. It differ
 Terms used for denoting classes which are in compostion relationship are - Member and Owner. Basic features to know about composition:
 
 1) Member's interface is not directly attached to the Owner's interface, but Member's functions can be called inside Owner's functions.
-
+```
 class Member
 {
 public:
@@ -38,7 +38,7 @@ int main()
 	mo.foo();
 	mo.fun();
 }
-
+```
 Output
 ------
 Owner foo()
@@ -59,7 +59,7 @@ Move assign.    ------->		Move assign.
 Dtor			------->		Dtor
 
 A possible example of how compiler generated special member functions look like:
-
+```
 class A {}; // member 1
 class B {}; // member 2
 class C {}; // member 3
@@ -92,10 +92,10 @@ private:
 	B bx;
 	C cx;
 };
-
+```
 4) If the programmer writes the Owner's copy ctor and move ctor, s/he must also write the code that decides which ctor of the Member to call.
 The same also applies to assignment operator functions.
-
+```
 class Member
 {
 public:
@@ -128,7 +128,7 @@ int main()
 	Owner o2 = o1;
 	Owner o3 = std::move(o1);
 }
-
+```
 Output
 -------
 Member()
