@@ -92,7 +92,7 @@ private:
 	C cx;
 };
 ```
-4) If the programmer writes the Owner's copy ctor and move ctor, s/he must also write the code that decides which ctor of the Member to call.
+4) If the programmer writes Owner's copy ctor and move ctor, s/he must also write the code that decide which ctor of Member will be called inside Owner's copy ctor and move ctor.
 The same also applies to assignment operator functions.
 ```
 class Member
