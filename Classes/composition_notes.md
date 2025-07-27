@@ -48,14 +48,14 @@ Member foo()
 (Rule of zero)
 
 
-| Owner  		| Member |
-| ------:		| -----------:|
+| Owner  		    | Member |
+| :------		    | :-----------|
 | Default ctor  	| Default ctor  |
 | Copy ctor 		| Copy ctor |
 | Move ctor    		| Default ctor |
 | Copy assign.    	| Copy assign. |
 | Move assign.    	| Move assign. |
-| Dtor    		| Dtor |
+| Dtor    		    | Dtor |
 
 A possible example of how compiler generated special member functions look like:
 ```
@@ -128,7 +128,7 @@ int main()
 	Owner o3 = std::move(o1);
 }
 ```
-**Output**  
-Member()
-Member()
-Member()
+<ins>Output</ins>  
+Member()  
+Member()  
+Member()  
