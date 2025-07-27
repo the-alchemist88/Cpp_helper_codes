@@ -39,8 +39,8 @@ int main()
 }
 ```
 <ins>Output</ins>  
-Owner foo()
-Member foo()
+Owner foo()  
+Member foo()  
 
 2) Owner cannot access private members of Member. However access can be allowed via a friend declaration.
 
