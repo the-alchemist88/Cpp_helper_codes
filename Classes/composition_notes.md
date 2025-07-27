@@ -38,7 +38,7 @@ int main()
 	mo.fun();
 }
 ```
-**Output**
+<ins>Output</ins>  
 Owner foo()
 Member foo()
 
@@ -47,14 +47,14 @@ Member foo()
 3) The special member functions that the compiler writes for Owner are passed directly to Member. In other words, whatever is called for Owner also called for Member.
 (Rule of zero)
 
-<ins>Owner</ins>			<ins>Member</ins>
+<ins>Owner</ins>			<ins>Member</ins>  
 ------------				----------
-Default ctor	------->		Default ctor
-Copy ctor     	------->		Copy ctor
-Move ctor     	------->		Default ctor
-Copy assign.    ------->		Copy assign.
-Move assign.    ------->		Move assign.
-Dtor		------->		Dtor
+Default ctor	------->		Default ctor  
+Copy ctor     	------->		Copy ctor  
+Move ctor     	------->		Default ctor  
+Copy assign.    ------->		Copy assign.  
+Move assign.    ------->		Move assign.  
+Dtor		------->		Dtor  
 
 A possible example of how compiler generated special member functions look like:
 ```
@@ -127,7 +127,7 @@ int main()
 	Owner o3 = std::move(o1);
 }
 ```
-**Output**
+**Output**  
 Member()
 Member()
 Member()
