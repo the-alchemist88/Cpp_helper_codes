@@ -1,7 +1,7 @@
 # Composition(Containment)
 
-Composition means that a class has data members of another class type. It differs from nested types. Nested type means that the definition of a class is contained within another class definition. 
-Terms used for denoting classes which are in compostion relationship are - Member and Owner. Basic features to know about composition:
+Composition features apply if a class has data members of another class type. It differs from nested types. Nested type means that the definition of a class is contained within another class definition. 
+Terms used for denoting classes which are in compostion relationship are - Member and Owner. Fundemantal fetures of composition are explained below:
 
 1) Member's interface is not directly attached to the Owner's interface, but Member's functions can be called inside Owner's functions.
 ```
@@ -48,14 +48,14 @@ Member foo()
 (Rule of zero)
 
 
-| Owner  		    | Member |
-| :------		    | :-----------|
+| Owner  		| Member |
+| :------		| :-----------|
 | Default ctor  	| Default ctor  |
 | Copy ctor 		| Copy ctor |
 | Move ctor    		| Default ctor |
 | Copy assign.    	| Copy assign. |
 | Move assign.    	| Move assign. |
-| Dtor    		    | Dtor |
+| Dtor    		| Dtor |
 
 A possible example of how compiler generated special member functions look like:
 ```
