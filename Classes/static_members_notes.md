@@ -1,14 +1,12 @@
-Static Members
---------------
+# Static Members
 
-1) Static Data Memebers
------------------------
+## Static Data Memebers
 
 Static members of classes don't belong to the class object. They are global entities, however, since they are located in class scope, name lookup rules
 will change accordingly. Also, access control will be applied to them as other members. By in-class declaration, their logical relation with the class is emphasized.
 
 - Their storage is not inside class object.
-
+```
 class Myclass
 {
 public:
@@ -23,14 +21,14 @@ int main()
 {
 	std::cout << "sizeof Myclass" << sizeof Myclass;
 }
-
+```
 Output
 ------
 sizeof Myclass = 4
 
 
 - Don't confuse declaration and definition of static members:
-
+```
 class Myclass
 {
 public:
@@ -42,7 +40,7 @@ int main()
 {
 	Myclass::x = 5; // link-time error
 }
-
+```
 
 - Typically static members are only declared(not defined) in .h files and defined in .cpp files. 
 
@@ -60,7 +58,7 @@ int Myclass::x; // Note that static keyword shouldn't be placed in definition ot
 
 
 - A class cannot have a data member of incomplete type. However a static data member can be an incomplete type.
-
+```
 class Demo;
 
 class Myclass
@@ -68,7 +66,7 @@ class Myclass
 	Demo dx; // error
 	static Demo dy; // valid
 };
-
+```
 
 - A class cannot have a data member of type its own type, but it can have, as a static data member.
 
@@ -80,7 +78,7 @@ class Myclass
 
 
 - Static data members are constructed before main function is called, same as global variables.
-
+```
 class Myclass
 {
 public:
@@ -100,7 +98,7 @@ int main()
 {
 	std::cout << "main() started\n";
 }
-
+```
 Output
 ------
 fun() is called
@@ -108,16 +106,16 @@ main() started
 
 
 - Constructor initializer list(CIL) cannot initialize static data members of the class.
-
+```
 class Myclass
 {
 	static int svar;
 	Myclass(int x): svar{x}; // error
 };
-
+```
 
 - Since before modern C++, const static integral type data members could be initalized within the class.
-
+```
 class Myclass
 {
 public:
@@ -126,10 +124,10 @@ public:
 	const static char cval = 'a'; 	// valid
 	const static char double = 0.5; // erorr
 };
-
+```
 
 - Since C++17 standard, inline definition became possible for global variables and static data members.
-
+```
 class Myclass
 {
 	inline static const char* s{ "Hello" };
@@ -141,10 +139,9 @@ class Myclass
 {
 	constexpr static int year{ 2024 };
 }
+```
 
-
-2) Static Member Functions
---------------------------
+## Static Member Functions
 
 Actually they are global functions, but since they are declared inside class their name lookup rules will change accordingly. Also they can access protected and private members of
 the class. They don't have hidden class pointer("this") parameter as non-static member functions do. They are logically connected with the class. 
@@ -157,7 +154,7 @@ General features:
 - "this" pointer cannot be used inside static member functions since they have no hidden class pointer as non-static member functions.
 
 Ex:
-
+```
 int init()
 {
 	return 30;
@@ -201,7 +198,7 @@ int main()
 {
 	std::cout << Myclass::svar;
 }
-
+```
 Output
 ------
 20
