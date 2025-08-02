@@ -22,10 +22,10 @@ int main()
 	std::cout << "sizeof Myclass" << sizeof Myclass;
 }
 ```
-<ins>Output<\ins>  
+<ins>Output</ins>  
 sizeof Myclass = 4
 
-- Don't confuse declaration and definition of static members:
+- Don't confuse declaration and definition of static members.
 ```
 class Myclass
 {
@@ -51,11 +51,12 @@ public:
 };
 
 // Myclass.cpp
-int Myclass::x; // Note that static keyword shouldn't be placed in definition otherwise compiler will complain(similar to explicit keyword usage)
-		// Default init will firstly make x zero-initialized here as for all static storage variables
+int Myclass::x; // Note that static keyword shouldn't be placed in definition, otherwise compiler will complain(similar to explicit keyword usage)  
+		            // Default init will firstly make x zero-initialized here as for all static storage variables
 ```
 
 - A class cannot have a data member of incomplete type. However a static data member can be an incomplete type.
+
 ```
 class Demo;
 
@@ -66,7 +67,8 @@ class Myclass
 };
 ```
 
-- A class cannot have a data member of type its own type, but it can have, as a static data member.
+- A class cannot have a data member of its own type, but can have it as a static data member.
+  
 ```
 class Myclass
 {
@@ -75,6 +77,7 @@ class Myclass
 };
 ```
 - Static data members are constructed before main function is called, same as global variables.
+  
 ```
 class Myclass
 {
@@ -96,11 +99,12 @@ int main()
 	std::cout << "main() started\n";
 }
 ```
-<ins>Output<\ins>
-fun() is called
+<ins>Output</ins>  
+fun() is called  
 main() started
 
 - Constructor initializer list(CIL) cannot initialize static data members of the class.
+  
 ```
 class Myclass
 {
@@ -110,6 +114,7 @@ class Myclass
 ```
 
 - Since before modern C++, const static integral type data members could be initalized within the class.
+  
 ```
 class Myclass
 {
@@ -122,14 +127,17 @@ public:
 ```
 
 - Since C++17 standard, inline definition became possible for global variables and static data members.
+  
 ```
 class Myclass
 {
 	inline static const char* s{ "Hello" };
 }
+```
 
 - constexpr keyword implicitly adds inline and const feature to members.
-
+  
+```
 class Myclass
 {
 	constexpr static int year{ 2024 };
@@ -138,7 +146,7 @@ class Myclass
 
 ## Static Member Functions
 
-Actually they are global functions, but since they are declared inside class their name lookup rules will change accordingly. Also they can access protected and private members of
+Actually Static Member Functions are global functions, but since they are declared inside class their name lookup rules will change accordingly. Also they can access protected and private members of
 the class. They don't have hidden class pointer("this") parameter as non-static member functions do. They are logically connected with the class. 
 
 General features:
@@ -188,11 +196,11 @@ public:
 };
 
 int Myclass::svar = init(); // Note that there are two init() function in the code, one is a free function, the other is a static member function. Since svar is declared as a static
-							// data member in the class, during its initatlization, function name willl be first searched inside class according to name lookup rules
+														// data member in the class, during its initatlization, function name will be first searched inside class according to name lookup rules
 int main()
 {
 	std::cout << Myclass::svar;
 }
 ```
-<ins>Output<\ins>  
+<ins>Output</ins>    
 20
