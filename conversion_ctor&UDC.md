@@ -1,10 +1,9 @@
-Conversion constructor
-------------------------------------------------
+## Conversion constructor
 
 It is such a constructor that, in addition to its main raison d'être, it implicitly converts a non-class expression into a class type. Simply, they are ctors with parameters.
 
 To understand what the compiler is doing in the background, the following code will help:
-
+```
 class Myclass
 {
 public:
@@ -38,36 +37,32 @@ int main()
 	m = 35;									// Firstly, a temporary object will be created by Myclass(int x) ctor.
 											// Then copy assignment operator will be called for copying from temporary object to m. Compare the address of objects copied from and copied to, on the output	
 }											// dtor of m will be called
+```
+<ins>Possible Output</ins>  
+Myclass() for this: 000000682FB6F5D4  
+&m = 000000682FB6F5D4  
+Myclass(int x) x = 35 for this: 000000682FB6F6B4  
+Myclass copy asignment for this: 000000682FB6F5D4  
+&other = 000000682FB6F6B4  
+~Myclass() for this: 000000682FB6F6B4  
+~Myclass() for this: 000000682FB6F5D4  
 
-Possible Output
-----------------
-Myclass() for this: 000000682FB6F5D4
-&m = 000000682FB6F5D4
-Myclass(int x) x = 35 for this: 000000682FB6F6B4
-Myclass copy asignment for this: 000000682FB6F5D4
-&other = 000000682FB6F6B4
-~Myclass() for this: 000000682FB6F6B4
-~Myclass() for this: 000000682FB6F5D4
-
-
-User Defined Conversion(UDC)
------------------------------
+## User Defined Conversion(UDC)
 
 Type conversions performed by the compiler by calling functions defined by the programmer for non-standard type conversions are called UDC.
 These functions are:
 
-1)Conversion constructor
-2)Type-cast operator function
+1) Conversion constructor  
+2) Type-cast operator function
 
 C++ has a very important rule about implicit conversions:
 
 1) standard conversion + UDC --> OK
 2) UDC + standard conversion --> OK
-
 3) UDC + UDC --> not OK !!!
 
 Example:
-
+```
 class A
 {
 public:
@@ -98,9 +93,9 @@ int main()
 					// B() expression goes through function to pointer decay
 	
 }
-
+```
 However this feature can lead to quite absurd and unintentional conversions made by the programmer:
-
+```
 class Myclass
 {
 public:
@@ -117,10 +112,11 @@ int main()
 
 	m = pd; // valid !
 }
-
+```
 In order to prevent unwanted conversions, usually one parameter ctors of classes are declared with "explicit" keyword. This can be thought as "explicit only", meaning only explicit
 conversions can employ UDC. Note that "explicit" keyword forbids only implicit conversions with copy initialization syntax. It is also possible to make other ctors explicit.
 
+```
 class Myclass
 {
 public:
@@ -135,6 +131,7 @@ int main()
 	Myclass m4 = 10; // error! one paremeter ctor is explicit
 	Myclass m5 = static_cast<Myclass>(5); // valid, explicit conversion
 }
+```
 
 There are some cases where compiler doesn't generate code for copying intentionally even in source file  even when the language syntax visually suggests a copy/move
 (e.g. copy initialization), no copy/move is performed.
@@ -143,7 +140,7 @@ Until C++17 "copy elison" was a compiler optimization. In C++17 standard some ca
 this name denotes an elision, there is no elision of any copying here since omitting it became mandatory by the standard.
 
 Example:
-
+```
 class Myclass
 {
 public:
@@ -175,12 +172,13 @@ int main()
 	func(Myclass{10}); 	// Straightforward thinking, first a temporary object should be constructed with Myclass(int x) ctor.
 						// Then since it is an r value, move ctor gets called to construct the function parameter mx. However this is atypical copy elision case.
 }
+```
 
 Without any copy elision this code would give the following output(can be tested with "-fno-elide-constructors" option in GCC):
-
+```
 Myclass(int x)
 Myclass(Myclass&& other)
-
+```
 But instead the output is(since C++17 compiled):
 
-Myclass(int x)
+`Myclass(int x)`
