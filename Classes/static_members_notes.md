@@ -22,7 +22,7 @@ int main()
 	std::cout << "sizeof Myclass" << sizeof Myclass;
 }
 ```
-**Output**
+<ins>Output<\ins>  
 sizeof Myclass = 4
 
 - Don't confuse declaration and definition of static members:
@@ -41,7 +41,7 @@ int main()
 ```
 
 - Typically static members are only declared(not defined) in .h files and defined in .cpp files. 
-
+```
 // Myclass.h
 class Myclass
 {
@@ -53,7 +53,7 @@ public:
 // Myclass.cpp
 int Myclass::x; // Note that static keyword shouldn't be placed in definition otherwise compiler will complain(similar to explicit keyword usage)
 		// Default init will firstly make x zero-initialized here as for all static storage variables
-
+```
 
 - A class cannot have a data member of incomplete type. However a static data member can be an incomplete type.
 ```
@@ -96,8 +96,7 @@ int main()
 	std::cout << "main() started\n";
 }
 ```
-**Output**
-
+<ins>Output<\ins>
 fun() is called
 main() started
 
@@ -195,5 +194,5 @@ int main()
 	std::cout << Myclass::svar;
 }
 ```
-**Output**
+<ins>Output<\ins>  
 20
