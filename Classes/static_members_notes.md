@@ -22,10 +22,8 @@ int main()
 	std::cout << "sizeof Myclass" << sizeof Myclass;
 }
 ```
-Output
-------
+**Output**
 sizeof Myclass = 4
-
 
 - Don't confuse declaration and definition of static members:
 ```
@@ -69,14 +67,13 @@ class Myclass
 ```
 
 - A class cannot have a data member of type its own type, but it can have, as a static data member.
-
+```
 class Myclass
 {
 	Myclass mx; // error
 	static Myclass my; // valid
 };
-
-
+```
 - Static data members are constructed before main function is called, same as global variables.
 ```
 class Myclass
@@ -99,11 +96,10 @@ int main()
 	std::cout << "main() started\n";
 }
 ```
-Output
-------
+**Output**
+
 fun() is called
 main() started
-
 
 - Constructor initializer list(CIL) cannot initialize static data members of the class.
 ```
@@ -199,6 +195,5 @@ int main()
 	std::cout << Myclass::svar;
 }
 ```
-Output
-------
+**Output**
 20
