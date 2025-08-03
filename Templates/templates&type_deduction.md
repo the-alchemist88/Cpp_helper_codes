@@ -1,13 +1,9 @@
 # Generic Programming and Templates
-----------------------------------
-
-## Templates - 1
--------------
 
 Briefly speaking, generic programming denotes the style of programming that is independent of types. For example in C language void* type is used for eliminating dependency to types.
 Besides in C++ and in some other languages inheritence tools(virtual dispatch etc.) is used to employ derived class' codes without knowing the type at runtime.
 
-The most prominant diffrence between C and C++ compiler is that C++ compiler is able to write code. Consequently, we call the code that can make compiler write code according its
+The most prominant difference between C and C++ compiler is that C++ compiler is able to write code. Consequently, we call such code, which can trigger compiler to write code by its
 instructions as templates. This style of coding is called Template Meta Programming(TMP). The types of templates are:
 
 - function template
@@ -35,13 +31,12 @@ In order for the compiler to write the code of template, it needs to know the ty
    - Class Template Argument Deduction - CTAD (C++17)
 4) Default template argument --> `template<typename T = int>`
 
-# Function Templates
-------------------
+## Function Templates
 
 Function templates are functions that are parameterized so that they represent a family of functions. The keyword **typename** introduces a type parameter. The process of replacing template parameters by concrete types is called instantiation. It results in a _specalization_(instance) of a template.
 
-# Translation of Templates
-------------------------
+## Translation of Templates
+
 Templates are _compiled_ in several phases:
 
 1. Without instantiation at definition time, the template code itself is checked for correctness ignoring the template parameters. This includes:
@@ -70,7 +65,7 @@ int main()
 }
 ```
 ## Template Argument Deduction(TAD)
--------------------------------
+
 Auto type deduction and TAD is the same with one exception (std::initializer_list). In auto type deduction, type deduction is made for the keyword **auto**, not for the variable name. There are three cases:
 
 1) `auto x = expr;`	-->	cv qualifiers and refs drop. Array and function decay occur. Equivalent function template is:
@@ -208,6 +203,6 @@ int main()
 }
 ```
 
-Resources utilised:
+Resources utilized:
 1) C++Templates[Vandevoorde-Josuttis]
 2) Effective_Modern_C++[Scott_Meyers]
