@@ -1,13 +1,16 @@
-NAMESPACES
---------------
+# NAMESPACES
 
-İsimalanları(namespaces) kapsam oluşturmak için kullanılır. İsimalanı içindeki bir ismi kullanabilmek için önce ismin, isimalanının ismiyle nitelenmesi
-gerekir. İsimalanları tipik olarak başlık dosyalarında oluşturulur, STL'de sık kullanılmıştır. Örneğin std isim alanı birçok başlık dosyasında
-bulunmaktadır. Global alanda oluşturulmuş isimalanına "namespace" de denmektedir. Bir fonksiyonun içinde isimalanı oluşturulamaz. İsimalanlarının
-elemanları static global değilşkenler gibi statik ömürlüdür(static storage) ve isimalanı oluşturulduğunda ilk değerini alır(initizlized). İsimalanları
-kümülatif'tir, yani aynı isimde oluşturulan isimalanlarının içeriği birbirine eklenbilir, STL'de uygulandığı gibi. Bir isimalanı içinde bir isimalanı 
-daha(nested) oluşturulabilir. Sentaksı göstermek amacıyla örnek vermek gerekirse(aynı isimdeki iki farklı fonksiyonunun gösterimi);
+- Namespaces are employed to form scopes. In order to use an identifier in a namespace, that identifier must be qualified(with scope resolution operator) with the name of that namespace.
+- Namespaces are typically seen in header files, as in STL. For example **std** namespace is placed in many header files.
+- A namespace that has been located in global namespace can plainly be called as **namespace** in C++ jargon. 
+- A namespace cannot appear inside a function.
+- Elements of namespaces have static storage such as global variables and initialized when namespace is formed.
+- Namespaces are cumulative, which means that contents of namespaces that has been named with the same name can be added to each other, as applied in STL.
+- Namespaces can be nested in each other.
+  
+  Two functions with the same name can be used as in the example:
 
+```cpp
 // demo.h
 #pragma once
 
@@ -30,7 +33,7 @@ bool foo(int)
 {
 	return true;
 }
-
+```
 Bir isimalanı içindeki isim, o isimalanı dışında, isimalanı adı ile nitelenmeden kullanılablir mi? Evet. Bunun üç yolu var:
 
 1) using declaration
@@ -46,7 +49,7 @@ enjekte(inject) eder. Yani o isim sanki o kapsamda bildirilmiş gibi ele alını
 
 using namespace direktifi, isimalanı içindeki isimleri görünür kılar. Ancak using bildirimi gibi isimleri enjekte etmez. Aynı isimde başka bir varlık
 bildirilirse sentaks hatası olmaz ancak ismin kullanılma anında nitelenmezse hata olur.
-
+```cpp
 namespace Demo
 {
 	int x;
@@ -62,7 +65,7 @@ int main()
 	::x = 10;
 	Demo::x = 15;
 }
-
+```
    3) ADL(Argument dependant look-up)
    
 Bir fonksiyon çağrısı nitelenmiş bir isim kullanılarak yapıldığında, eğer fonksiyona gönderilen argüman ya da argümanlardan biri bir isimalanı içinde 
@@ -70,7 +73,7 @@ tanımlanan bir türe ilişkin ise(isimalanı içinde tanımlanan bir türden ol
 ilişkin olduğu) aranır.
 
 Örnek:
-
+```cpp
 namespace Demo
 {
 	class Myclass {};
@@ -100,7 +103,6 @@ void baz(Demo::Myclass)
 	std::cout << "baz(Myclass)\n";
 }
 
-
 int main()
 {
 	Demo::Myclass mx;
@@ -112,17 +114,15 @@ int main()
 	baz(mx); // error - ambiguity, ADL vs free function, none has priority on name look-up
 	fun(mx); // error - calls fun(int) in local scope, it masks the name "fun" on name look-up 
 }
-
-
+```
 Herb Sutter'ın bloğundan alınan başka bir örnek:
-
+```cpp
 namespace A
 {
 	struct X{};
 	struct Y{};
 	void f(int);
 	void g(X);
-
 }
 
 namespace B
@@ -142,7 +142,7 @@ namespace B
 		h(y); // calls B::h (endless recursion): ADL examines A namespace and finds no A::h, so only  B::h from ordinary lookup is used
 	}
 }
-
+```
 
 İsimalanlarının belirgin özellikleri:
 
@@ -154,6 +154,7 @@ başlık dosyalarında değil cpp dosyalarında kullnmak içindir. static anahta
 2) static anahtar sözcüğü class'ları niteleyemez.
 
 - Ayrıca isimsiz isimalanları nested isimalanları için e kullanılabilir. İsimsiz isimalanı örneği:
+```cpp
 namespace
 {
 	int g;
@@ -165,9 +166,9 @@ int main()
 	foo(12);
 	g = 15;
 }
-
+```
 - Yukarıdaki isimsiz isimalanı örneğiyle aynı etkiye sahip isimlendirilmiş isimalanı kullanımı örneği:
-
+```cpp
 namespace xyz15
 {
 	int x;
@@ -181,9 +182,9 @@ int main()
 	foo(12);
 	g = 15;
 }
-
+```
 -namespace alias sentaksının kullanılışı:
-
+```cpp
 namespace Demonstaration_xyz_proj
 {
 	namespace Details
@@ -210,18 +211,17 @@ namespace A
 		}
 	}
 }
-
+```
 ifadesi aşağıdaki ifadeyle denk:
-
+```cpp
 namespace A::B::C
 {
-
 }
-
+```
 - inline namespaces. Buradaki inline anahtar sözcüğünün inline fonksiyonlar veya inline değişkenlerle ilgisi yoktur. inline anahrar sözcüğünün isimalalanlarında
 kullanımı, kendi elemanlarını onu kapsayan isimalanı içinde görünür kılar. Çoğu durumda inline namespaceaşağıdaki örnekteki gibi bir bildirimle aynı 
 etkiyi taşır.
-
+```cpp
 namespace A
 {
 	namespace B
@@ -245,9 +245,9 @@ int main()
 	A::ival = 10;
 	X::ival = 10;
 }
-
+```
 Farklılıklarını bulunduğu noktalar da vardır:
-
+```cpp
 namespace Myspace1
 {
 	int a{5};
@@ -283,3 +283,4 @@ int main()
 	std::cout << Myspace1::a; // ok
 	std::cout << Myspace2::b; // error, ambiguity, inline namespace is used
 }
+```
