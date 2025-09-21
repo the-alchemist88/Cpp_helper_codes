@@ -110,8 +110,8 @@ int main()
     auto&& var7 = 5;    // type is int&&
     auto& var8 = var7;  // type is int&. The name that is type of R value reference(var7), forms nevertheless an L value expression
 
-    auto&& var9 = a;  	 // type is int(&)[10]
-    auto&& var10 = ca;   // type is const int(&)[10]. ca is L value expression, according to reference collapsing rules var sloud be lvalue ref
+    auto&& var9 = a;  	// type is int(&)[10]
+    auto&& var10 = ca;  // type is const int(&)[10]. ca is L value expression, according to reference collapsing rules var sloud be lvalue ref
 
 }
 ```
