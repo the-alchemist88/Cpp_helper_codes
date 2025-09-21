@@ -4,7 +4,7 @@ Composition features apply if a class has data members of another class type. It
 Terms used for denoting classes which are in compostion relationship are - Member and Owner. Fundemantal fetures of composition are explained below:
 
 1) Member's interface is not directly attached to the Owner's interface, but Member's functions can be called inside Owner's functions.
-```
+```cpp
 class Member
 {
 public:
@@ -22,7 +22,7 @@ public:
 	void fun()
 	{
 		mx.foo();
-		//my.bar(); 	// syntax error, private
+		my.bar(); 	// syntax error, private
 	}
 
 private:
@@ -47,18 +47,17 @@ Member foo()
 3) The special member functions that the compiler writes for Owner are passed directly to Member. In other words, whatever is called for Owner also called for Member.
 (Rule of zero)
 
-
-| Owner  		| Member |
-| :------		| :-----------|
+| Owner  			| Member |
+| :------			| :-----------|
 | Default ctor  	| Default ctor  |
 | Copy ctor 		| Copy ctor |
 | Move ctor    		| Default ctor |
 | Copy assign.    	| Copy assign. |
 | Move assign.    	| Move assign. |
-| Dtor    		| Dtor |
+| Dtor    			| Dtor |
 
 A possible example of how compiler generated special member functions look like:
-```
+```cpp
 class A {}; // member 1
 class B {}; // member 2
 class C {}; // member 3
