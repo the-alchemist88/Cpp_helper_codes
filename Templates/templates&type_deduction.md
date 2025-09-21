@@ -15,7 +15,7 @@ instructions as templates. This style of coding is called Template Meta Programm
 
 Template parameters can be:
 
-- type parameter   	--> template<typename T>
+- type parameter   		--> template<typename T>
 - non-type parameter 	--> template<int n>
 - template parameter 	--> parameter itself is a template (rare usage)
 
