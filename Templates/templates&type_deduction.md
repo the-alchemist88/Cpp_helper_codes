@@ -172,9 +172,9 @@ auto createInitList()
 int main()
 {
     auto initList = { 1, 3, 5, 7 }; // ok, type of initList is std::initializer_list<int>
-    func1({ 1, 3, 5, 7 }); // error, can't deduce type for T
-    func1(initList); // // ok, type of T is std::initializer_list<int>
-    func2({ 1, 3, 5, 7 }); // ok, T deduced as int
+    func1({ 1, 3, 5, 7 }); 			// error, can't deduce type for T
+    func1(initList);  				// ok, type of T is std::initializer_list<int>
+    func2({ 1, 3, 5, 7 }); 			// ok, T deduced as int
 }
 ```
 So the only real difference between auto and template type deduction is that auto assumes that a braced initializer represents a std::initializer_list, but template type deduction
