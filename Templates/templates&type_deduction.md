@@ -1,6 +1,6 @@
 # Generic Programming and Templates
 
-Briefly speaking, generic programming denotes the style of programming that is independent of types. For example in C language void* type is used for eliminating dependency to types.
+Briefly speaking, generic programming denotes the style of programming that is independent of types. For example in C language "void*" type is used for eliminating dependency to types.
 Besides in C++ and in some other languages inheritence tools(virtual dispatch etc.) is used to employ derived class' codes without knowing the type at runtime.
 
 The most prominant difference between C and C++ compiler is that C++ compiler is able to write code. Consequently, we call such code, which can trigger compiler to write code by its
@@ -61,7 +61,6 @@ void func(T x)
 
 int main()
 {
-
 }
 ```
 ## Template Argument Deduction(TAD)
@@ -82,9 +81,8 @@ Auto type deduction and TAD is the same with one exception (std::initializer_lis
 
 3) `auto&& x = expr;`	-->	This is a universal reference. Type of _x_ depends on the value category of expr:
 	- if L value then type of _x_ dedeuced as T& according to reference collapsing rules
-	- if R value(PR value or X value) then type of x deduced as T&& according to reference collapsing rules
-
-Equivalent function template is:
+	- if R value(PR value or X value) then type of x deduced as T&& according to reference collapsing rules  
+	Equivalent function template is:
    ```
    template<typename T>
    void func(T&& x);
@@ -155,13 +153,11 @@ parameter T, for each function call. Ex:
 template<typename T>
 void func1(T)
 {
-
 }
 
 template<typename T>
 void func2(std::initializer_list<T>)
 {
-
 }
 
 auto createInitList()
