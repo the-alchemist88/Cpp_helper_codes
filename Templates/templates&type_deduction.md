@@ -21,7 +21,7 @@ Template parameters can be:
 
 Syntax: 
 
-template< comma-separated-list-of-parameters >
+template<comma-separated-list-of-parameters>
 
 In order for the compiler to write the code of template, it needs to know the types of arguments that corresponds to template parameters. There are three ways of doing this for compiler:
 
