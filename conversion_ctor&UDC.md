@@ -2,7 +2,7 @@
 
 It is such a constructor that, in addition to its main raison d'être, it implicitly converts a non-class expression into a class type. Simply, they are ctors with parameters.
 
-To understand what the compiler is doing in the background, the following code will help:
+In order to understand what the compiler is doing in the background, the following code may help:
 ```
 class Myclass
 {
@@ -32,11 +32,11 @@ public:
 
 int main()
 {
-	Myclass m;								// no-args ctor will be called
+	Myclass m;														// no-args ctor will be called
 	std::cout << "&m = " << &m << "\n";		// address of m
-	m = 35;									// Firstly, a temporary object will be created by Myclass(int x) ctor.
-											// Then copy assignment operator will be called for copying from temporary object to m. Compare the address of objects copied from and copied to, on the output	
-}											// dtor of m will be called
+	m = 35;																// firstly, a temporary object will be created by Myclass(int x) ctor
+																				// then copy assignment operator will be called for copying from temporary object to m. Compare the address of objects copied from and copied to, on the output	
+}																				// dtor of m will be called
 ```
 <ins>Possible Output</ins>  
 Myclass() for this: 000000682FB6F5D4  
@@ -49,7 +49,7 @@ Myclass copy asignment for this: 000000682FB6F5D4
 
 ## User Defined Conversion(UDC)
 
-Type conversions performed by the compiler by calling functions defined by the programmer for non-standard type conversions are called UDC.
+Type conversions that are performed by compiler via calling functions, which are defined by programmer for non-standard type conversions, are called UDC.
 These functions are:
 
 1) Conversion constructor  
@@ -84,13 +84,13 @@ public:
 
 int main()
 {
-	A ax = 5;		// valid : UDC (int --> A)
-	B bx = ax;		// valid : UDC (A --> B)
-	B bx1 = 7.5;	// valid : standard conversion(double --> int) + UDC (int --> B)
-	C cx = ax;		// error ! : UDC(A --> B) + UDC(B --> C) 
-	C cx1 = static_cast<B>(10); // valid : excplicit conversion + UDC
-	C cx2(B());		// most vexing parse! This is a function declaration with return type of class C and parameter type of B(*)() 
-					// B() expression goes through function to pointer decay
+	A ax = 5;			// valid, UDC (int --> A)
+	B bx = ax;		// valid, UDC (A --> B)
+	B bx1 = 7.5;	// valid, standard conversion(double --> int) + UDC (int --> B)
+	C cx = ax;		// error, UDC(A --> B) + UDC(B --> C) 
+	C cx1 = static_cast<B>(10); // valid, excplicit conversion + UDC
+	C cx2(B());		// most vexing parse, this is a function declaration with return type of class C and parameter type of B(*)() 
+								// B() expression goes through function to pointer conversion
 	
 }
 ```
@@ -114,7 +114,7 @@ int main()
 }
 ```
 In order to prevent unwanted conversions, usually one parameter ctors of classes are declared with "explicit" keyword. This can be thought as "explicit only", meaning only explicit
-conversions can employ UDC. Note that "explicit" keyword forbids only implicit conversions with copy initialization syntax. It is also possible to make other ctors explicit.
+conversions can employ UDC. Note that "explicit" keyword forbids only implicit conversions with copy initialization syntax. It is also possible to make other ctors explicit. Ex:
 
 ```
 class Myclass
@@ -128,7 +128,7 @@ int main()
 	Myclass m1{1};
 	Myclass m2(2);
 	Myclass m3(3.); 
-	Myclass m4 = 10; // error! one paremeter ctor is explicit
+	Myclass m4 = 10; // error,bone paremeter ctor is explicit
 	Myclass m5 = static_cast<Myclass>(5); // valid, explicit conversion
 }
 ```
