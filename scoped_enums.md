@@ -67,12 +67,11 @@ int main()
 ```cpp
 namespace myspace
 {
-    namespace details
-    {
-        enum class ScreenColor {Blue, Black, Red, Purple, Brown};
+	namespace details
+	{
+		enum class ScreenColor {Blue, Black, Red, Purple, Brown};
 		enum class TrafficLight{Green, Yellow, Red};
-
-    }
+	}
 }
 
 int main()
