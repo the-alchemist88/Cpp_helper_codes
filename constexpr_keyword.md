@@ -45,7 +45,7 @@ int main()
 false  
 true
 
-- Compiler may not allocate storage for x due to optimization reasons. However in some ways programmer can force it:
+- Compiler may not allocate storage for x due to optimization reasons(for example if a variable is not used). However in some ways programmer can force it:
 ```cpp
 constexpr int x{7};
 std::cout << &x;
@@ -86,7 +86,23 @@ Every function cannot be a constexpr function, here are several restrictions abo
 
 The main characteristic of constexpr functions: if the return type, types of passed arguments and local variables are literal type, then return value can be obtained at compile time.
 Since compiler can generate return values of constexpr functions in compile time, they will require less operations during run time.
-Keep in mind that constexpr functions are implicitly inline.
+Keep in mind that constexpr functions are implicitly inline. Ex:
+```cpp
+constexpr int foo(int x) {
+	return x *x;
+}
+
+int bar(int x) {
+	return x *x;
+}
+
+int main()
+{
+	auto x = foo(5);			// even if most compilers calculate return value in compile time, standards don't ensure it
+	auto y = bar(5);			// either variable nor function is constexpr, nevertheless compilers can make optimization and calculate return value in compile time
+	constexpr auto z = foo(5);	// calculation will be done in compile time, this is assured by the standards
+}
+```
 
 ## Side Note: Optimizations in C++
 
