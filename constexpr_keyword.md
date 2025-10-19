@@ -45,11 +45,6 @@ int main()
 false  
 true
 
-- Compiler may not allocate storage for x due to optimization reasons(for example if a variable is not used). However in some ways programmer can force it:
-```cpp
-constexpr int x{7};
-std::cout << &x;
-```
 - Aggregate types can also be constexpr:
 ```cpp
 constexpr int arr[] = {1,3,5,7,9};
@@ -76,6 +71,13 @@ int main()
 	*p2 = 20; // error
 }
 ```
+### Note  
+Compiler may not allocate storage for x due to optimization reasons. However in some ways programmer can force it:
+```cpp
+constexpr int x{7};
+std::cout << &x;
+```
+
 ## constexpr Functions
 
 Every function cannot be a constexpr function, here are several restrictions about a function that is to be qualified as constexpr:
@@ -104,14 +106,14 @@ int main()
 }
 ```
 
-## Side Note: Optimizations in C++
+## Reminder: Optimizations in C++
 
-1) Compiler optimizations can be divided into two categories(compilers may have different abilities and can be customized with optimization switches):  
-		a) Reorganizing the source code to generate a more effective assembly code without changing the observable behavior(such as inline expansion, modifying the loops, dead code elimination etc.)  
-		b) Compiler can write code for the programmer(templates)
+1) Compiler optimizations. This can be divided into two categories(compilers may have different abilities and can be customized with optimization switches):  
+	- Reorganizing the source code to generate a more effective assembly code without changing the observable behavior(such as inline expansion, modifying the loops, dead code elimination etc.)  
+	- Compiler can write code for the programmer(templates)
 	
-2) Link-time optimizations(LTO)
-3) Processor optimizations(branch prediction, changing the order of operations etc.)
+3) Link-time optimizations(LTO)
+4) Processor optimizations(branch prediction, changing the order of operations etc.)
 
  
   
