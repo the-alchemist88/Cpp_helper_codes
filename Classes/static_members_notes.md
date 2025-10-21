@@ -6,7 +6,7 @@ Static members of classes don't belong to the class object. They are global enti
 will change accordingly. Also, access control will be applied to them as other members. By in-class declaration, their logical relation with the class is emphasized.
 
 - Their storage is not inside class object.
-```
+```cpp
 class Myclass
 {
 public:
@@ -26,7 +26,7 @@ int main()
 sizeof Myclass = 4
 
 - Don't confuse declaration and definition of static members.
-```
+```cpp
 class Myclass
 {
 public:
@@ -41,7 +41,7 @@ int main()
 ```
 
 - Typically static members are only declared(not defined) in .h files and defined in .cpp files. 
-```
+```cpp
 // Myclass.h
 class Myclass
 {
@@ -57,7 +57,7 @@ int Myclass::x; // Note that static keyword shouldn't be placed in definition, o
 
 - A class cannot have a data member of incomplete type. However a static data member can be an incomplete type.
 
-```
+```cpp
 class Demo;
 
 class Myclass
@@ -69,7 +69,7 @@ class Myclass
 
 - A class cannot have a data member of its own type, but can have it as a static data member.
   
-```
+```cpp
 class Myclass
 {
 	Myclass mx; // error
@@ -78,7 +78,7 @@ class Myclass
 ```
 - Static data members are constructed before main function is called, same as global variables.
   
-```
+```cpp
 class Myclass
 {
 public:
@@ -103,9 +103,48 @@ int main()
 fun() is called  
 main() started
 
+- Recall that static objects won't be conctructed, even compiler allocates storage for them, unless the function that they are located in is called. And they will be constructed only once even if multiple calls occur.
+
+```cpp
+class Myclass {
+public:
+	Myclass() {
+		std::cout << "Myclass() called for this object : " << this << '\n';
+	}
+
+	~Myclass() {
+		std::cout << "~Myclass() called for this object: " << this << '\n';
+	}
+};
+
+void foo()
+{
+	static Myclass ms;	// will be constructed once
+	static int call_counter;
+
+	std::cout << "call_counter = " << ++call_counter << '\n';
+}
+
+int main()
+{
+	foo();
+	foo();
+	foo();
+	foo();
+}
+```
+
+<ins>Possible Output</ins>    
+Myclass() called for this object : 00007FF7354E0180  
+call_counter = 1  
+call_counter = 2  
+call_counter = 3  
+call_counter = 4  
+~Myclass() called for this object: 00007FF7354E0180  
+
 - Constructor initializer list(CIL) cannot initialize static data members of the class.
   
-```
+```cpp
 class Myclass
 {
 	static int svar;
@@ -115,7 +154,7 @@ class Myclass
 
 - Since before modern C++, const static integral type data members could be initalized within the class.
   
-```
+```cpp
 class Myclass
 {
 public:
@@ -128,7 +167,7 @@ public:
 
 - Since C++17 standard, inline definition became possible for global variables and static data members.
   
-```
+```cpp
 class Myclass
 {
 	inline static const char* s{ "Hello" };
@@ -137,7 +176,7 @@ class Myclass
 
 - constexpr keyword implicitly adds inline and const feature to members.
   
-```
+```cpp
 class Myclass
 {
 	constexpr static int year{ 2024 };
@@ -157,7 +196,7 @@ General features:
 - "this" pointer cannot be used inside static member functions since they have no hidden class pointer as non-static member functions.
 
 Ex:
-```
+```cpp
 int init()
 {
 	return 30;
