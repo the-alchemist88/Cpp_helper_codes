@@ -1,11 +1,11 @@
-To simply put, classes are the tools to abstract the entites in problem/solution domain. It helps to express complex entites simplier software-wise. 
+To simply put, classes are the tools to abstract the entites in problem/solution domain. It helps to express complex entites simplier in software-wise. 
 Please bear in mind that classes don't have to only be related to object oriented programming(OOP) paradigm as they are also heavily used on generic and functional programming paradigms. OOP a is programming approach; a programmer can decide to use this approach or another, and a programming language can have tools to support that approach or not. 
-For example a programmer can implement inheritence or runtime polymorphism in C langauge but the problem is C doesn't have the support for these features, programmer has to implement by himself.
+For example a programmer can implement inheritence or runtime polymorphism in C langauge even C doesn't have the support for these features.
  
 Notes on features of classes:
 
-1) Member function syntax exists in langage level, at the assembly level, there is no difference betweeen non-static member functions and free functions. Consider them as free fucntions but having a hidden pointer to class paramater, type of the object that is left operand of dot operator. 
-  ```cpp
+- Member function syntax exists in langage level, at the assembly level, there is no difference betweeen non-static member functions and free functions. Consider them as free fucntions but having a hidden pointer to class paramater, type of the object that is left operand of dot operator. 
+```cpp
 class Enemyfighter {};
  
 class Myfighter { 
@@ -23,12 +23,12 @@ int main()
 	attack2(&fighter1, &fighter2);
 }
  ```
-2) Access specifiers don't form a scope. Recall that compiler checks code in this order: Name lookup, context control, access control.
+- Access specifiers don't form a scope. Recall that compiler checks code in this order: Name lookup, context control, access control.
  
-3) Function redeclaration is not allowed inside class scope.
+- Function redeclaration is not allowed inside class scope.
  
-4) Public interface of a class ==> public members of that class + free functions that has paramater of type of that class (typically both are located in the same header file)
-  ```cpp
+- Public interface of a class ==> public members of that class + free functions that has paramater of type of that class (typically both are located in the same header file)
+```cpp
 //Myclass.h
 
  class Myclass {  //  public interface of Myclass ==> members + foo
@@ -58,8 +58,8 @@ private:
 int Myclass::get { // this will cause error if it is included in multiple source files. It should qualified as inline in declaration or definition or both.
 	return mx;
 }
- ```
-5) Member functions have access to private members of any object of type of that class, not only of the object the member function is called for. Ex:
+```
+- Member functions have access to private members of any object of type of that class, not only of the object the member function is called for. Ex:
  ```cpp
 class Myclass {
 public:
@@ -76,7 +76,7 @@ void Myclass::set(int x) { // valid
 	mx = x;		// mx is private data member of the object that set function is called for
 }
  ```
-6) Regarding name lookup, an unqualified name inside a member function first looked for in block scope then searched in class scope.
+- Regarding name lookup, an unqualified name inside a member function first looked for in block scope then searched in class scope.
  ```cpp
 class Myclass {
 public:
@@ -107,7 +107,7 @@ int main() {
 	foo();					// global function call
 }
  ```
-7) In constructor initializer list(CIL), initializatin order follows the same order of declaration. 
+- In constructor initializer list(CIL), initializatin order follows the same order of declaration. 
 Thus, at CIL, making the order of initalization different than declaration order of variables may cause confusion and UB. Note that Initalization only happens at CIL and using it considered as best practice. Ex:
  ```cpp
 class Myclass {
@@ -128,20 +128,20 @@ private:
 	int me(8);	// error, direct initialization syntax is not allowed inside class
 };
  ```
-8) "Special member functions" are unique in that way that compiler, instead of the programmer, can generate the code for them under some conditions. When compiler writes the code for them, we use the verb "default" in order to express it. For example: Compiler defaulted the default constructor of Myclass.
+- "Special member functions" are unique in that way that compiler, instead of the programmer, can generate the code for them under some conditions. When compiler writes the code for them, we use the verb "default" in order to express it. For example: Compiler defaulted the default constructor of Myclass.
 
 Special member functions are:
 
-Default ctor
-Destructor
-Copy ctor
-Move ctor (C++11)
-Copy assignment
-Move assignment (C++11)
+1. Default ctor  
+2. Destructor  
+3. Copy ctor  
+4. Move ctor (C++11)  
+5. Copy assignment  
+6. Move assignment (C++11)  
 
 ## const member functions
 
-1) const member functions have a hidden const class_type* paramater so that they cannot modify class data members. Note that non-const member functions cannot call const member functions. Ex:
+- const member functions have a hidden const class_type* paramater so that they cannot modify class data members. Note that non-const member functions cannot call const member functions. Ex:
  ```cpp
 class Myclass {
 public:
@@ -183,8 +183,8 @@ int main() {
 
 	m.foo();	// error, no conversion from const T* to T*
 }
- ```
-2) mutable keyword is used for data members that don't change state of a class and mutable data members can be mdofied by const member functions as well non-const member functions. Note that this context of mutable keyword has no relation with the usage of it in lambda expressions.
+```
+- mutable keyword is used for data members that don't change state of a class and mutable data members can be mdofied by const member functions as well non-const member functions. Note that this context of mutable keyword has no relation with the usage of it in lambda expressions.
  ```cpp
 class Fighter {
 public:
