@@ -1,8 +1,8 @@
 ## Conversion constructor
 
-It is such a constructor that can implicitly convert a non-class expression into an object of class type. Simply, they are ctors with parameters.
+It is such a constructor that can implicitly convert an expression of non-class type into an object of class type. Simply, they are ctors with parameters(not only one-paramater ctor).
 
-In order to understand what the compiler is doing in the background, the following code may help:
+In order to understand what the compiler is doing in the background, the following example may help:
 ```cpp
 class Myclass
 {
@@ -133,26 +133,24 @@ int main()
 }
 ```
 
-Note that explicit ctor won't be included in overload set if the object constructed by copy initalization syntax. Ex:
+Note that explicit ctor won't be included in function overload set if the object constructed by copy initalization syntax. Ex:
 
 ```cpp
 class Myclass
 {
 public:
 	explicit Myclass(double) {};
-	Myclass(int) {};
+	Myclass(int) {}; // this is called
 };
 
 int main()
 {
-	Myclass m = 45.9; // valid
+	Myclass m = 45.9; // valid, double converts into int
 }
 ```
-There are some cases where compiler doesn't generate code for copying intentionally even in source file  even when the language syntax visually suggests a copy/move
-(e.g. copy initialization), no copy/move is performed.
+There are some cases where compiler doesn't generate code for intentional copying. To explain briefly, even if the syntax visually suggests a copy/move operation (e.g. copy initialization), no copy/move is performed. This deliberate miss of copy/move operations by compiler is called copy elision. 
 
-Until C++17 "copy elison" was a compiler optimization. In C++17 standard some cases of copy elison became mandotory and they are called as mandatory copy elision. Actually even if
-this name denotes an elision, there is no elision of any copying here since omitting it became mandatory by the standard.
+Until C++17, "copy elison" was a compiler optimization technique where unnecessary copy/move ctor calls are skipped. Since C++17 standard, in certain cases, copy elison became mandatory(guaranteed) and called as mandatory copy elision. Therefore even if this name denotes an elision, there is no elision of any copying here since omitting it became mandatory by the standard.
 
 Example:
 ```cpp
