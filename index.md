@@ -1,14 +1,8 @@
-# İçindekiler
+# Contents
 
-## 1. Klasörler
-### Classes
 - [Classes](Classes/)
-### Exceptions & Stack Unwinding
 - [Exceptions & Stack Unwinding](Exceptions&Stack_Unwinding/)
-### Inheritance
-- [Inheritance](Inheritence/)   ← klasör adı burada
-
-## 2. Doküman / Tekil Dosyalar
+- [Inheritance](Inheritence/) 
 - [Namespaces](Namespaces.md)
 - [constexpr Keyword](constexpr_keyword.md)
 - [Conversion Ctor & UDC](conversion_ctor&UDC.md)
