@@ -1,9 +1,9 @@
 ## Conversion constructor
 
-It is such a constructor that, in addition to its main raison d'être, it implicitly converts a non-class expression into a class type. Simply, they are ctors with parameters.
+It is such a constructor that can implicitly convert a non-class expression into an object of class type. Simply, they are ctors with parameters.
 
 In order to understand what the compiler is doing in the background, the following code may help:
-```
+```cpp
 class Myclass
 {
 public:
@@ -32,11 +32,11 @@ public:
 
 int main()
 {
-	Myclass m;														// no-args ctor will be called
-	std::cout << "&m = " << &m << "\n";		// address of m
-	m = 35;																// firstly, a temporary object will be created by Myclass(int x) ctor
-																				// then copy assignment operator will be called for copying from temporary object to m. Compare the address of objects copied from and copied to, on the output	
-}																				// dtor of m will be called
+	Myclass m; // no-args ctor will be called
+	std::cout << "&m = " << &m << "\n";	// address of m
+	m = 35;	// firstly, a temporary object will be created by Myclass(int x) ctor  
+			    // then copy assignment operator will be called for copying from temporary object to m. Compare the address of objects copied from and copied to, on the output	
+}			    // dtor of m will be called
 ```
 <ins>Possible Output</ins>  
 Myclass() for this: 000000682FB6F5D4  
@@ -62,7 +62,7 @@ C++ has a very important rule about implicit conversions:
 3) UDC + UDC --> not OK !!!
 
 Example:
-```
+```cpp
 class A
 {
 public:
@@ -95,7 +95,7 @@ int main()
 }
 ```
 However this feature can lead to quite absurd and unintentional conversions made by the programmer:
-```
+```cpp
 class Myclass
 {
 public:
@@ -116,7 +116,7 @@ int main()
 In order to prevent unwanted conversions, usually one parameter ctors of classes are declared with "explicit" keyword. This can be thought as "explicit only", meaning only explicit
 conversions can employ UDC. Note that "explicit" keyword forbids only implicit conversions with copy initialization syntax. It is also possible to make other ctors explicit. Ex:
 
-```
+```cpp
 class Myclass
 {
 public:
@@ -128,11 +128,26 @@ int main()
 	Myclass m1{1};
 	Myclass m2(2);
 	Myclass m3(3.); 
-	Myclass m4 = 10; // error,bone paremeter ctor is explicit
+	Myclass m4 = 10; // error, one paremeter ctor is explicit
 	Myclass m5 = static_cast<Myclass>(5); // valid, explicit conversion
 }
 ```
 
+Note that explicit ctor won't be included in overload set if the object constructed by copy initalization syntax. Ex:
+
+```cpp
+class Myclass
+{
+public:
+	explicit Myclass(double) {};
+	Myclass(int) {};
+};
+
+int main()
+{
+	Myclass m = 45.9; // valid
+}
+```
 There are some cases where compiler doesn't generate code for copying intentionally even in source file  even when the language syntax visually suggests a copy/move
 (e.g. copy initialization), no copy/move is performed.
 
@@ -140,7 +155,7 @@ Until C++17 "copy elison" was a compiler optimization. In C++17 standard some ca
 this name denotes an elision, there is no elision of any copying here since omitting it became mandatory by the standard.
 
 Example:
-```
+```cpp
 class Myclass
 {
 public:
@@ -175,10 +190,11 @@ int main()
 ```
 
 Without any copy elision this code would give the following output(can be tested with "-fno-elide-constructors" option in GCC):
-```
+```cpp
 Myclass(int x)
 Myclass(Myclass&& other)
 ```
 But instead the output is(since C++17 compiled):
-
-`Myclass(int x)`
+```cpp
+Myclass(int x)
+```
