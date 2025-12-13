@@ -128,7 +128,7 @@ private:
 	int me(8);	// error, direct initialization syntax is not allowed inside class
 };
  ```
-- "Special member functions" are unique in the way that compiler, instead of the programmer, can generate the code for them under some conditions. When compiler writes the code for special member functions, we use the term "default" in order to express it. For example: Compiler **_default_ed** the default constructor of Myclass.
+- "Special member functions" are unique in the way that compiler, instead of the programmer, can generate the code for them under some conditions. When compiler writes the code for special member functions, we use the term "default" in order to express it. For example: Compiler _default_ ed the default constructor of Myclass.
 
 Special member functions are:
 
