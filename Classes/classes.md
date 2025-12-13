@@ -128,7 +128,7 @@ private:
 	int me(8);	// error, direct initialization syntax is not allowed inside class
 };
  ```
-- "Special member functions" are unique in that way that compiler, instead of the programmer, can generate the code for them under some conditions. When compiler writes the code for them, we use the verb "default" in order to express it. For example: Compiler defaulted the default constructor of Myclass.
+- "Special member functions" are unique in the way that compiler, instead of the programmer, can generate the code for them under some conditions. When compiler writes the code for special member functions, we use the term "default" in order to express it. For example: Compiler _default_ed the default constructor of Myclass.
 
 Special member functions are:
 
@@ -141,7 +141,7 @@ Special member functions are:
 
 ## const member functions
 
-- const member functions have a hidden const class_type* paramater so that they cannot modify class data members. Note that non-const member functions cannot call const member functions. Ex:
+- const member functions have a hidden const _class_type*_ paramater so that they cannot modify class data members. Note that non-const member functions cannot call const member functions. Ex:
  ```cpp
 class Myclass {
 public:
