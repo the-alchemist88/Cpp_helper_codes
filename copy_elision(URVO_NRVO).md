@@ -1,8 +1,8 @@
 # Copy Elision
 
-There are some cases where compiler doesn't generate code for intentional copying. To explain briefly, even if the syntax visually suggests a copy/move operation (e.g. copy initialization), no copy/move is performed. This deliberate miss of copy/move operations by compiler is called copy elision. 
+There are some cases where compiler doesn't generate code for intentional copying. To explain briefly, even if the syntax visually suggests a copy/move operation (e.g. copy initialization), no copy/move is performed. This deliberate miss of copy/move operations by compiler is called _copy elision_. 
 
-Until C++17, "copy elison" was a compiler optimization technique where unnecessary copy/move ctor calls are skipped. Since C++17 standard, in certain cases, copy elison became mandatory(guaranteed) and called as mandatory copy elision. Therefore even if this name denotes an elision, there is no elision of any copying here since omitting it became mandatory by the standard. Ex:
+Until C++17, "copy elison" was a compiler optimization technique where unnecessary copy/move ctor calls are skipped. Since C++17 standard, in certain cases, copy elison became mandatory(guaranteed) and called as _mandatory copy elision_. Even though this name implies an elision, there is no elision of any copying here since omitting it became mandatory by the standard. Thus, the term "mandatory copy elision" is referred as misnomer by C++ programmers.  Ex:
 
 ```cpp
 class Myclass
