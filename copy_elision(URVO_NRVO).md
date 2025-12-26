@@ -29,11 +29,11 @@ public:
 	}
 };
 
-void func(Myclass mx){}
+void foo(Myclass mx){}
 
 int main()
 {
-	func(Myclass{10}); 	// Straightforward thinking, first a temporary object should be constructed with Myclass(int x) ctor.
+	foo(Myclass{10}); 	// Straightforward thinking, first a temporary object should be constructed with Myclass(int x) ctor.
 						// Then since it is an r value, move ctor gets called to construct the function parameter mx. However this is atypical copy elision case.
 }
 ```
@@ -51,7 +51,7 @@ Myclass(int x)
 ### Case 1: Passing PR value expression to a function 
 
 If a function has a paramater of any class type and this function is called via a PR value expression such as a temporary object expression, since C++17, compiler applies mandatory
-copy elision. It takes "Myclass{10}" argument as an initalizer expression for "Myclass mx" object when calling "func(Myclass{10})". In other words, temporary object doesn't get
+copy elision. In the above example, foo function takes "Myclass{10}" argument as an initalizer expression for "Myclass mx" object when calling "func(Myclass{10})". In other words, temporary object doesn't get
 materialized.
 
 ### Case 2: Return Value Optimization(RVO)
