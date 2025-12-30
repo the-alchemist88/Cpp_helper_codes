@@ -66,41 +66,74 @@ When the nameless temporary is the operand of a return statement, this variant o
 In a return statement, when the operand is the name of a non-volatile object with automatic storage duration, which isn't a function parameter or a catch
 clause parameter, and which is of the same class type (ignoring cv-qualification) as the function return type. This variant of copy elision is known as NRVO. Ex:
 ```cpp
+#include <iostream>
+
 class Myclass
 {
 public:
-    Myclass() { std::cout << "Myclass()\n"; };
-    Myclass(const Myclass&) { std::cout << "Myclass(const Myclass&)\n"; };
+    Myclass() { std::cout << "Myclass() is called for " << this << "\n"; };
+    Myclass(const Myclass&) { std::cout << "Myclass(const Myclass&) is called for " << this << "\n"; }
     //Myclass(const Myclass&) = delete; // uncommenting this line will cause compiler to throw error because of f_NRVO funciton
+    Myclass(Myclass&&) { std::cout << "Myclass(Myclass&&) is called for " << this << "\n"; }
+    ~Myclass() { std::cout << "~Myclass() is called for " << this << "\n"; }
 };
 
 Myclass f_URVO() // URVO - unnamed return value optimization
 				 // In C++17 and later, URVO is mandatory and no longer considered a form of copy elision
 {
+    std::cout << "f_URVO() is called\n";
     return Myclass{};
 }
 
 Myclass f_NRVO() // NRVO - named return value optimization
 {				 // NRVO is not mandatory, also a callable copy/move ctor is required even if f_NRVO doesn't call it
+    std::cout << "f_NRVO() is called\n";
     Myclass m;
+    std::cout << "Named object is constructed\n";
     return m;
 }
 
 int main()
 {
-    auto obj1 = f_URVO();  
+    auto obj1 = f_URVO();
+    std::cout << "f_URVO() returned\n\n";
     auto obj2 = f_NRVO();
+    std::cout << "f_NRVO() returned\n\n";
 }
 ```
-<ins>Output:</ins>  
-Myclass()  
-Myclass()  
+<ins>Output for C++17:</ins>  
+f_URVO() is called  
+Myclass() is called for 0x7ffc1ffc046f  
+f_URVO() returned  
+
+f_NRVO() is called  
+Myclass() is called for 0x7ffc1ffc046e  
+Named object is constructed  
+f_NRVO() returned  
+
+~Myclass() is called for 0x7ffc1ffc046e  
+~Myclass() is called for 0x7ffc1ffc046f
+
+<ins>Output for C++17 with -fno-elide-constructors flag:</ins>  
+f_URVO() is called  
+Myclass() is called for 0x7ffe6d66074f  
+f_URVO() returned  
+
+f_NRVO() is called  
+Myclass() is called for 0x7ffe6d66071f  
+Named object is constructed  
+Myclass(Myclass&&) is called for 0x7ffe6d66074e  
+~Myclass() is called for 0x7ffe6d66071f  
+f_NRVO() returned  
+
+~Myclass() is called for 0x7ffe6d66074e  
+~Myclass() is called for 0x7ffe6d66074f  
 
 Without any copy elision in this code, 2 copy/move ctors should be called for each object initialization. First is for constructing the temporary objects(via return expression)
 that will initialize obj1 and obj2 where the functions are called, second is for constructing of obj1 and obj2. Since function call expressions are PR value expressions, move ctor 
 is first choice for obj1 and obj2.
 
-<ins>Output with -fno-elide-constructors option in GCC:</ins>  
+<ins>Output with -fno-elide-constructors option in GCC for C++14:</ins>  
 Myclass()  
 Myclass(Myclass&& other)  
 Myclass(Myclass&& other)  
