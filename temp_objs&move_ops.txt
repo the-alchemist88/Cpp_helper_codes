@@ -20,6 +20,13 @@ int(14);
 Myclass();
 Myclass{};
 
+If you discard an expression from a PRValue class type, it becomes a "temporary materialization," and the constructor is called to create the object.
+
+With the C++17 standards, prvalue expressions of class type are no longer directly temporary objects. However, when used where a glvalue expression is expected, a temporary object is effectively created.
+In this case, the prvalue expression is converted to an xvalue expression, and the object comes into existence; this is called temporary materialization.
+
+A PRvalue expression from a class type is not an object itself. To use a common analogy, it's more like "the recipe used to create a class object." 
+However, a class object is created when there is a "temporary materialization conversion." In other words, temporary materialization results in a conversion from the PRvalue category to the Xvalue category.
 
 Example for first method:
 
@@ -102,7 +109,6 @@ main function continues
 
 
 The life of a temporary object ends just after running the code of statement where it was constructed(if there is no life extension).
-
 
 Move-ing Operations
 --------------------
