@@ -34,7 +34,7 @@ void foo(Myclass mx){}
 int main()
 {
 	foo(Myclass{10}); 	// Straightforward thinking, first a temporary object should be constructed with Myclass(int x) ctor.
-						// Then since it is an r value, move ctor gets called to construct the function parameter mx. However this is atypical copy elision case.
+						// Then since it is an r value, move ctor gets called to construct the function parameter mx. However this is a typical copy elision case.
 }
 ```
 Without any copy elision this code would give the following output(can be tested with "-fno-elide-constructors" option in GCC):
@@ -86,7 +86,7 @@ Myclass f_URVO() // URVO - unnamed return value optimization
 }
 
 Myclass f_NRVO() // NRVO - named return value optimization
-{				 // NRVO is not mandatory, also a callable copy/move ctor is required even if f_NRVO doesn't call it
+{				 // NRVO is not mandatory, also a callable copy/move ctor is required even though f_NRVO doesn't call it
     std::cout << "f_NRVO() is called\n";
     Myclass m;
     std::cout << "Named object is constructed\n";
@@ -129,20 +129,34 @@ f_NRVO() returned
 ~Myclass() is called for 0x7ffe6d66074e  
 ~Myclass() is called for 0x7ffe6d66074f  
 
-Without any copy elision in this code, 2 copy/move ctors should be called for each object initialization. First is for constructing the temporary objects(via return expression)
-that will initialize obj1 and obj2 where the functions are called, second is for constructing of obj1 and obj2. Since function call expressions are PR value expressions, move ctor 
-is first choice for obj1 and obj2.
+Using -fno-elide-constructors flag, which will prevent non mandotary copy elision, compiler calls move ctor for obj2(0x7ffe6d66074e) and then calls dtor for named object in f_NRVO() function. On the other hand,
+without any flag, named object and obj2 are the same object.  
+
+Running the same code with C++14 without any copy elision, 2 copy/move ctors should be called for each object initialization. First is for constructing the temporary objects(via return expression) that will initialize obj1 and obj2 where the functions are called, second is for constructing of obj1 and obj2.Since function call expressions are PR value expressions, move ctor is first choice for obj1 and obj2.  
 
 <ins>Output with -fno-elide-constructors option in GCC for C++14:</ins>  
-Myclass()  
-Myclass(Myclass&& other)  
-Myclass(Myclass&& other)  
-Myclass()  
-Myclass(Myclass&& other)  
-Myclass(Myclass&& other)  
+f_URVO() is called  
+Myclass() is called for 0x7ffc2d9a683f  
+Myclass(Myclass&&) is called for 0x7ffc2d9a686e  
+~Myclass() is called for 0x7ffc2d9a683f  
+Myclass(Myclass&&) is called for 0x7ffc2d9a686d  
+~Myclass() is called for 0x7ffc2d9a686e  
+f_URVO() returned  
 
-Note that although Myclass has user defined copy ctor, compiler calls move ctor for f_NRVO() even it has copy syntax in return statement, in other words it returns an L value
-expression and return type is Myclass thus it should use copy initialization, but instead move ctor kicks in. It is not new rule, since modern C++ this case is applied as shown.
+f_NRVO() is called  
+Myclass() is called for 0x7ffc2d9a683f  
+Named object is constructed  
+Myclass(Myclass&&) is called for 0x7ffc2d9a686f  
+~Myclass() is called for 0x7ffc2d9a683f  
+Myclass(Myclass&&) is called for 0x7ffc2d9a686c  
+~Myclass() is called for 0x7ffc2d9a686f  
+f_NRVO() returned  
+
+~Myclass() is called for 0x7ffc2d9a686c  
+~Myclass() is called for 0x7ffc2d9a686d  
+
+Note that although Myclass has user defined copy ctor, compiler calls move ctor when returning from f_NRVO() function even it has copy syntax in return statement. In other words, it returns an L value
+expression and return type is Myclass, thus normally it should use copy initialization but instead move ctor kicks in. It is not a new rule, since modern C++ this case is applied as shown in the example.
 However, some programmers that are unaware of this rule,  may want to reassure calling move ctor by using std::move(name) in return statement. This usage is called pessimistic move
 and must be avoided since it can block NRVO. Pessimistic move ex:
 
