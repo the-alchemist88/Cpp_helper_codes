@@ -102,6 +102,7 @@ int main()
 }
 ```
 <ins>Output for C++17:</ins>  
+```text
 f_URVO() is called  
 Myclass() is called for 0x7ffc1ffc046f  
 f_URVO() returned  
@@ -128,13 +129,14 @@ f_NRVO() returned
 
 ~Myclass() is called for 0x7ffe6d66074e  
 ~Myclass() is called for 0x7ffe6d66074f  
-
+```
 Using -fno-elide-constructors flag, which will prevent non mandotary copy elision, compiler calls move ctor for obj2(0x7ffe6d66074e) and then calls dtor for named object in f_NRVO() function. On the other hand,
 without any flag, named object and obj2 are the same object.  
 
 Running the same code with C++14 without any copy elision, 2 copy/move ctors should be called for each object initialization. First is for constructing the temporary objects(via return expression) that will initialize obj1 and obj2 where the functions are called, second is for constructing of obj1 and obj2.Since function call expressions are PR value expressions, move ctor is first choice for obj1 and obj2.  
 
 <ins>Output with -fno-elide-constructors option in GCC for C++14:</ins>  
+```text
 f_URVO() is called  
 Myclass() is called for 0x7ffc2d9a683f  
 Myclass(Myclass&&) is called for 0x7ffc2d9a686e  
@@ -154,7 +156,7 @@ f_NRVO() returned
 
 ~Myclass() is called for 0x7ffc2d9a686c  
 ~Myclass() is called for 0x7ffc2d9a686d  
-
+```
 Note that although Myclass has user defined copy ctor, compiler calls move ctor when returning from f_NRVO() function even it has copy syntax in return statement. In other words, it returns an L value
 expression and return type is Myclass, thus normally it should use copy initialization but instead move ctor kicks in. It is not a new rule, since modern C++ this case is applied as shown in the example.
 However, some programmers that are unaware of this rule,  may want to reassure calling move ctor by using std::move(name) in return statement. This usage is called pessimistic move
