@@ -1,35 +1,35 @@
-Temporary Objects
-----------------------
+# Temporary Objects
 
-Temporary object: Even in the source code there is no named object of this type, but in the code that the compiler generates(in assembly code) there is an object constructed.
+Temporary object: Even in the source code there is no named object of this type, but in the code that the compiler generates(in assembly code) there is an object constructed.  
 
-There are two ways to construct a temporary object:
+There are two ways to construct a temporary object:  
 
 1) Via the code that stimulate the compiler to form one:
-
-const int& x = 45; //lvalue ref cannot be bound to an rvalue expression. Therefore x is bound to a temporary oject(type of int) that the compiler initialized with 45 integer literal
-				   //in the background
+```cpp
+const int& x = 45; // lvalue ref cannot be bound to an rvalue expression. Therefore x is bound to a temporary oject(type of int)
+                   // that the compiler initialized with 45 integer literal in the background. Look below item b 
+```
 
 2) Directly using temporary object syntax:
-
+```cpp
 int();
 int{};
 int(45);
 int(14);
 
-Myclass();
-Myclass{};
+Myclass(); // look below item b 
+Myclass{}; // look below item b 
+```
 
-If you discard an expression from a PRValue class type, it becomes a "temporary materialization," and the constructor is called to create the object.
+a) By C++17 standard, prvalue expressions of class type are no longer directly form temporary objects. However, when used where a glvalue expression is expected, a temporary object is generated.
+In this case, the prvalue expression is converted to an xvalue expression, and an object is formed; this is called _temporary_ _materialization_. 
 
-With the C++17 standards, prvalue expressions of class type are no longer directly temporary objects. However, when used where a glvalue expression is expected, a temporary object is effectively created.
-In this case, the prvalue expression is converted to an xvalue expression, and the object comes into existence; this is called temporary materialization.
+A prvalue expression of class type is not an object itself. By a common analogy, it's more like "the recipe used to form a class object." However, a class object is formed when there is a "temporary materialization conversion." In other words, temporary materialization results in a conversion from the prvalue category to the xvalue category.
 
-A PRvalue expression from a class type is not an object itself. To use a common analogy, it's more like "the recipe used to create a class object." 
-However, a class object is created when there is a "temporary materialization conversion." In other words, temporary materialization results in a conversion from the PRvalue category to the Xvalue category.
+b) If you don't use a statement which is an prvalue expression of class type, in other words dicard it, here temporary materialization kicks in and the constructor is called to form the object.
 
 Example for first method:
-
+```cpp
 class Myclass
 {
 public:
@@ -55,14 +55,13 @@ int main()
 	Myclass mx;
 	mx = 10;
 }
+```
 
-Output:
-
-Myclass() called for this: 0000006F371DFCA4
-Myclass(int x) called for this: 0000006F371DFD84(x = 10)
-~Myclass() called for this: 0000006F371DFD84
-~Myclass() called for this: 0000006F371DFCA4
----------------------------------------------------------------
+<ins>Output</ins>  
+Myclass() called for this: 0000006F371DFCA4 
+Myclass(int x) called for this: 0000006F371DFD84(x = 10)  
+~Myclass() called for this: 0000006F371DFD84  
+~Myclass() called for this: 0000006F371DFCA4  
 
 In the output, two objects of Myclass type are constructed even if in the source code there is only one. Because in the assignment statement a temporary object of type Myclass is
 constructed with Myclass(int x ) constructor and just after the end of this statement it's destroyed.
@@ -72,12 +71,12 @@ Value category of expressions that generate a temporary object is R value(PR val
 When a reference (const L value reference or R values reference) is bound to a temporary object (in a PR value expression category) the life of the temporary object is fixed to scope
 of the referring name. That is, the temporary object is not destroyed until the end of the scope of the referring name. This rule is called life extension. The first example was a
 typical case of life extension:
-
+```cpp
 const int& x = 45;
-
-
+```
 Another example for life extension:
 
+```cpp
 class Myclass
 {
 public:
@@ -92,27 +91,24 @@ public:
 	}
 };
 
-
 int main()
 {
 	Myclass&& r = Myclass{};
 
 	std::cout << "main function continues\n";
 }
+```
 
-Output:
-
-Myclass() called for this: 0000009AEF8FFAA4
-main function continues
-~Myclass() called for this: 0000009AEF8FFAA4
----------------------------------------------------------------------------
-
+<ins>Output</ins>  
+Myclass() called for this: 0000009AEF8FFAA4  
+main function continues  
+~Myclass() called for this: 0000009AEF8FFAA4  
 
 The life of a temporary object ends just after running the code of statement where it was constructed(if there is no life extension).
 
-Move-ing Operations
---------------------
+## Move-ing Operations
 
+```cpp
 void func(std::string&& r) // r value reference parameter function, this functions main purpose is moving from r. Usually this is declared with an lvalue overload.
 {
 	std::string s1 = r; // doesn't move, value category of expression 'r' is an lvalue --> copy ctor of string class is called
@@ -121,13 +117,11 @@ void func(std::string&& r) // r value reference parameter function, this functio
 	std::cout << "r.length(): " << r.length() << '\n';
 	std::cout << "s1.length(): " << s1.length() << '\n';
 
-
 	std::cout << "\nNow moved\n\n";
 	std::string s2 = std::move(r); // does move, expression 'std::move(s)' is xvalue --> move ctor of string class is called
 
 	std::cout << "r.length(): " << r.length() << '\n';
 	std::cout << "s2.length(): " << s2.length() << '\n';
-
 }
 
 int main()
@@ -142,22 +136,21 @@ int main()
 	std::cout << "\nfunc gets called\n\n";
 	func(std::move(s));
 }
+```
 
-Output:
+<ins>Output</ins>  
+r.length(): 10000  
+s.length(): 10000  
 
-r.length(): 10000
-s.length(): 10000
+func gets called  
 
-func gets called
+r.length(): 10000  
+s1.length(): 10000  
 
-r.length(): 10000
-s1.length(): 10000
+Now moved  
 
-Now moved
-
-r.length(): 0
-s2.length(): 10000
---------------------------
+r.length(): 0  
+s2.length(): 10000  
 
 Moved-from state: Value is unknown. However, object must be in a valid state: Invariants are not corrupted after move operation. This means:
 
