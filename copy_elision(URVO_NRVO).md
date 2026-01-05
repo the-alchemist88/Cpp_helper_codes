@@ -48,7 +48,7 @@ Myclass(int x)
 ```
 ## Copy Elision Cases:
 
-### Case 1: Passing PR value expression to a function 
+### Case 1: Temporary Object Passing
 
 If a function has a paramater of any class type and this function is called via a PR value expression such as a temporary object expression, since C++17, compiler applies mandatory
 copy elision. In the above example, foo function takes "Myclass{10}" argument as an initalizer expression for "Myclass mx" object when calling "foo(Myclass{10})". In other words, temporary object doesn't get
