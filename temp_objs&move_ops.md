@@ -6,8 +6,16 @@ There are two ways to construct a temporary object:
 
 1) Via the code that stimulate the compiler to form one:
 ```cpp
-const int& x = 45; 
-// lvalue ref cannot be bound to an rvalue expression. Therefore x is bound to a temporary oject(type of int) that the compiler initialized with 45 integer literal in the background. Look below item a
+const int& r1 = 45;
+// Although 45 is a prvalue, a reference must bind to an object.
+// Therefore, a temporary int object initialized with 45 is materialized,
+// and its lifetime is extended to match the lifetime of r1. Look item a below
+
+int&& r2 = 67;
+// Even though y is an rvalue reference and and integer literal "67" is a prvalue expression,
+// references requires an object to bind to.
+// Therefore, a temporary int object initialized with 67 is materialized,
+// and its lifetime is extended to match the lifetime of r1. Look item a below
 ```
 
 2) Directly using temporary object syntax:
