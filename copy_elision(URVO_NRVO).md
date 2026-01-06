@@ -1,8 +1,8 @@
 # Copy Elision
 
-There are some cases where compiler doesn't generate code for intentional copying. To explain briefly, even if the syntax visually suggests a copy/move operation (e.g. copy initialization), no copy/move is performed. This deliberate miss of copy/move operations by compiler is called _copy elision_. 
+There are some cases where compiler doesn't generate code for intentional copying. To explain briefly, even though the syntax visually suggests a copy/move operation (e.g. copy initialization), no copy/move is performed. This deliberate miss of copy/move operations by compiler is called _copy elision_. 
 
-Until C++17, "copy elison" was a compiler optimization technique where unnecessary copy/move ctor calls are skipped. Since C++17 standard, in certain cases, copy elison became mandatory(guaranteed) and called as _mandatory copy elision_. Even though this name implies an elision, there is no elision of any copying here since omitting it became mandatory by the standard. Thus, the term "mandatory copy elision" is referred as misnomer by C++ programmers.  Ex:
+Until C++17, "copy elison" was a compiler optimization technique where unnecessary copy/move ctor calls are skipped. Since C++17 standard, in certain cases, copy elison became mandatory(guaranteed) and called as _mandatory copy elision_. Altough this name implies an elision, there is no elision of any copying here since omitting it became mandatory by the standard. Thus, the term "mandatory copy elision" is referred as misnomer by some C++ programmers.  Ex:
 
 ```cpp
 class Myclass
@@ -38,12 +38,12 @@ int main()
 }
 ```
 Without any copy elision this code would give the following output(can be tested with "-fno-elide-constructors" option in GCC):
-```cpp
+```text
 Myclass(int x)
 Myclass(Myclass&& other)
 ```
 But instead the output is(since C++17 compiled):
-```cpp
+```text
 Myclass(int x)
 ```
 ## Copy Elision Cases:
@@ -101,7 +101,7 @@ int main()
     std::cout << "f_NRVO() returned\n\n";
 }
 ```
-<ins>Output for C++17:</ins>  
+Output for C++17:  
 ```text
 f_URVO() is called  
 Myclass() is called for 0x7ffc1ffc046f  
@@ -114,8 +114,9 @@ f_NRVO() returned
 
 ~Myclass() is called for 0x7ffc1ffc046e  
 ~Myclass() is called for 0x7ffc1ffc046f
-
-<ins>Output for C++17 with -fno-elide-constructors flag:</ins>  
+```
+Output for C++17 with -fno-elide-constructors flag:  
+```text
 f_URVO() is called  
 Myclass() is called for 0x7ffe6d66074f  
 f_URVO() returned  
