@@ -48,7 +48,7 @@ Myclass(int x)
 ```
 ## Copy Elision Cases:
 
-### Case 1: Temporary Object Passing
+### Case 1: Temporary Object Passing (mandatory since C++17)
 
 If a function has a paramater of any class type and this function is called via a PR value expression such as a temporary object expression, since C++17, compiler applies mandatory
 copy elision. In the above example, foo function takes "Myclass{10}" argument as an initalizer expression for "Myclass mx" object when calling "foo(Myclass{10})". In other words, temporary object doesn't get
@@ -56,12 +56,12 @@ materialized.
 
 ### Case 2: Return Value Optimization(RVO)
 
-- Unnamed Return Value Optimization(URVO)
+- Unnamed Return Value Optimization(URVO) (mandatory since C++17)
 
 In the initialization of an object, when the source object is a nameless temporary and is of the same class type (ignoring cv-qualification) as the target object.
 When the nameless temporary is the operand of a return statement, this variant of copy elision is known as URVO(In C++17 and later, URVO is mandatory and no longer considered a form of copy elision)
 
-- Named Return Value Optimization(NRVO)
+- Named Return Value Optimization(NRVO) (still an optimization)
 
 In a return statement, when the operand is the name of a non-volatile object with automatic storage duration, which isn't a function parameter or a catch
 clause parameter, and which is of the same class type (ignoring cv-qualification) as the function return type. This variant of copy elision is known as NRVO. Ex:
