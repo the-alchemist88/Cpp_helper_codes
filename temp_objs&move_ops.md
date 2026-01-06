@@ -34,7 +34,7 @@ In this case, the prvalue expression is converted to an xvalue expression, and a
 
 A prvalue expression of class type is not an object itself. By a common analogy, it's more like "the recipe used to form a class object." However, a class object is formed when there is a "temporary materialization conversion." In other words, temporary materialization results in a conversion from the prvalue category to the xvalue category.
 
-b) If you don't use a statement which is an prvalue expression of class type, in other words dicard it, here temporary materialization kicks in and the constructor is called to form the object.
+b) If you don't make a statement from an prvalue expression of class type and don't use it, in other words dicard it, here temporary materialization kicks in and the constructor is called to form the object.
 
 Example for first method:
 ```cpp
