@@ -136,7 +136,7 @@ without any flag, named object and obj2 are the same object.
 
 Running the same code with C++14 without any copy elision, 2 copy/move ctors should be called for each object initialization. First is for constructing the temporary objects(via return expression) that will initialize obj1 and obj2 where the functions are called, second is for constructing of obj1 and obj2.Since function call expressions are PR value expressions, move ctor is first choice for obj1 and obj2.  
 
-<ins>Output with -fno-elide-constructors option in GCC for C++14:</ins>  
+Output with -fno-elide-constructors option in GCC for C++14:
 ```text
 f_URVO() is called  
 Myclass() is called for 0x7ffc2d9a683f  
