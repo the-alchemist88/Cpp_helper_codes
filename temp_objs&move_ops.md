@@ -29,7 +29,7 @@ Myclass(); // look below item b
 Myclass{}; // look below item b 
 ```
 
-a) By C++17 standard, prvalue expressions of class type are no longer directly form temporary objects. However, when used where a glvalue expression is expected, a temporary object is generated.
+a) By C++17 standard, prvalue expressions no longer directly form temporary objects. However, when used where a glvalue expression is expected, a temporary object is generated.
 In this case, the prvalue expression is converted to an xvalue expression, and an object is formed; this is called _temporary_ _materialization_. 
 
 A prvalue expression of class type is not an object itself. By a common analogy, it's more like "the recipe used to form a class object." However, a class object is formed when there is a "temporary materialization conversion." In other words, temporary materialization results in a conversion from the prvalue category to the xvalue category.
