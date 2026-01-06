@@ -57,12 +57,13 @@ int main()
 }
 ```
 
-<ins>Output</ins>  
+Output:
+ ```text
 Myclass() called for this: 0000006F371DFCA4 
 Myclass(int x) called for this: 0000006F371DFD84(x = 10)  
 ~Myclass() called for this: 0000006F371DFD84  
 ~Myclass() called for this: 0000006F371DFCA4  
-
+```
 In the output, two objects of Myclass type are constructed even if in the source code there is only one. Because in the assignment statement a temporary object of type Myclass is
 constructed with Myclass(int x ) constructor and just after the end of this statement it's destroyed.
 
@@ -98,12 +99,12 @@ int main()
 	std::cout << "main function continues\n";
 }
 ```
-
-<ins>Output</ins>  
+Output:
+```text
 Myclass() called for this: 0000009AEF8FFAA4  
 main function continues  
 ~Myclass() called for this: 0000009AEF8FFAA4  
-
+```
 The life of a temporary object ends just after running the code of statement where it was constructed(if there is no life extension).
 
 ## Move-ing Operations
@@ -138,7 +139,8 @@ int main()
 }
 ```
 
-<ins>Output</ins>  
+Output:
+```text
 r.length(): 10000  
 s.length(): 10000  
 
@@ -151,7 +153,7 @@ Now moved
 
 r.length(): 0  
 s2.length(): 10000  
-
+```
 Moved-from state: Value is unknown. However, object must be in a valid state: Invariants are not corrupted after move operation. This means:
 
 1) Reassignable
