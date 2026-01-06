@@ -78,19 +78,18 @@ public:
     ~Myclass() { std::cout << "~Myclass() is called for " << this << "\n"; }
 };
 
-Myclass f_URVO() // URVO - unnamed return value optimization
-				 // In C++17 and later, URVO is mandatory and no longer considered a form of copy elision
+Myclass f_URVO() // URVO - unnamed return value optimization, since C++17 URVO is mandatory and no longer considered as a form of copy elision
 {
     std::cout << "f_URVO() is called\n";
     return Myclass{};
 }
 
-Myclass f_NRVO() // NRVO - named return value optimization
-{				 // NRVO is not mandatory, also a callable copy/move ctor is required even though f_NRVO doesn't call it
+Myclass f_NRVO() // NRVO - named return value optimization. NRVO is not mandatory, also a callable copy/move ctor is required even though f_NRVO doesn't call it
+{
     std::cout << "f_NRVO() is called\n";
     Myclass m;
     std::cout << "Named object is constructed\n";
-    return m;
+    return m; // lvalue to xvalue conversion, triggers move semantics 
 }
 
 int main()
