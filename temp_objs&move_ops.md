@@ -13,7 +13,7 @@ const int& r1 = 45;
 
 int&& r2 = 67;
 // Even though y is an rvalue reference and and integer literal "67" is a prvalue expression,
-// references requires an object to bind to.
+// reference requires an object to bind to.
 // Therefore, a temporary int object initialized with 67 is materialized,
 // and its lifetime is extended to match the lifetime of r1. Look item a below
 ```
@@ -120,17 +120,17 @@ The life of a temporary object ends just after running the code of statement whe
 ```cpp
 void func(std::string&& r) // r value reference parameter function, this functions main purpose is moving from r. Usually this is declared with an lvalue overload.
 {
-	std::string s1 = r; // doesn't move, value category of expression 'r' is an lvalue --> copy ctor of string class is called
-						// data type of r is std::string&&
+  std::string s1 = r; // doesn't move, value category of expression 'r' is an lvalue --> copy ctor of string class is called
+                        // data type of r is std::string&&
 
-	std::cout << "r.length(): " << r.length() << '\n';
-	std::cout << "s1.length(): " << s1.length() << '\n';
+  std::cout << "r.length(): " << r.length() << '\n';
+  std::cout << "s1.length(): " << s1.length() << '\n';
 
-	std::cout << "\nNow moved\n\n";
-	std::string s2 = std::move(r); // does move, expression 'std::move(s)' is xvalue --> move ctor of string class is called
+  std::cout << "\nNow moved\n\n";
+  std::string s2 = std::move(s); // does move, expression 'std::move(s)' is xvalue --> move ctor of string class is called
 
-	std::cout << "r.length(): " << r.length() << '\n';
-	std::cout << "s2.length(): " << s2.length() << '\n';
+  std::cout << "r.length(): " << r.length() << '\n';
+  std::cout << "s2.length(): " << s2.length() << '\n';
 }
 
 int main()
@@ -146,7 +146,6 @@ int main()
 	func(std::move(s));
 }
 ```
-
 Output:
 ```text
 r.length(): 10000  
