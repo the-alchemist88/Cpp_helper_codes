@@ -6,8 +6,8 @@ There are two ways to construct a temporary object:
 
 1) Via the code that stimulate the compiler to form one:
 ```cpp
-const int& x = 45; // lvalue ref cannot be bound to an rvalue expression. Therefore x is bound to a temporary oject(type of int)
-                   // that the compiler initialized with 45 integer literal in the background. Look below item b 
+const int& x = 45; 
+// lvalue ref cannot be bound to an rvalue expression. Therefore x is bound to a temporary oject(type of int) that the compiler initialized with 45 integer literal in the background. Look below item a
 ```
 
 2) Directly using temporary object syntax:
