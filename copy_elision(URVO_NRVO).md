@@ -89,7 +89,7 @@ Myclass f_NRVO() // NRVO - named return value optimization. NRVO is not mandator
     std::cout << "f_NRVO() is called\n";
     Myclass m;
     std::cout << "Named object is constructed\n";
-    return m; // lvalue to xvalue conversion, triggers move semantics 
+    return m; // lvalue to xvalue conversion, allows move semantics 
 }
 
 int main()
@@ -157,17 +157,28 @@ f_NRVO() returned
 ~Myclass() is called for 0x7ffc2d9a686c  
 ~Myclass() is called for 0x7ffc2d9a686d  
 ```
-Note that although Myclass has user defined copy ctor, compiler calls move ctor when returning from f_NRVO() function even it has copy syntax in return statement. In other words, it returns an L value
-expression and return type is Myclass, thus normally it should use copy initialization but instead move ctor kicks in. It is not a new rule, since modern C++ this case is applied as shown in the example.
-However, some programmers that are unaware of this rule,  may want to reassure calling move ctor by using std::move(name) in return statement. This usage is called pessimistic move
-and must be avoided since it can block NRVO. Pessimistic move ex:
+Note that although Myclass has user defined copy ctor, compiler calls move ctor when returning from f_NRVO() function and it has copy syntax in return statement(return m). Straightforward expectation would be it should return an lvalue
+expression, thus normally it should use copy initialization, however, move ctor kicks in because compiler does lvalue to xvalue conversion. It is not a new rule, since modern C++ this case is applied in this way.
+However, some programmers that are unaware of this rule, may want to reassure calling move ctor by using std::move(name) in return statement. This usage is called pessimistic move and must be avoided since it blocks copy elision. Pessimistic move ex:
 
 ```cpp
-Myclass pess_foo()        // blocks NRVO, don't use pessimistic move 
+class Myclass
+{
+public:
+    Myclass() { std::cout << "Myclass() is called for " << this << "\n"; };
+    Myclass(const Myclass&) { std::cout << "Myclass(const Myclass&) is called for " << this << "\n"; }
+    Myclass(Myclass&&) { std::cout << "Myclass(Myclass&&) is called for " << this << "\n"; }
+    ~Myclass() { std::cout << "~Myclass() is called for " << this << "\n"; }
+};
+
+Myclass pess_move()       
 {                               
     Myclass x;
-    return std::move(x);  // programmer ties to trigger move semantics by changing the value category of a named object
-						  // however "return x" already triggers move ctor not copy ctor
+    return std::move(x); // programmer ties to trigger move semantics by changing the value category of a named object but it blocks NRVO, don't use pessimistic move 
+}
+int main()
+{
+    Myclass m(pess_move()); // will call move ctor for m
 }
 ```
 
