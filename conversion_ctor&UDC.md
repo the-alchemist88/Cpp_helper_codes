@@ -90,11 +90,21 @@ int main()
 	C cx = ax;		// error, UDC(A --> B) + UDC(B --> C) 
 	C cx1 = static_cast<B>(10); // valid, excplicit conversion + UDC
 	C cx2(B());		// most vexing parse, this is a function declaration with return type of class C and parameter type of B(*)() 
-								// B() expression goes through function to pointer conversion
-	
 }
 ```
-However this feature can lead to quite absurd and unintentional conversions made by the programmer:
+Side Note: Why in the above example "B()" looks like an object but is not one? At first glance, B() appears to be a temporary object construction. In many contexts, that intuition is correct. However, in the declaration "C cx2(B());" B() is not an object construction at all. The reason is that this line appears in a declaration context. According to the C++ grammar, if a statement can be parsed both as a declaration and as an expression, the declaration interpretation is always chosen. This rule is what leads to the so-called “most vexing parse”. The compiler does not interpret B() as “construct a temporary B object”. Instead, it interprets it as a function type taking no parameters and returning B. As a result, the full statement is parsed as: C cx2( B (*)() );
+This means that cx2 is a function name, the return type is C, and the parameter is a pointer to a function that takes no parameters and returns B. The following syntax all construct an object:
+
+```cpp
+C cx2((B()));
+
+C cx2{B{}};
+
+B tmp{};
+C cx2(tmp);
+```
+
+However this rule can lead to quite absurd and unintentional conversions made by the programmer:
 ```cpp
 class Myclass
 {
