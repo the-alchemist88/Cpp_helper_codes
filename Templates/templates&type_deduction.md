@@ -102,14 +102,14 @@ int main()
     auto var2 = y;      // type is int, const-ness drops
 
     auto var3 = a;      // type is int*
-    auto var5 = ca;     // type is const const int*
+    auto var4 = ca;     // type is const int*
 
-    auto& var6 = 5;     // error, cannot be bound to R value expression
-    auto&& var7 = 5;    // type is int&&
-    auto& var8 = var7;  // type is int&. The name that is type of R value reference(var7), forms nevertheless an L value expression
+    auto& var5 = 13;    // error, cannot be bound to R value expression
+    auto&& var6 = 5;    // type is int&&
+    auto& var7 = var6;  // type is int&. The name that is type of R value reference(var6), forms nevertheless an L value expression
 
-    auto&& var9 = a;  	// type is int(&)[10]
-    auto&& var10 = ca;  // type is const int(&)[10]. ca is L value expression, according to reference collapsing rules var sloud be lvalue ref
+    auto&& var8 = a;  	// type is int(&)[10]
+    auto&& var9 = ca;   // type is const int(&)[10]. ca is L value expression, according to reference collapsing rules var sloud be lvalue ref
 
 }
 ```
@@ -162,7 +162,7 @@ void func2(std::initializer_list<T>)
 
 auto createInitList()
 {
-    return { 1, 3, 5, 7 }; // error can't deduce type, auto in a function return type or a lambda parameter implies template type deduction, not auto type deduction
+    return { 1, 3, 5, 7 }; // error, can't deduce type, auto in a function return type or a lambda parameter implies template type deduction, not auto type deduction
 }
 
 int main()
