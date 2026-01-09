@@ -205,6 +205,8 @@ int init()
 class Myclass {
 public:
 
+	Myclass(int x): svar(x) {)  // error, svar is a static variable thus it is already generated before main. In CIL, only non-static data members can be initialized 
+
 	static void foo()
 	{
 		bar(); // bar is a non-static member function thus it has a hidden Myclass* paramater, consequently it must be called for an object
@@ -214,8 +216,8 @@ public:
 		fun();
 
 		svar = 5;
-		nsvar = 10; // error, similar reason with calling directly bar() function with its name, because static gunctions don't have "this" pointer
-		mx.nsvar = 10;
+		var = 10; // error, similar reason with calling directly bar() function with its name, because static functions don't have "this" pointer
+		mx.var = 10;
 	}
 
 	void bar() {}
@@ -231,15 +233,36 @@ public:
 	}
 
 	static int svar;
-	int nsvar{};
+	int var{};
 };
 
 int Myclass::svar = init(); // Note that there are two init() function in the code, one is a free function, the other is a static member function. Since svar is declared as a static
-														// data member in the class, during its initatlization, function name will be first searched inside class according to name lookup rules
+                            // data member in the class, during its initatlization, function name will be first searched inside class according to name lookup rules
 int main()
 {
 	std::cout << Myclass::svar;
 }
 ```
 <ins>Output</ins>    
-20
+20  
+
+Note that since classes are typically declared in header files, in cpp files client cannot directly see a member function's access category or whether it is static or non-static. Therefore, some programmers prefer to do a so-called trick via preprocessor commands.
+
+```cpp
+// Myclass.h
+
+class Myclass {
+public:
+	static void foo();
+
+// Myclass.cpp
+
+#include "Myclass.h"
+
+#define PUBLIC
+#define STATIC
+
+PUBLIC STATIC void Myclass::foo()
+{
+}
+```
