@@ -27,8 +27,8 @@ public:
         cout << "Hey I'm " << m_name << '\n';
         for (auto p : alive)
             if(p != this)
-                cout << (*p).m_name << "! ";
-        cout << "\nGuys, need back-up!\n\n";
+                cout << p->m_name << "! ";
+        cout << "\nEveryone, I need back-up!\n\n";
     }
 
     static void print_figter_num()
@@ -41,7 +41,7 @@ public:
     {
         cout << "alive fighters: ";
         for (auto p : alive)
-            cout << (*p).m_name << " ";
+            cout << p->m_name << " ";
         cout << '\n';
         cout << "neutralised fighters: ";
         for (auto s : dead)
