@@ -252,7 +252,9 @@ The typical contexts where static members are used:
 
 - Named Constructors
 - Singleton patterns (shown examples above)
-- Object count etc. (there is an example in this repo)
+- Object count (there is an example in this repo)
+- Factory functions
+- Dynamic-only objects
 
 Note that since classes are typically declared in header files, in cpp files client cannot directly see a member function's access category or whether it is static or non-static. Therefore, some programmers prefer to do a so-called trick via preprocessor commands.
 
