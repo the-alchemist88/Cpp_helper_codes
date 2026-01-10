@@ -19,16 +19,19 @@ public:
         cout << m_name << " has fallen\n";
         dead.push_back(m_name);
         --alive_fighter_num;
-        erase(alive, this); // C++20, std::erase instead of remove-erase idiom
+        std::erase(alive, this); // C++20, std::erase instead of remove-erase idiom
     }
-//
+
+    Fighter(const Fighter&) = delete;
+    Fighter& operator=(const Fighter&) = delete;
+
     void ask_help()
     {
         cout << "Hey I'm " << m_name << '\n';
         for (auto p : alive)
             if(p != this)
                 cout << p->m_name << "! ";
-        cout << "\nEveryone, I need back-up!\n\n";
+        cout << "\nGuys, I need back-up!\n\n";
     }
 
     static void print_figter_num()
