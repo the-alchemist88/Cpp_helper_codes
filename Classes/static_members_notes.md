@@ -183,6 +183,8 @@ class Myclass
 }
 ```
 
+In practice, static data members are not located in public access, but const or constexpr(makes implicitly inline and const) static data members can be put in public access.
+
 ## Static Member Functions
 
 From a simple point of view, static member functions are global functions with subtle differences. Firstly, they are declared inside class their name lookup rules will change accordingly. Also they can access protected and private members of
