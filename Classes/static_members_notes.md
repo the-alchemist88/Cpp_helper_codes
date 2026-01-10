@@ -185,8 +185,8 @@ class Myclass
 
 ## Static Member Functions
 
-Actually Static Member Functions are global functions, but since they are declared inside class their name lookup rules will change accordingly. Also they can access protected and private members of
-the class. They don't have hidden class pointer("this") parameter as non-static member functions do. They are logically connected with the class. 
+From a simple point of view, static member functions are global functions with subtle differences. Firstly, they are declared inside class their name lookup rules will change accordingly. Also they can access protected and private members of
+the class since they are member functions. Comparing them with non-static member functions, they don't have hidden class pointer("this") parameter as non-static member functions do. Nevertheless they are logically connected with the class. 
 
 General features:
 
@@ -245,6 +245,12 @@ int main()
 ```
 <ins>Output</ins>    
 20  
+
+The typical contexts where static members are used:
+
+- Named Constructors
+- Singleton patterns (shown examples above)
+- Object count etc. (there is an example in this repo)
 
 Note that since classes are typically declared in header files, in cpp files client cannot directly see a member function's access category or whether it is static or non-static. Therefore, some programmers prefer to do a so-called trick via preprocessor commands.
 
