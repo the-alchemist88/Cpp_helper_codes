@@ -174,7 +174,7 @@ class Myclass
 }
 ```
 
-- constexpr keyword implicitly adds inline and const feature to members.
+- constexpr keyword implicitly qualifies members as inline and const.
   
 ```cpp
 class Myclass
@@ -183,7 +183,7 @@ class Myclass
 }
 ```
 
-In practice, static data members are not located in public access, but const or constexpr(makes implicitly inline and const) static data members can be put in public access.
+In practice, static data members are not located in public access, but const or constexpr static data members can be put in public access.
 
 ## Static Member Functions
 
