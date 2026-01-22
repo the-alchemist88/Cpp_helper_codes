@@ -11,7 +11,7 @@ Please note that implementing function overloading at compiler side is a signifi
 
 Requirements for function overloading to occur:
 
-1) Namesake functions, which are called candidate functions technically, must be declared in the same scope.
+1) Namesake functions, which are called candidate functions technically, must be declared in the same scope(In case of ADL and operator functions, scope and name lookup rules might differ).
 2) Their signatures must be different.
 
 The primary job of function overloading mechanism to pick the correct function when a candiadate function is called. This process is called function overload resolution and it is a compile-time feature.
