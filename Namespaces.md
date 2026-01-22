@@ -43,7 +43,7 @@ Bir isimalanı içindeki isim, o isimalanı dışında, isimalanı adı ile nite
    1) using std::cout;
 
 Bu bir bildirimdir. Bu bildirimin bir kapsamı var ve bildirim o kapsamda etkin. Using bildirimi, bildirime konu ismi, bildirimin yapıldığı kapsama 
-enjekte(inject) eder. Yani o isim sanki o kapsamda bildirilmiş gibi ele alınır.
+enjekte(inject) eder. Yani o isim sanki o kapsamda tanimlanmis gibi ele alınır.
 
    2) using namespace std;
 
