@@ -34,7 +34,7 @@ bool foo(int)
 	return true;
 }
 ```
-Bir isimalanı içindeki isim, o isimalanı dışında, isimalanı adı ile nitelenmeden kullanılablir mi? Evet. Bunun üç yolu var:
+Can a name within a namespace be used outside that namespace without being qualified by the namespace name? Yes. There are three ways to do this:
 
 1) using declaration
 2) using namespace (directive) declaration
@@ -66,13 +66,12 @@ int main()
 	Demo::x = 15;
 }
 ```
-   3) ADL(Argument dependant look-up)
+   3) ADL(Argument Dependant Lookp)
    
-Bir fonksiyon çağrısı nitelenmiş bir isim kullanılarak yapıldığında, eğer fonksiyona gönderilen argüman ya da argümanlardan biri bir isimalanı içinde 
-tanımlanan bir türe ilişkin ise(isimalanı içinde tanımlanan bir türden olmak zorunda değil) söz konusu fonksiyon ismi, o isimalanında da(argümanın 
-ilişkin olduğu) aranır.
+When a function is called using a qualified name through its arguments, if these arguments are related to a type defined within a namespace (it
+doesn't have to be of a type defined within a namespace), then that function name is also searched in that namespace (to which the argument belong).
 
-Örnek:
+Ex:
 ```cpp
 namespace Demo
 {
@@ -143,6 +142,52 @@ namespace B
 	}
 }
 ```
+
+If we examine a trivial "Hello world" program:
+```cpp
+std::cout << ("Hello world");
+```
+Note that ostream class has its own member operator<< and free operator<< functions and their overloads in std namespace, below is only a simple demo:
+```cpp
+namespace std { 
+	class ostream {
+		ostream& operator<< (type);
+		//code
+	}; 
+	ostream& operator<<(ostream&, type);
+	//code
+}
+```
+
+_std::cout << ("Hello world")_ this call is interpreted in two different ways by the compiler, each applying its own lookup rules.Thus the name lookup runs through two separate channels:  
+```cpp
+std::cout.operator << ("Hello world"); // member function  
+operator << (std::cout, "Hello world"); // free function  
+```
+The candidate function set consists of these two sources:  
+
+A) Member operator candidates  
+- std::ostream and base classes  
+- Only operator<< member functions  
+
+B) Non-member operator candidates  
+
+Unqualified lookup:  
+- Your current scope  
+- Enclosing namespaces  
+
+ADL:
+	- std::ostream → namespace std
+
+Best match between member operator candidates (simplified form of signatures and return types):
+```cpp
+ostream& operator<<(const void*);
+```
+Best match between non-member operator candidates (simplified form of signatures and return types):
+```cpp
+ostream& operator<<(ostream&, const char* s);
+```
+In this case, "ostream& operator<<(ostream&, const char* s );" The function is chosen because it is a better candidate (array to pointer conversion).
 
 İsimalanlarının belirgin özellikleri:
 
