@@ -95,7 +95,7 @@ a) Standard Conversion. Can be grouped in three categories:
 	- Other conversions except first two cases  
   
   Exact match subcategories:  
-      1) L value ==> R value transformation  
+      1) Lvalue-to-Rvalue conversion (explained below the page)
       2) const conversion  
       3) Array to pointer conversion(array decay)  
       4) function to pointer conversion  
@@ -243,3 +243,12 @@ int main  {
 	foo(50L, 3.6L, true); 	// ambiguity, for first argument 3rd foo has advantage and third 2nd foo
 }
 ```
+
+## Lvalue-to-Rvalue Conversions
+
+Due to their ephemeral nature, rvalues are necessarily restricted to the right-hand side of a (“simple”) assignment: An assignment 7 = 8 doesn’t make sense because the mathematical 7 isn’t allowed to be redefined. Lvalues, on the other hand, don’t  
+appear to have the same restriction: One can certainly compute the assignment x = y when x and y are variables of compatible type, even though the expressions x and y are both lvalues.  
+
+The assignment x = y works because the expression on the right-hand side, y, undergoes an implicit conversion called the lvalue-to-rvalue conversion. As its name implies, the lvalue-to-rvalue conversion takes an lvalue and produces an rvalue of  
+the same type by reading from the storage or register associated with the lvalue. This conversion therefore accomplishes two things: First, it ensures that an lvalue can be used wherever an rvalue is expected (e.g., as the right-hand side of an assignment or  
+in a mathematical expression such as x + y). Second, it identifies where in the program the compiler (prior to optimization) may emit a “load” instruction to read a value from memory.  
