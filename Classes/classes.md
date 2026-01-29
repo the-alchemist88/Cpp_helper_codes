@@ -32,7 +32,7 @@ class Enemyfighter {};
 
 class Myfighter { 
 public:
-	void attack1(Enemyfighter*); 		// actually has a hidden parameter of type Myfighter*
+	void attack1(Enemyfighter*);    // actually has a hidden parameter of type Myfighter*
 };
 	
 void attack2(Myfighter*, Enemyfighter*);
@@ -41,7 +41,7 @@ int main()
 {
 	Myfighter fighter1;
 	Enemyfighter fighter2;
-	fighter1.attack1(&fighter2); // If we assume that attack1 and attack2 have the same effect, it is much more clear on attack1 that which object is taking the action
+	fighter1.attack1(&fighter2);     // If we assume that attack1 and attack2 have the same effect, it is much more clear on attack1 that which object is taking the action
 	attack2(&fighter1, &fighter2);
 }
  ```
@@ -77,7 +77,7 @@ private:
 	int mx;
 };
 
-int Myclass::get() { // this will cause a linker error if it is included in multiple source files. It should qualified as inline in declaration or definition or both.
+int Myclass::get() { // this will cause a linker error if it is included in multiple source files. It should qualified as inline in declaration or definition or both
 	return mx;
 }
 ```
@@ -93,9 +93,9 @@ private:
 
 Myclass g;
 
-void Myclass::set(int x) { // valid
-  g.mx = mx;	// left hand side mx is private data member of g object
-  mx = x;		  // left hand side mx is private data member of the object that set function is called for
+void Myclass::set(int x) {   // valid
+  g.mx = mx;                 // left hand side mx is private data member of g object
+  mx = x;                    // left hand side mx is private data member of the object that set function is called for
 }
  ```
 - Regarding name lookup, an unqualified name inside a member function first looked for in block scope then searched in class scope.
@@ -114,19 +114,19 @@ Myclass g;
 
 void Myclass::foo() {
 	int x;
-	x = 45;					// local
-	Myclass::x = 56;		// data member
-	::x = 56;				// global
+    x = 45;                 // local
+    Myclass::x = 56;        // data member
+    ::x = 56;               // global
 	
-	x = Myclass::x + ::x; 	// valid
+	x = Myclass::x + ::x;   // valid
 };
 
 void foo();
 
 int main() {
 	Myclass m;
-	m.Myclass::foo();		// member function call
-	foo();					// global function call
+	m.Myclass::foo();       // member function call
+	foo();                  // global function call
 }
  ```
 
@@ -139,9 +139,9 @@ public:
   class Nested {};
   void bar(void)
   {
-    mn;           //  1  All of them refers the same object. Note that mn is non-static data member
-    this->mn;     //  2
-    Myclass::mn;  //  3
+    mn;           // 1  All of them refers the same object. Note that mn is non-static data member
+    this->mn;     // 2
+    Myclass::mn;  // 3
   }
 private:
   Nested foo(Nested);
@@ -177,9 +177,9 @@ public:
 
 private:
 	int ma, mb, mc;
-	int md{7};	// in-class member initializer(default member initializer), it simply instructs the compiler to initialize this variable with the specified value at CIL
-				// if a data member will not be initiazlied with a parameter(via parameter-ed ctors), this this way of initialization can be preferred.
-	int me(8);	// error, direct initialization syntax is not allowed inside class.
+	int md{7};  // in-class member initializer(default member initializer), it simply instructs the compiler to initialize this variable with the specified value at CIL
+	            // if a data member will not be initiazlied with a parameter(via parameter-ed ctors), this this way of initialization can be preferred
+	int me(8);  // error, direct initialization syntax is not allowed inside class
 };
  ```
 - "Special member functions" are unique in the way that compiler, instead of the programmer, can generate the code for them under some conditions. When compiler writes the code for special member functions, we use the term "default" in order to express it. For example: Compiler defaulted the default constructor of Myclass.
@@ -222,19 +222,19 @@ public:
 
 	void bar() const
 	{
-		x = 54; 	// error
-		foo();		// error, bar() passes hidden const Myclass* argument to foo(), but there is no conversion from const T* to T*.
+		x = 54;     // error
+		foo();      // error, bar() passes hidden const Myclass* argument to foo(), but there is no conversion from const T* to T*
 		Myclass m;
-		m.foo();	// valid, this is called for m object via hidden Myclass*
-		baz();		// valid
+		m.foo();    // valid, this is called for m object via hidden Myclass*
+		baz();	    // valid
 	}
 
 	Myclass& baz() const
 	{
-		return *this;	// error, no conversion from const T* to T*, return type should be const Myclass&
+		return *this;   // error, no conversion from const T* to T*, return type should be const Myclass&
 	}
 
-	Myclass baz() 		// function overloading
+    Myclass baz()       // function overloading
 	{
 		return *this;
 	}
@@ -248,10 +248,10 @@ int main() {
 	Myclass m;
 	const Myclass cm;
 
-	m.bar();	// valid
-	cm.bar();	// valid
+	m.bar();   // valid
+	cm.bar();  // valid
 
-	cm.foo(); // error, no conversion from const T* to T*
+	cm.foo();  // error, no conversion from const T* to T*
 }
 ```
 - mutable keyword is used for data members that do not participate in the logical state of the object and mutable data members can be mdofied by const member functions as well non-const member functions.  
