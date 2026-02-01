@@ -1,19 +1,17 @@
 # INHERITANCE 
 
-- A Derived object contains a Base subobject as part of its memory layout. This means that the complete Base subobject is embedded inside the Derived object, possibly followed by additional data members and padding.
-Therefore, the following relation always holds:
+- A Derived object contains a complete Base subobject as part of its object representation, possibly followed by additional data members and padding. Therefore, the following relation always holds:  
 
-- sizeof(Derived) >=  sizeof(Base) 
+`sizeof(Derived) >= sizeof(Base)`
 
-- The base class of an inheritance relationship must be a complete type at the point of derivation. In other words, a class cannot be derived from an incomplete type, because the compiler needs to know the full layout
-of the base class in order to embed it as a subobject of the derived class.
+- The base class of an inheritance relationship must be a complete type at the point of derivation. The compiler must know the full layout of the base class in order to embed it as a base subobject of the derived class.
 
-- In a derived class, writing a "using declaration" for member functions or data members of the base class can have two purposes:
+- In a derived class, writing a `using declaration` for member functions or data members of the base class can have two purposes:
 
 1) It can be used to bring base class members (those that are accessible, i.e., not private) into the public interface of the derived class, so that client code can use them through the derived type.  
 
-2) It can be used to prevent name hiding and to form a proper overload set between base class and derived class functions. If the derived class declares a function with the same name, it hides all base class functions
-with that name. A using declaration can be used to bring the base class overloads back into scope.  
+2) It can be used to prevent name hiding and to form a proper overload set. If the derived class declares a function with the same name, it hides all base class functions with that name.
+A `using declaration` can be used to bring the base class overloads back into scope.
 
 ```cpp
 class Base
@@ -58,9 +56,9 @@ int main()
 	Derived dx;
 
 	dx.foo(5);	// added base class function to derived class public interface
-	dx.bar(5);	// function overloading, base class object bar function ced 
-	dx.bar(5.);	// function overloading, derived class object bar function ced 
-	dx.baz(5);	// both derived and base have the same function, it's not ambiguity. Derived class function has priority.
+	dx.bar(5);	// function overloading, base class object bar function called 
+	dx.bar(5.);	// function overloading, derived class object bar function called 
+	dx.baz(5);	// both derived and base have a function with the same signature; this is not ambiguous. The derived class function is selected.
 }
 ```
 <ins>Output</ins>  
@@ -69,11 +67,10 @@ Base::bar(int x)
 Der::bar(double x)  
 Derived::baz(int x)  
 
-Special member functions in inheritance behave similarly to composition. If a special member function of the derived class is implicitly declared / defaulted by the compiler,
-the corresponding base class special member function is automatically invoked (e.g., the base class default constructor is called before the derived class constructor).
+Special member functions in inheritance behave similarly to composition. If a special member function of the derived class is implicitly declared or defaulted, the corresponding base class special member function is automatically invoked.
+(e.g., the base class default constructor is called before the derived class constructor).
 
-However, if a special member function is user-defined in the derived class, then it becomes the programmer’s responsibility to explicitly invoke the corresponding base class constructor,
-assignment operator, or destructor, typically via the member initializer list or an explicit call.
+However, if a special member function is user-defined in the derived class, then it becomes the programmer’s responsibility to explicitly invoke the corresponding base class constructor, assignment operator, or destructor.
 
 ```cpp
 class Base
@@ -151,7 +148,7 @@ public:
 // test code
 int main()
 {
-	Der da;			// default ctor
+	Der da;			    // default ctor
 	cout << "\n";
 	Der db(3, 5);		// (int, int) ctor
 	cout << "\n";
@@ -159,12 +156,12 @@ int main()
 	cout << "\n";
 	Der dd = std::move(da);	// move ctor
 	cout << "\n";
-	da = dd;		// copy assignment operator
+	da = dd;		    // copy assignment operator
 	cout << "\n";
 	db = std::move(dc);	// move assignment operator
 	cout << "\n";
 	db.Base::foo(5);	// calling Base class function through a derived object
-	db.foo(5);		// since it's a public inheritance, derived class object also has base class public functions
+	db.foo(5);		    // since it's a public inheritance, derived class object also has base class public functions
 }
 ```
 
@@ -190,7 +187,7 @@ Der& operator=(Der&& rhs)
 Base::foo(int x)  
 Base::foo(int x)  
 
-Since modern C++, the language provides the _inheriting constructors_ feature via the `using Base::Base; syntax`. This allows a derived class to inherit the constructors of its base class,
+Since modern C++11, the language provides the _inheriting constructors_ feature via the `using Base::Base;` syntax. This allows a derived class to inherit the constructors of its base class,
 saving the programmer from having to manually forward all base class constructors.
 
 However, the access control of the base class constructors is preserved. If the base class constructors are protected, they can still be inherited, but they will not be accessible to
@@ -265,8 +262,8 @@ This means (private inheritance): Protected and public parts of the base class c
 
 - There is no is-a relationship. There is no implicit conversion from the derived class to the base class. Upcasting is a syntax error with two exceptions:
 
-a) Valid (implicitly) within the derived class's member function
-b) Valid in functions to which the derived class gives friendship
+- Valid (implicitly) within the derived class's member function
+- Valid in functions to which the derived class gives friendship
 
 ```cpp
 class Base
@@ -281,8 +278,8 @@ class Der : private Base
 	{
 		Der myder;
 
-		Base* bptr = &myder; // geçerli
-		Base& bref = myder; // geçerli
+		Base* bptr = &myder; // valid
+		Base& bref = myder; // valid
 	}
 	friend void func();
 };
@@ -291,16 +288,16 @@ void func()
 {
 	Der myder;
 
-	Base* bptr = &myder; // geçerli
-	Base& bref = myder; // geçerli
+	Base* bptr = &myder; // valid
+	Base& bref = myder; // valid
 }
 
 int main()
 {
 	Der myder;
 
-	Base* bptr = &myder; // geçersiz
-	Base& bref = myder; // geçersiz
+	Base* bptr = &myder; // invalid
+	Base& bref = myder; // invalid
 }
 ```
 - Private inheritance is an alternative to composition (containment, i.e. having a data member of a class type). Differences between the two:
@@ -313,7 +310,7 @@ On the other hand, composition allows multiple subobjects of the same type (e.g.
 since a class can inherit from a given base class only once. Examples that are possible in composition but not in private inheritance:
 
 - A class can have two members of another class type.
-- A class can have an array of memvers of another class type.
+- A class can have an array of members of another class type.
 
 In summary, upcasting in private inheritance:
 
@@ -338,9 +335,11 @@ class BaseY { int y;}
 
 class Der : public BaseX, BaseY {}
 ```
-This means class Der : public BaseX is the same as private BaseY. Der object has two separate base classes. So sizeof(Der) will be 8 in this case.
+This means class Der : public BaseX is the same as private BaseY. Der object has two separate base classes.  
+Thus `sizeof(Der)` will be at least `sizeof(BaseX) + sizeof(BaseY)` in this case (typically 8 bytes on many platforms).
 
-In multiple inheritance, base class subobjects are constructed in the order in which they appear in the inheritance list, 
+
+In multiple inheritance, base class subobjects are constructed in the order in which they appear in the inheritance list (from left to right),
 not in the order in which they appear in the constructor’s initializer list. The same rule applies in reverse order for destruction.
 ```cpp
 class Der : public BaseX, public BaseY // It comes to life in this order
@@ -387,10 +386,10 @@ int main()
 }
 ```
 <ins>Output</ins>  
-BaseX foo()
-BaseY foo(int, int)
-BaseX foo()
-BaseY foo(int, int)
+BaseX foo()  
+BaseY foo(int, int)  
+BaseX foo()  
+BaseY foo(int, int)  
 
 If the function overloading mechanism is desired to be on action, then "using declaration" can be added for both base classes in the derived class:
 ```cpp
@@ -485,11 +484,11 @@ int main()
 }
 ```
 <ins>Output</ins>  
-Person
-Engineer
-Employee
-Developer
-Senior_Developer
+Person  
+Engineer  
+Employee  
+Developer  
+Senior_Developer  
 
 ## Empty Base Optimization (EBO)
 
@@ -499,7 +498,7 @@ the compiler may need to add padding for alignment, which can increase the objec
 For this reason, inheriting from an empty class is often preferred, because most modern compilers apply the _Empty Base Optimization (EBO)_ and do not allocate additional
 storage for the empty base subobject. Note that EBO is not strictly guaranteed by the standard, but it is widely implemented by major compilers.
 
-Why is an empty class formed in the firs place?
+Why is an empty class formed in the first place?
 
 - Just because a class does not have members does not mean that it will not have an interface.
 - Such classes are used to create overload resolution with some techniques.
@@ -529,12 +528,12 @@ void foo(Base& r)
 void g1()
 {
 	Der1 myder;
-	foo1(myder); // geçerli, friend func
+	foo1(myder); // invalid, friend func
 }
 
 void g2()
 {
 	Der1 myder;
-	//foo1(myder); // geçersiz
+	foo1(myder); // valid
 }
 ```
