@@ -1,7 +1,7 @@
 # Function Overloading
 
-The main purpose of function overloading mechanism is naming a group of functions, which do the same job in essence when they are abstracted, with the same name. Thus, user of this functions 
-will employ them more conveniently. If those functions had to have the same name as in C language, user would have to know all of the different function names that actually correspond to only one functionality. Consider this example in C language:
+The main purpose of function overloading is to give the same name to a group of functions that conceptually perform the same task. Thus, user of these functions will employ them more conveniently.
+If those functions had to have the same name as in C language, user would have to know all of the different function names that actually correspond to only one functionality. Consider this example in C language:
 ```cpp
 int   abs(int n);
 long  labs(long n);
@@ -11,10 +11,10 @@ Please note that implementing function overloading at compiler side is a signifi
 
 Requirements for function overloading to occur:
 
-1) Namesake functions, which are called candidate functions technically, must be declared in the same scope(In case of ADL and operator functions, scope and name lookup rules might differ).
+1) Functions with the same name, which are called candidate functions technically, must be declared in the same scope(In case of ADL and operator functions, scope and name lookup rules might differ).
 2) Their signatures must be different.
 
-The primary job of function overloading mechanism to pick the correct function when a candiadate function is called. This process is called function overload resolution and it is a compile-time feature.
+The primary job of the function overloading mechanism is to pick the correct function when a candidate function is called. This process is called function overload resolution and it is a compile-time feature.
 
 ## Terminology reminders
 
@@ -61,7 +61,7 @@ double func6(int*);
 double func6(int[]);			      // function redeclaration, array decay
 
 double func7(int(*)(int, int));	
-double func7(int(int, int));	  // function redeclaration, function to pointer conversion
+double func7(int(int, int));	  // function redeclaration, parameter type adjustment (function-to-pointer)
 
 double func8(int);
 double func8(int&);				      // function overloading
@@ -85,6 +85,7 @@ A call to overloaded functions can result in three ways: no match, ambiguity or 
 2) Viable functions, which are simply suitable functions by signature, are determined. If there is no viable function that means no match.
 3) If there are more than one viable function, the result, ambiguity or best match, will be decided by criteria explained below.
 
+If two viable candidates require conversion sequences of the same rank for all parameters, and neither is better in any parameter, the call is ambiguous.
 Overload resolution ranks the viable candidate functions by comparing how each argument of the call matches the corresponding parameter of the candidates. 
 
 If we are to specify how well a given argument matches the corresponding parameter of a viable candidate, we can rank the possible matches as follows (from best to worst):
@@ -92,21 +93,30 @@ If we are to specify how well a given argument matches the corresponding paramet
 a) Standard Conversion. Can be grouped in three categories:  
 	- Exact match  
 	- Promotion  
-	- Other conversions except first two cases  
+	- Conversion 
   
   Exact match subcategories:  
       1) Lvalue-to-Rvalue conversion (explained below the page)
-      2) const conversion  
+      2) Qualification (const/volatile) conversion
       3) Array to pointer conversion(array decay)  
-      4) function to pointer conversion  
-  
+      4) Function to pointer conversion  
+	  5) Reference binding (T&, const T&, T&&)
+	  	Ex:
+		```cpp
+		void f(int&);
+		int x{};
+		f(x);   // reference binding → exact match
+		```
+
+Note that all of these are in the same rank category (“exact match”). Therefore, a reference binding is not better than an lvalue-to-rvalue conversion by itself.
+	
   Promotion subcategories:  
       1) Integral promotion:  
           bool, char, short  ==> int  
       2) float-double promotion:  
           float ==> double  
 
-b) User-defined conversion parameter function  
+b) User-defined conversion
 
 c) Variadic parameter function  
 	
@@ -141,8 +151,8 @@ int func8(int, int = 10);
 int func8(int);
 
 void func9(int);
-void func9(long));
-void func9(double));
+void func9(long);
+void func9(double);
 
 void func10(int);
 void func10(long);
@@ -171,7 +181,7 @@ void  func16(const int&);
 void  func17(bool);
 void  func17(void*);
 
-int main  {
+int main()  {
 
 	func1(45); 			  // exact match, int
 	func1(45L); 		  // exact match, long
@@ -181,7 +191,7 @@ int main  {
 	func2(45); 			  // no match
 	
 	int x{};
-	func3(x); 			  // exact match, int, L value to R value transformation
+	func3(x); 			  // exact match, int, lvalue to rvalue transformation
 	
 	func4(&x); 			  // exact match, const int*, const conversion
 	
@@ -191,9 +201,9 @@ int main  {
 	func5(&x);			  // exact match, int*
 	func5(&cx);			  // exact match, const int*
 
-	func6(54);			  // ambiguity, an R value expression can be bound to both "const T&" and "T" paramter
-	func6(x);			    // ambiguity
-	func6(cx);			  // ambiguity
+	func6(54);           // ambiguity, int : exact match (no conversion needed for prvalue int) , const int& : exact match (reference binding to temporary is also exact match). Same rank, no better candidate
+	func6(x);			    // ambiguity, int : exact match (lvalue-to-rvalue conversion) , const int& : exact match (reference binding). Both are exact match, neither is better
+	func6(cx);			  // ambiguity, int : exact match (lvalue-to-rvalue conversion) , const int& : exact match (reference binding to const). Both are exact match, neither is better
 	
 	func7(foo);			  // exact match, int(*)(int), function to pointer conversion
 	func7(&foo);		  // exact match, same call without conversion
@@ -211,8 +221,8 @@ int main  {
 	
 	func13(&cx);		  // no match, there is no conversion from "const T*" to "T*"
 	
-	func14(45);			  // exact match, int, argument is R value expression, L value reference cannot be bound to R value expression
-	func14(x);			  // ambiguity, there is no superiority between T and T& parameter
+	func14(45);			  // exact match, int, argument is rvalue expression, lvalue reference cannot be bound to rvalue expression
+	func14(x);			  // ambiguity, int needs lvalue-to-rvalue, int& needs reference binding. Same rank, no better candidate
 	
 	func15(0);			  // exact match, int, both functions are viable but second one requires a conversion(integral to null pointer conversion)
 	func15(nullptr);	// conversion, from nullptr_t to int*
@@ -221,12 +231,11 @@ int main  {
 	func16(cx);			  // const int&
 	func16(23);			  // int&&, "const T&" can also bind to an R value expression but "T&&" has priority against it  
 	
-	func17(&x);			  // conversion, void*, this case is exception, otherwise expectation would be ambiguity
-
+	func17(&x);			  // void* is selected because T* -> void* is a standard pointer conversion, while T* -> bool is a pointer-to-bool conversion, which is lower ranked. Therefore this is NOT ambiguous.
 }
 ```
 
-Regarding multiple paramater candidate functions, for one candidate to be considered better than another, this single rule explains it all:  
+Regarding multiple parameter candidate functions, for one candidate to be considered better than another, this single rule explains it all:  
 
 The better candidate must have at least one parameter be a better match and cannot have other parameters be a worse match(can be the same level) than the corresponding parameter in the other candidates. Ex:  
 
@@ -239,7 +248,7 @@ int main  {
 
 	foo(12, 12, 45u); 		  // 1, for first argument 1st foo is better match, for the rest of argument all has same level(conversion)
 	foo(12, 12f, 45u);		  // ambiguity, for first argument 1st foo is better match, for second paramter 2nd foo
-	foo(50u, 3.6L, true); 	// 2, for first two arguments ther is no winner, for third argument 3rd foo has promotion
+	foo(50u, 3.6L, true); 	// 2, for first two arguments there is no winner, for third argument 3rd foo has promotion
 	foo(50L, 3.6L, true); 	// ambiguity, for first argument 3rd foo has advantage and third 2nd foo
 }
 ```
