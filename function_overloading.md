@@ -81,44 +81,42 @@ int func11(std::nullptr_t);		  // function overloading, nullptr_t is the type of
 
 A call to overloaded functions can result in three ways: no match, ambiguity or best match. Overload resolution contains several phases:
 
-1) Candidate functions are detected.
-2) Viable functions, which are simply suitable functions by signature, are determined. If there is no viable function that means no match.
-3) If there are more than one viable function, the result, ambiguity or best match, will be decided by criteria explained below.
+1. Candidate functions are detected.
+2. Viable functions, which are simply suitable functions by signature, are determined. If there is no viable function that means no match.
+3. If there are more than one viable function, the result, ambiguity or best match, will be decided by criteria explained below.
 
 If two viable candidates require conversion sequences of the same rank for all parameters, and neither is better in any parameter, the call is ambiguous.
 Overload resolution ranks the viable candidate functions by comparing how each argument of the call matches the corresponding parameter of the candidates. 
 
 If we are to specify how well a given argument matches the corresponding parameter of a viable candidate, we can rank the possible matches as follows (from best to worst):
 
-a) Standard Conversion. Can be grouped in three categories:  
+1. Standard Conversion. Can be grouped in three categories:  
 	- Exact match  
 	- Promotion  
 	- Conversion 
   
-  Exact match subcategories:  
-      1) Lvalue-to-Rvalue conversion (explained below the page)
-      2) Qualification (const/volatile) conversion
-      3) Array to pointer conversion(array decay)  
-      4) Function to pointer conversion  
-	  5) Reference binding (T&, const T&, T&&)
-	  	Ex:
-		```cpp
-		void f(int&);
-		int x{};
-		f(x);   // reference binding → exact match
-		```
+	Exact match subcategories. Note that all of these are in the same rank category (“exact match”). Therefore, a reference binding is not better than an lvalue-to-rvalue conversion by itself:  
+	  - Lvalue-to-Rvalue conversion (explained below the page)
+	  - Qualification (const/volatile) conversion
+	  - Array to pointer conversion(array decay)  
+	  - Function to pointer conversion  
+	  - Reference binding (T&, const T&, T&&)  
+			Ex:  
+	```cpp
+	void f(int&);  
+	int x{};  
+	f(x);   // reference binding 
+	```
 
-Note that all of these are in the same rank category (“exact match”). Therefore, a reference binding is not better than an lvalue-to-rvalue conversion by itself.
-	
-  Promotion subcategories:  
-      1) Integral promotion:  
-          bool, char, short  ==> int  
-      2) float-double promotion:  
-          float ==> double  
+     Promotion subcategories:  
+	  - Integral promotion:  
+		  bool, char, short  ==> int  
+	  - float-double promotion:  
+		  float ==> double  
 
-b) User-defined conversion
+2. User-defined conversion
 
-c) Variadic parameter function  
+3. Variadic parameter function  
 	
 For simplicity, first have a look at the one parameter examples below:
 ```cpp
@@ -201,7 +199,7 @@ int main()  {
 	func5(&x);			  // exact match, int*
 	func5(&cx);			  // exact match, const int*
 
-	func6(54);           // ambiguity, int : exact match (no conversion needed for prvalue int) , const int& : exact match (reference binding to temporary is also exact match). Same rank, no better candidate
+	func6(54);        // ambiguity, int : exact match (no conversion needed for prvalue int) , const int& : exact match (reference binding to temporary is also exact match). Same rank, no better candidate
 	func6(x);			    // ambiguity, int : exact match (lvalue-to-rvalue conversion) , const int& : exact match (reference binding). Both are exact match, neither is better
 	func6(cx);			  // ambiguity, int : exact match (lvalue-to-rvalue conversion) , const int& : exact match (reference binding to const). Both are exact match, neither is better
 	
@@ -255,9 +253,10 @@ int main  {
 
 ## Lvalue-to-Rvalue Conversions
 
-Due to their ephemeral nature, rvalues are necessarily restricted to the right-hand side of a (“simple”) assignment: An assignment 7 = 8 doesn’t make sense because the mathematical 7 isn’t allowed to be redefined. Lvalues, on the other hand, don’t  
-appear to have the same restriction: One can certainly compute the assignment x = y when x and y are variables of compatible type, even though the expressions x and y are both lvalues.  
+Due to their ephemeral nature, rvalues are necessarily restricted to the right-hand side of a (“simple”) assignment: An assignment 7 = 8 doesn’t make sense because the mathematical 7 isn’t allowed to be redefined.
+Lvalues, on the other hand, don’t   appear to have the same restriction: One can certainly compute the assignment x = y when x and y are variables of compatible type, even though the expressions x and y are both lvalues.
 
-The assignment x = y works because the expression on the right-hand side, y, undergoes an implicit conversion called the lvalue-to-rvalue conversion. As its name implies, the lvalue-to-rvalue conversion takes an lvalue and produces an rvalue of  
-the same type by reading from the storage or register associated with the lvalue. This conversion therefore accomplishes two things: First, it ensures that an lvalue can be used wherever an rvalue is expected (e.g., as the right-hand side of an assignment or  
-in a mathematical expression such as x + y). Second, it identifies where in the program the compiler (prior to optimization) may emit a “load” instruction to read a value from memory.  
+The assignment x = y works because the expression on the right-hand side, y, undergoes an implicit conversion called the lvalue-to-rvalue conversion. As its name implies, the lvalue-to-rvalue conversion takes an lvalue
+and produces an rvalue of   the same type by reading from the storage or register associated with the lvalue. This conversion therefore accomplishes two things: First, it ensures that an lvalue can be used wherever an
+rvalue is expected (e.g., as the right-hand side of an assignment or   in a mathematical expression such as x + y). Second, it identifies where in the program the compiler (prior to optimization) may emit a “load”
+instruction to read a value from memory.  
