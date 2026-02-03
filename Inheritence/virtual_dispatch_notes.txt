@@ -152,12 +152,12 @@ object(of type derived class). Note that destruction is done in the reverse orde
 
 4) Virtual dispatch mechanism has costs:
 
-    a) For each polymorphic class a virtual function table is formed by compiler. It's the same table for all objects of this class and created during
-runtime and employs dynamic storage, therefore allocating and freeing this memory will come with a considerable cost.
+    a) For each polymorphic class a virtual function table(a data structure) is formed by compiler. It's the same table for all objects of this class and. This data structure created during
+runtime and employs dynamic memory, therefore allocating and freeing this memory will come with a considerable cost depending on the system that the application runs on.
 
-    b) Each polymorphic class object has a virtual pointer that points to its own virtual function table. You can check the size 
-difference between a polymorphic class and a class that has no virtual funciton. Adding more than one virtual function won't change the class size.
-Consequently, when virtual dispatch mechanism is active, accessing to an overridden function shall require double dereferencing.
+    b) When a polymorphic class is formed compiler embeds a virtual function table pointer(vptr - also employs memory) in base class therefore each derived class object has a virtual pointer that points to its own virtual function table.
+You can check the size difference between a polymorphic class and a class that has no virtual funciton. Adding more than one virtual function won't change the class size. Thus, when a derived class object is constructed its vptr
+need to be initialized with virtual function table pointer value by the compiler. Consequently, when virtual dispatch mechanism is active, accessing to an overridden function shall require double dereferencing.
 Example: virtPtr->table[idx]
 
 5) Each time when a derived class object is used, the base class object should be replaceable with it in terms of functionality on compile-time.
