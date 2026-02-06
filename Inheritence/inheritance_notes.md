@@ -236,7 +236,7 @@ Base(int)
 Base(const char*)  
 Base(int, char)  
 
-## Inheritance Types(Public, Private, Protected Inheritance)
+## Inheritance Categories(Public, Private, Protected Inheritance)
 
 ### 1) Public Inheritance
 
