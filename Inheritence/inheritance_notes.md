@@ -351,9 +351,9 @@ Thus `sizeof(Der)` will be at least `sizeof(BaseX) + sizeof(BaseY)` in this case
 In multiple inheritance, base class subobjects are constructed in the order in which they appear in the inheritance list (from left to right),
 not in the order in which they appear in the constructor’s initializer list. The same rule applies in reverse order for destruction.
 ```cpp
-class Der : public BaseX, public BaseY // It comes to life in this order
+class Der : public BaseX, public BaseY // they are constructed in this order
 {
-	Der(): BaseY(), BaseX
+	Der(): BaseY(), BaseX() // not in this order
 }
 ```
 Name lookup is done simultaneously in all classes (derived and base classes), so there is no function overloading (scopes are different anyway).
@@ -400,6 +400,70 @@ BaseY foo(int, int)
 BaseX foo()  
 BaseY foo(int, int)  
 
+Example with qualified names:
+
+```cpp
+class Base {};
+
+class BaseX: public Base
+{
+public:
+	void foo()
+	{
+		std::cout << "BaseX foo()\n";
+	}
+
+	virtual void vfunc()
+	{
+		std::cout << "BaseX vfunc()\n";
+	}
+};
+
+class BaseY: public Base
+{
+public:
+	void foo()
+	{
+		std::cout << "BaseY foo()\n";
+	}
+
+	virtual void vfunc()
+	{
+		std::cout << "BaseY vfunc()\n";
+	}
+};
+
+class Der : public BaseX, public BaseY
+{
+public:
+
+	void vfunc() override
+	{
+		std::cout << "Der vfunc()\n";
+	}
+};
+
+int main()
+{
+	Der myder;
+
+	myder.BaseX::foo();
+	myder.BaseY::foo();
+
+	Der::BaseX* bpx = &myder;
+	Der::BaseY* bpy = &myder;
+
+	bpx->vfunc();
+	bpy->vfunc();
+}
+```
+
+<ins>Output</ins>  
+BaseX foo()  
+BaseY foo()  
+Der vfunc()  
+Der vfunc()  
+
 If the function overloading mechanism is desired to be on action, then "using declaration" can be added for both base classes in the derived class:
 ```cpp
 class BaseX
@@ -443,10 +507,10 @@ A virtual base class is initialized by the _most derived class_. Any attempts to
 
 There is a tool to solve the problem of the base class object coming to life twice (ambiguity) when an object of the derived class type is defined in the hierarchy in the form of diamond. Syntax:
 
-class Person{};
-class Employee:  virtual public Person{};
-class Engineer:  virtual public Person{};
-class Developer: public Employee, public Engineer{};
+class Person{};  
+class Employee:  virtual public Person{};  
+class Engineer:  virtual public Person{};  
+class Developer: public Employee, public Engineer{};  
 
 If the class that is derived by virtual inheritance (Employee and Engineer) will be a base class together with another class in multiple inheritance, the virtual inheritance syntax will ensure that only one of thie common base classes object is included in the derived class. In this syntax, both base classes (Employee and Engineer) must be obtained from virtual inheritance, otherwise the virtual inheritance mechanism will not be activated. Here, the common base class (Person) is called as virtual base class. Virtual base class must be initialized by the ctors of all of its derived classes.
 ```cpp
