@@ -58,7 +58,8 @@ int main()
 	dx.foo(5);	// added base class function to derived class public interface
 	dx.bar(5);	// function overloading, base class object bar function called 
 	dx.bar(5.);	// function overloading, derived class object bar function called 
-	dx.baz(5);	// both derived and base have a function with the same signature; this is not ambiguous. The derived class function is selected.
+	dx.baz(5);	// both derived and base have a function with the same signature;
+              // this is not ambiguous. The derived class function is selected.
 }
 ```
 <ins>Output</ins>  
@@ -205,14 +206,21 @@ public:
 	}
 
 	Base(const char*)
-	{ 
-		cout << "Base(const char*)\n"; 
+	{
+		cout << "Base(const char*)\n";
 	}
 
 	Base(int, char)
 	{
 		cout << "Base(int, char)\n";
 	}
+
+protected:
+	Base(int, int)
+	{
+		cout << "Base(int, iny)\n";
+	}
+	
 };
 
 class Der : public Base
@@ -224,10 +232,11 @@ public:
 // test code
 int main()
 {
-	Der da;
-	Der db(5);
-	Der dc("Hello");
-	Der dd(2, 'c');
+	Der d1;
+	Der d2(5);
+	Der d3("Hello");
+	Der d4(2, 'c');
+	// Der d5(2, 4); // cannot access protected member declared in class 'Base'
 }
 ```
 <ins>Output</ins>  
