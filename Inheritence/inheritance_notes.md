@@ -400,10 +400,18 @@ BaseY foo(int, int)
 BaseX foo()  
 BaseY foo(int, int)  
 
-Example with qualified names:
+Since there will be two base class objects inside derived class, it is possible to use different objects with qualified names:
 
 ```cpp
-class Base {};
+class Base
+{
+public:
+	void fun()
+	{
+		std::cout << "Base fun()\n";
+		std::cout << "Base this: " << this << '\n';
+	}
+};
 
 class BaseX: public Base
 {
@@ -411,6 +419,7 @@ public:
 	void foo()
 	{
 		std::cout << "BaseX foo()\n";
+		fun();
 	}
 
 	virtual void vfunc()
@@ -425,6 +434,7 @@ public:
 	void foo()
 	{
 		std::cout << "BaseY foo()\n";
+		fun();
 	}
 
 	virtual void vfunc()
@@ -447,6 +457,12 @@ int main()
 {
 	Der myder;
 
+	myder.Base::fun(); // this will use the Base class object that is inside the first declared class in inheritance declaration
+										 // in this case it will use the Base class objct inside BaseX
+
+	myder.BaseX::Base::fun();
+	myder.BaseY::Base::fun();
+
 	myder.BaseX::foo();
 	myder.BaseY::foo();
 
@@ -456,11 +472,22 @@ int main()
 	bpx->vfunc();
 	bpy->vfunc();
 }
+
 ```
 
 <ins>Output</ins>  
+Base fun()  
+Base this: 0000009CE056F830  
+Base fun()   
+Base this: 0000009CE056F830  
+Base fun()  
+Base this: 0000009CE056F840  
 BaseX foo()  
+Base fun()  
+Base this: 0000009CE056F830  
 BaseY foo()  
+Base fun()  
+Base this: 0000009CE056F840  
 Der vfunc()  
 Der vfunc()  
 
