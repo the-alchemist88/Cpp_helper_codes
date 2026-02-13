@@ -134,7 +134,7 @@ int main() {
 
 - An expression formed with the typeid operator yields an lvalue of type const std::type_info.
 
-	`typeid(Myclass); // type of this expression is const type_info`
+	`typeid(Myclass); // type of this expression is const type_info`  
 	`const type_info& ti = typeid(Myclass); // correct syntax`
 	
 - The default constructor of std::type_info does not exist and its copy constructor is deleted.
