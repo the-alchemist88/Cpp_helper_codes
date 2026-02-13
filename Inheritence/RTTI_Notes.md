@@ -28,7 +28,7 @@ void fun(Car* cptr)
 ```
 - To be able to perform a downcast with dynamic_cast, the source type (usually the base class) must be polymorphic, i.e., it must have at least one virtual function.
 
-- When downcasting is applied by reference semantics, if it fails at runtime compiler will throw exception(std::bad_cast) in this case.
+- When downcasting is applied by reference semantics, if it fails at runtime compiler will throw `exception(std::bad_cast)` in this case.
 That’s why pointer semantics are often preferred (no exception, just nullptr).
 ```cpp
 void car_game(Car& cr) 
@@ -53,13 +53,29 @@ int main()
 	fun(cptr);
 }
 ```
-- The dynamic_cast operator scans down the hierarchy: if the dynamic type that will be operand to dynamic_cast, is a type of a derived class that is lower
-in a multilevel inheritance hierarchy than the type to be casted, this is not a syntax error, it is converted to operand's dynamic type
+- The dynamic_cast operator uses the object’s dynamic type at runtime and scans down the hierarchy:
+If the object is actually an instance of a class derived from the target type (even lower in a multi-level inheritance hierarchy), the cast is valid and succeeds,
+and the result points to the object’s real type.
+
 ```cpp
+class Vehicle
+{
+public:
+	virtual void foo() = 0;
+};
+
+class Car : public Vehicle
+{
+	virtual void foo() override
+	{
+		cout << "Car foo()\n";
+	}
+};
+
 class Volvo : public Car
 {
 public:
-	virtual void foo()
+	virtual void foo() override
 	{
 		cout << "Volvo foo()\n";
 	}
@@ -74,24 +90,30 @@ public:
 	}
 };
 
-void fun(Car* cptr)
+void fun(Vehicle* cptr)
 {
-	if (auto* dptr = dynamic_cast<Volvo*>(cptr))
-	{
+	if (auto* dptr = dynamic_cast<Volvo*>(cptr)) // notice that dynamic_cast looks for Volvo*
 		dptr->foo();
-	}
-}		
+	else
+		cout << "dynamic_cast didn't succeed\n";
+}
 
 int main()
 {
-	VolvoXC90 vxcp;
+	Car car;
+	Volvo vol;
+	VolvoXC90 vxc;
 
-	fun(&vxcp);	//  by this call dynamic_cast will cast cptr into VolvoXC90*, not Volvo*
+	fun(&car); //  Car is placed higher than Volvo in hierarchy 
+	fun(&vol);
+	fun(&vxc); // VolvoXC90 is lower in the hierarchy than Volvo. The cast succeeds, and the result is a Volvo* pointing to a VolvoXC90 object
 }
 ```
 
 <ins>Output:</ins>  
-VolvoXC90 foo()
+dynamic_cast didn't succeed  
+Volvo foo()  
+VolvoXC90 foo()  
 
 ### 2) typeid
 ```cpp
