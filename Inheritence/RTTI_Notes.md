@@ -15,10 +15,13 @@ Tools for determining the dynamic type at runtime(RTTI tools):
 
 - Typically used for casting a pointer/reference to a base class type to a pointer/reference to a derived class type (downcasting).
 ```cpp
-void fun(Car* cptr) // assume that Volvo is publicly derived from Car class so this functian can operate virtual dispatch
+void fun(Car* cptr)
+// assume that Volvo is publicly derived from Car class thus this functian can trigger virtual dispatch
 {
-	if(auto* vptr = dynamic_cast<Volvo*>(cptr)) // if, at run-time, cptr points to an Volvo object then dynamic_cast is successful and aptr points to that object
-	{								    		// otherwise dynamic_cast returns nullptr
+	if(auto* vptr = dynamic_cast<Volvo*>(cptr))
+// if, at run-time, cptr points to a Volvo object then dynamic_cast becomes successful and cptr points to that object
+// otherwise dynamic_cast returns nullptr
+	{								    		
 		// code
 	}
 }										   
@@ -131,20 +134,20 @@ int main() {
 
 - An expression formed with the typeid operator yields an lvalue of type const std::type_info.
 
-	typeid(Myclass); // type of this expression is const type_info
-	const type_info& ti = typeid(Myclass); // correct syntax
+	`typeid(Myclass); // type of this expression is const type_info`
+	`const type_info& ti = typeid(Myclass); // correct syntax`
 	
 - The default constructor of std::type_info does not exist and its copy constructor is deleted.
 	
 - There are two commonly used function of type_info class:
-	
+
 	- operator== (to compare two types)
-	
+		```cpp
 		class Myclass{};
 		Myclass mx;
 		
 		auto b = typeid(Myclass) == typeid(mx);
-		
+		```
 	-  name() (returns const char*)
 
 	returns the type as C-string. Implementation dependant(depends on compiler)
