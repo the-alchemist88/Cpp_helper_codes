@@ -16,7 +16,7 @@ Tools for determining the dynamic type at runtime(RTTI tools):
 - Typically used for casting a pointer/reference to a base class type to a pointer/reference to a derived class type (downcasting).
 ```cpp
 void fun(Car* cptr)
-// assume that Volvo is publicly derived from Car class thus this functian can trigger virtual dispatch
+// assume that Volvo is publicly derived from Car class so that this function can trigger virtual dispatch
 {
 	if(auto* vptr = dynamic_cast<Volvo*>(cptr))
 // if, at run-time, cptr points to a Volvo object then dynamic_cast becomes successful and cptr points to that object
