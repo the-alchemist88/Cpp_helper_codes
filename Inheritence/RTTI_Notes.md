@@ -11,7 +11,8 @@ Tools for determining the dynamic type at runtime(RTTI tools):
 
 ### 1) dynamic_cast
 
-- dynamic_cast operator examines whether downcasting is safe or not.
+- dynamic_cast operator examines whether downcasting is safe or not. In other words, enables safe convversion of a base-class pointer (or reference) to a derived-class pointer (or reference)
+  by checking the object’s real type at runtime.
 
 - Typically used for casting a pointer/reference to a base class type to a pointer/reference to a derived class type (downcasting).
 ```cpp
@@ -68,7 +69,7 @@ class Car : public Vehicle
 {
 	virtual void foo() override
 	{
-		cout << "Car foo()\n";
+		std::cout << "Car foo()\n";
 	}
 };
 
@@ -77,7 +78,7 @@ class Volvo : public Car
 public:
 	virtual void foo() override
 	{
-		cout << "Volvo foo()\n";
+		std::cout << "Volvo foo()\n";
 	}
 };
 
@@ -86,7 +87,7 @@ class VolvoXC90 : public Volvo
 public:
 	void foo() override
 	{
-		cout << "VolvoXC90 foo()\n";
+		std::cout << "VolvoXC90 foo()\n";
 	}
 };
 
@@ -95,7 +96,7 @@ void fun(Vehicle* cptr)
 	if (auto* dptr = dynamic_cast<Volvo*>(cptr)) // notice that dynamic_cast looks for Volvo*
 		dptr->foo();
 	else
-		cout << "dynamic_cast didn't succeed\n";
+		std::cout << "dynamic_cast didn't succeed\n";
 }
 
 int main()
@@ -154,7 +155,7 @@ int main() {
 }
 ```
 
-- An expression formed with the typeid operator yields an lvalue of type const std::type_info.
+- An expression formed with the typeid operator yields an lvalue of type `const std::type_info`.
 
 	`typeid(Myclass); // type of this expression is const type_info`  
 	`const type_info& ti = typeid(Myclass); // correct syntax`
