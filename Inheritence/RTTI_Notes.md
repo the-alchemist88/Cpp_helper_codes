@@ -261,15 +261,8 @@ exception caught: std::bad_typeid
 
 - The static_cast operator can be used to determine at compile time whether two different classes are in the same inheritance hierarchy.
 It will be legal to cast classes in the same hierarchy to each other with static_cast, thus there will be no need to examine the header files.
-In order to check if two classes in the same hierarchy in compile time one of the ways can be used below:
 ```cpp
 static_cast<Der*>((Base*)0); // if this is valid, they Base and Der are in the same hierarchy
-
-static_assert(std::is_base_of<Base, Der>::value,
-              "Der is not derived from Base!");
-
-static_assert(std::is_convertible<Base*, Der*>::value,
-              "Base* cannot be static_cast to Der*!");
 ```
 
 ## Other Related Topics
