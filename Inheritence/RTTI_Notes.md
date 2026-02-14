@@ -28,7 +28,7 @@ void fun(Car* cptr)
 ```
 - To be able to perform a downcast with dynamic_cast, the source type (usually the base class) must be polymorphic, i.e., it must have at least one virtual function.
 
-- When downcasting is applied by reference semantics, if it fails at runtime compiler will throw `exception(std::bad_cast)` in this case.
+- When downcasting is applied by reference semantics, if dynamic_cast fails at runtime compiler will throw `exception(std::bad_cast)`.
 That’s why pointer semantics are often preferred (no exception, just nullptr).
 ```cpp
 void car_game(Car& cr) 
