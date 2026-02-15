@@ -16,17 +16,37 @@ Tools for determining the dynamic type at runtime(RTTI tools):
 
 - Typically used for casting a pointer/reference to a base class type to a pointer/reference to a derived class type (downcasting).
 ```cpp
-void fun(Car* cptr)
-// assume that Volvo is publicly derived from Car class so that this function can trigger virtual dispatch
+class Volvo: public Car
 {
-	if(auto* vptr = dynamic_cast<Volvo*>(cptr))
-// if, at run-time, cptr points to a Volvo object then dynamic_cast becomes successful and cptr points to that object
-// otherwise dynamic_cast returns nullptr
-	{								    		
-		// code
+public:
+	void Volvo_fun()
+	{
+		std::cout << "Volvo_fun()\n";
 	}
-}										   
+};
+
+void fun(Car* cptr)
+{
+	if (auto* vptr = dynamic_cast<Volvo*>(cptr))
+		// if, at run-time, cptr points to a Volvo object then dynamic_cast becomes successful and cptr points to that object
+		// otherwise dynamic_cast returns nullptr
+		vptr->Volvo_fun();
+	else 
+		cptr->Car_fun();
+}
+
+int main()
+{
+	Volvo vx;
+	fun(&vx);
+	Car cx;
+	fun(&cx);
+}								   
 ```
+<ins>Output:</ins>  
+Volvo_fun()  
+Car_fun()  
+
 - To be able to perform a downcast with dynamic_cast, the source type (usually the base class) must be polymorphic, i.e., it must have at least one virtual function.
 
 - When downcasting is applied by reference semantics, if dynamic_cast fails at runtime compiler will throw `exception(std::bad_cast)`.
@@ -191,8 +211,10 @@ int main()
 {
 	Der myder;
 	Base* baseptr = &myder;
-	std::cout << (typeid(*baseptr) == typeid(Der)) << '\n'; // if Base was non-polymorphic then this expression would print 0, it would be valid but related to static type
-	std::cout << typeid(*baseptr).name(); // if Base was non-polymorphic this would print class Base
+	std::cout << (typeid(*baseptr) == typeid(Der)) << '\n';
+	// if Base was non-polymorphic then this expression would print 0, it would be valid but related to static type
+	std::cout << typeid(*baseptr).name();
+	// if Base was non-polymorphic this would print class Base
 }
 ```
 <ins>Output:</ins>  
@@ -203,7 +225,7 @@ Der
 more expensive than typeid.
 
 - Since typeid doesn't do any casting, static_cast can be used to access the derived class member functions. static_cast is valid for the types that are in the same hierarchy but 
-programmer always need to check whether the dynamic_types match or not. Without checking the type, it can be undefined behaviour.
+programmer always need to check whether the dynamic types match or not. Calling derived class function without checking the type may cause an undefined behaviour.
 ```cpp
 class Base 
 {
@@ -223,9 +245,9 @@ public:
 
 void func(Base* bptr)
 {
-    if (auto b = typeid(*bptr) == typeid(Der))
+    if (auto b = typeid(*bptr) == typeid(Der)) // run-time type checking
     {
-        auto vptr = static_cast<Der*>(bptr);  // calling directly bptr->baz() without casting, may cause undefined behaviour if base class doesn't have that function for example
+        auto vptr = static_cast<Der*>(bptr);  // calling bptr->baz() without casting will throw an error if base class doesn't have that function
 
         vptr->bar();
     }
