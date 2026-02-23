@@ -269,10 +269,10 @@ The situation is different for other types of inheritance that are specific to C
 	
 This means (private inheritance): Protected and public parts of the base class can still be accessed within the derived class. However, client codes can no longer use the codes of the base class through the derived class.
 
-- There is no is-a relationship. There is no implicit conversion from the derived class to the base class. Upcasting is a syntax error with two exceptions:
+- There is no is-a relationship, consequently no implicit conversion from the derived class to the base class. Upcasting is a syntax error with two exceptions:
 
-- Valid (implicitly) within the derived class's member function
-- Valid in functions to which the derived class gives friendship
+	- Valid (implicitly) within the derived class's member function
+	- Valid in functions to which the derived class gives friendship
 
 ```cpp
 class Base
