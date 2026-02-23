@@ -269,7 +269,7 @@ The situation is different for other types of inheritance that are specific to C
 	
 This means (private inheritance): Protected and public parts of the base class can still be accessed within the derived class. However, client codes can no longer use the codes of the base class through the derived class.
 
-- There is no is-a relationship, consequently no implicit conversion from the derived class to the base class. Upcasting is a syntax error with two exceptions:
+- There is no "is-a" relationship, consequently no implicit conversion from the derived class to the base class. Upcasting is a syntax error with two exceptions:
 
 	- Valid (implicitly) within the derived class's member function
 	- Valid in functions to which the derived class gives friendship
@@ -311,9 +311,9 @@ int main()
 ```
 - Private inheritance is an alternative to composition (containment, i.e. having a data member of a class type). Differences between the two:
 
-- With composition, we cannot access the `protected` members of the contained object’s class. With private inheritance, we can access the `protected` members of the base class.
-- With composition, we cannot override the virtual functions of the contained object directly. With private inheritance, we can override the virtual functions of the base class.
-- With composition, there is no conversion from the containing class to the contained class type. With private inheritance, there is a limited and restricted conversion from the derived class to the base class.
+- In composition, we cannot access the `protected` members of the contained object’s class. In private inheritance, we can access the `protected` members of the base class.
+- In composition, we cannot override the virtual functions of the contained object directly. In private inheritance, we can override the virtual functions of the base class.
+- In composition, there is no conversion from the containing class to the contained class type. In private inheritance, there is a restricted conversion from the derived class to the base class.
 
 On the other hand, composition allows multiple subobjects of the same type (e.g., two members of the same class type, or an array of such members), which is not possible with inheritance,  
 since a class can inherit from a given base class only once. Examples that are possible in composition but not in private inheritance:
