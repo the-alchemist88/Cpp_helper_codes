@@ -1,8 +1,8 @@
 # Copy Elision
 
-There are some cases where compiler doesn't generate code for intentional copying. To explain briefly, even though the syntax visually suggests a copy/move operation (e.g. copy initialization), no copy/move is performed. This deliberate miss of copy/move operations by compiler is called _copy elision_. 
+There are some cases where compiler doesn't generate code for intentional copying. To explain briefly, even though the syntax visually suggests a copy/move operation (e.g. copy initialization), no copy/move is performed. This deliberate omission of copy/move operations by the compiler is called _copy elision_. 
 
-Until C++17, "copy elison" was a compiler optimization technique where unnecessary copy/move ctor calls are skipped. Since C++17 standard, in certain cases, copy elison became mandatory(guaranteed) and called as _mandatory copy elision_. Altough this name implies an elision, there is no elision of any copying here since omitting it became mandatory by the standard. Thus, the term "mandatory copy elision" is referred as misnomer by some C++ programmers.  Ex:
+Until C++17, "copy elision" was a compiler optimization technique where unnecessary copy/move ctor calls are skipped. Since C++17 standard, in certain cases, copy elison became mandatory(guaranteed) and called as _mandatory copy elision_. Although this name implies an elision, there is no elision of any copying here since omitting it became mandatory by the standard. Thus, the term "mandatory copy elision" is referred as misnomer by some C++ programmers.  Ex:
 
 ```cpp
 class Myclass
@@ -48,17 +48,17 @@ Myclass(int x)
 ```
 ## Copy Elision Cases:
 
-### Case 1: Temporary Object Passing (mandatory since C++17)
+### Case 1: Initialization from a prvalue of the same type (mandatory since C++17)
 
-If a function has a paramater of any class type and this function is called via a PR value expression such as a temporary object expression, since C++17, compiler applies mandatory
-copy elision. In the above example, foo function takes "Myclass{10}" argument as an initalizer expression for "Myclass mx" object when calling "foo(Myclass{10})". In other words, temporary object doesn't get
-materialized.
-
+In the initialization of an object, when the source object is a nameless temporary and is of the same class type (ignoring cv-qualification) as the target object, since C++17, compiler applies mandatory
+copy elision. The following situation fits in this case: if function has a paramater of any class type and this function is called via a PR value expression such as a temporary object expression. In the above example, 
+foo function takes "Myclass{10}" argument as an initalizer expression for "Myclass mx" object when calling "foo(Myclass{10})". In other words, temporary materialization conversion does not occur, meaning the temporary 
+object is never created and the parameter object is constructed directly.
 ### Case 2: Return Value Optimization(RVO)
 
 - Unnamed Return Value Optimization(URVO) (mandatory since C++17)
 
-In the initialization of an object, when the source object is a nameless temporary and is of the same class type (ignoring cv-qualification) as the target object.
+
 When the nameless temporary is the operand of a return statement, this variant of copy elision is known as URVO(In C++17 and later, URVO is mandatory and no longer considered a form of copy elision)
 
 - Named Return Value Optimization(NRVO) (still an optimization)
@@ -158,8 +158,7 @@ f_NRVO() returned
 ~Myclass() is called for 0x7ffc2d9a686d  
 ```
 Note that although Myclass has user defined copy ctor, compiler calls move ctor when returning from f_NRVO() function and it has copy syntax in return statement(return m). Straightforward expectation would be it should return an lvalue
-expression, thus normally it should use copy initialization, however, move ctor kicks in because compiler does lvalue to xvalue conversion. It is not a new rule, since modern C++ this case is applied in this way.
-However, some programmers that are unaware of this rule, may want to reassure calling move ctor by using std::move(name) in return statement. This usage is called pessimistic move and must be avoided since it blocks copy elision. Pessimistic move ex:
+expression, thus normally it should use copy initialization, however, move ctor kicks in because the compiler treats the returned local object as an rvalue candidate and prefers the move constructor. It is not a new rule, since modern C++ this case is applied in this way. However, some programmers that are unaware of this rule, may want to reassure calling move ctor by using std::move(name) in return statement. This usage is called pessimistic move and must be avoided since it blocks copy elision. Pessimistic move ex:
 
 ```cpp
 class Myclass
@@ -174,7 +173,7 @@ public:
 Myclass pess_move()       
 {                               
     Myclass x;
-    return std::move(x); // programmer ties to trigger move semantics by changing the value category of a named object but it blocks NRVO, don't use pessimistic move 
+    return std::move(x); // programmer tries to trigger move semantics by changing the value category of a named object but it blocks NRVO, don't use pessimistic move 
 }
 int main()
 {
@@ -205,7 +204,7 @@ class Myclass
 ```
 However for this class above; moving and copying will differ because of string element. Move ctor will change the pointers inside of string object but copy ctor will do deep copy.
 
-2) Nevertheless copy elision is the most favourable among three in terms of efficiency, because it doesn't construct any object. It uses the same object - zero cost.
+2) Nevertheless copy elision is the most favourable among three in terms of efficiency, because it avoids creating intermediate objects and constructs the result directly in the destination. It uses the same object - zero cost.
 
-In conclusion, temporary objects should be encouraged to be used whenever they meet the requirements instead of named objects because they make copy elision possible(in arguments
+In conclusion, temporary objects should be encouraged to be used whenever they meet the requirements instead of named objects because they make copy elision possible(as arguments
 of functions and return expressions). This is a considerable efficiency advantage.
