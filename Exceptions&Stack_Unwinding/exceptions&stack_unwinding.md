@@ -3,7 +3,7 @@
 When an exception is thrown, the runtime searches for a matching catch handler. During this search, the stack is unwound: all automatic objects that were fully constructed between
 the throw point and the handler are destroyed. Destructors are called in the reverse order of construction. When using exception handling tools, execution proceeds as follows:
 
-- Control reaches the try statement by normal sequential execution. The guarded section in the try block is executed.
+- Control reaches the try block by normal sequential execution. The guarded section in the try block is executed.
 
 - If no exception is thrown during execution of the guarded section, the catch clauses that follow the try block are not executed. Execution continues at the statement after the last
 catch clause that follows the associated try block.
@@ -191,11 +191,11 @@ int main()
     try
 	{
         Myclass{45};
-    }
+	}
     catch (const std::exception& ex) // rethrow gets caught
 	{
-        std::cout << "exception caught(main): " << ex.what() << '\n';
-    }
+		std::cout << "exception caught(main): " << ex.what() << '\n';
+	}
 }
 ```
 
