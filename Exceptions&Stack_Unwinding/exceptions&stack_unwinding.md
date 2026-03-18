@@ -1,7 +1,7 @@
 # Exceptions and Stack Unwinding in C++
 
 When an exception is thrown, the runtime searches for a matching catch handler. During this search, the stack is unwound: all automatic objects that were fully constructed between
-the throw point and the handler are destroyed. Destructors are called in the reverse order of construction.  In stack unwinding, execution proceeds as follows:
+the throw point and the handler are destroyed. Destructors are called in the reverse order of construction. When using exception handling tools, execution proceeds as follows:
 
 - Control reaches the try statement by normal sequential execution. The guarded section in the try block is executed.
 
@@ -31,7 +31,7 @@ Most standard library exceptions derive from std::exception. The two main semant
 
 - runtime_error – failures caused by external conditions (e.g., network failure, file system errors)
 
-- And some commonly encountered exceptions:
+And several commonly encountered exceptions are:
 
 - bad_alloc - memory allocation failed
 
@@ -78,7 +78,7 @@ _<const exception&>_ since copy ctor of exception class can also throw exception
 - Destructors are implicitly noexcept(true) unless explicitly specified otherwise. If a destructor throws an exception during stack unwinding, std::terminate is called. Move constructors
 and move assignment operators are typically declared noexcept, since this allows the standard library and the compiler to perform additional optimizations.
 
-- Ctors may throw exceptions since it is possible to fail when obtaining resources. Note that an object comes to life only if one of its ctors is fully executed. Therefore, its destructor
+- Constructors may throw exceptions since it is possible to fail when obtaining resources. Note that an object comes to life only if one of its ctors is fully executed. Therefore, its destructor
 is not called. Only the destructors of fully constructed objects are executed during stack unwinding. Thus smart pointers is critical when obtaining resources in ctors so that they can
 be released during stack unwinding. Ex:
 
@@ -200,7 +200,7 @@ int main()
 ```
 
 <ins>Output</ins>  
-exception caught(constructor): runtime error!
+exception caught(constructor): runtime error!  
 exception caught(main): runtime error!
 
 ## Key Takeaways
@@ -212,5 +212,5 @@ exception caught(main): runtime error!
 - RAII should be used to manage resources safely during exception handling.
 
  
-Resource utilised: https://learn.microsoft.com/en-us/cpp/cpp/exceptions-and-stack-unwinding-in-cpp?view=msvc-170
+Resource utilised: https://learn.microsoft.com/en-us/cpp/cpp/exceptions-and-stack-unwinding-in-cpp?view=msvc-170  
 Article Date: 11/14/2022
