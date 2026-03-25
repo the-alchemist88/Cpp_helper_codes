@@ -3,8 +3,8 @@
 - General syntax of a lambda expression:
 ```cpp
 [capture](params) specifiers {
-    body;
-	return expr;
+  // body
+  return expr;
 };
 ```
 
@@ -59,14 +59,17 @@ int x{ 10 };
 
 auto comp_gen = [&x](){return ++x;};
 
-// can be thought as:
+// How compiler translates it:
 
 class Ref
 {
 public:
-	Ref(int& val): r(val){} 		// now r refers to object that is sent to this ctor
-	auto operator()() const { return ++r; } // reference-ness of "r" didn't get modified - it cannot refer to another object, can be thought as constant pointer(int* const r = &val) 
-						// "++r" expression doesn't cause incompatability with const member function
+	// now r refers to object that is sent to this ctor
+	Ref(int& val): r(val){}
+	// reference-ness of "r" didn't get modified - it cannot refer to another object, can be thought as constant pointer(int* const r = &val)
+	// "++r" expression doesn't cause incompatability with const member function
+	auto operator()() const { return ++r; } 
+						
 private:
 	int& r;
 };
@@ -107,16 +110,14 @@ auto f = [=]() {
 
 Ex:
 ```cpp
-int x = 10, y = 20;
-
-auto f = [=, &x]() {
+int main() {
 	int x = 10, y = 20;
-
+	
 	auto f = [=, &x]() mutable {
-		x++;           // modifies original x
-		y++;           // modifies copied y
+		x++;  // modifies original x
+		y++;  // modifies copied y
 	};
-
+	
 	cout << "Before lambda is called\n";
 	cout << "x = " << x << '\n';
 	cout << "y = " << y << '\n';
@@ -126,6 +127,7 @@ auto f = [=, &x]() {
 	cout << "After lambda is called\n";
 	cout << "x = " << x << '\n';
 	cout << "y = " << y << '\n';
+}
 ```
 
 <ins>Output</ins>  
@@ -148,12 +150,43 @@ Ex:
 int x = 10, y = 20;
 
 auto f = [&, x]() {
-    // x is a copy
-    // y is a reference
+    // y can be modified
+    // x cannot (it's a copy)
 };
 ```
-✔️ y can be modified
-❌ x cannot (it's a copy)
+
+- When a lambda captures _this_ pointer inside class, it can access to class member through _this_ pointer. Ex:
+
+```cpp
+class Test {
+public:
+	int x{ 10 };
+
+	void run() {
+
+		// copy capture pointer
+		auto f1 = [this]() { // sets x to 50 through this->x
+			x = 50;
+		};
+
+		// copy capture object
+		// mutable specifier is added to be able to modify the object otherwise copy captured object couldn't be modified
+		auto f2 = [*this]() mutable { 
+			x = 100;
+		};
+
+		f1();
+		cout << "After f1() x = " << x << '\n'; // 50
+
+		f2();
+		cout << "After f2() x = " << x << '\n'; // still 50
+	}
+};
+```
+
+<ins>Output</ins>  
+After f1() x = 50  
+After f2() x = 50  
 
 - Init capture syntax(since C++14):
 ```cpp
@@ -177,15 +210,15 @@ public:
     }
 };
 ```
-- Lambda is constexpr only if its body satisfies constexpr _constexpr_ requirements, it is a non-constant
+- Lambda is constant expression only if its body satisfies _constexpr_ requirements, it is a non-constant
 expression(for example static variables cannot be used to initialize constexpr variables):
 ```cpp
 constexpr int ci = []{static int x = 10; return x * x;}(); // not allowed in constexpr
 ```
 - In order to check whether a lamba expression returns a constant expression, use constexpr keyword inside lambda after paranthesis:
-
+```cpp
 constexpr int ci = []()constexpr{int x = 10; return x * x;}();
-
+```
 - If any of the qualifiers below is used in lambda expression then paranthesis must be placed even if inside is empty:
 ```cpp
 []()mutable{code};
