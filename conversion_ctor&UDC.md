@@ -20,14 +20,18 @@ public:
 		std::cout << "~Myclass() for this: " << this << '\n';
 	}
 
-	Myclass(int x) // Conversion ctor
+    // Conversion ctor 1
+	Myclass(int x) 
 	{
-		std::cout << "Myclass(int x) x = " << x << " for this: " << this << '\n'; // address of the temporary object to be created by converting from int to Myclass
+        // address of the temporary object to be created by converting from int to Myclass
+		std::cout << "Myclass(int x) x = " << x << " for this: " << this << '\n'; 
 	}
 
-	Myclass(int x, int y) // Conversion ctor
+    // Conversion ctor 2
+	Myclass(int x, int y) 
 	{
-		std::cout << "Myclass(int x, int y) x = " << x << " y = " << y <<  " for this: " << this << '\n'; // address of the temporary object to be created by converting from int to Myclass
+        // address of the temporary object to be created by converting from int to Myclass
+		std::cout << "Myclass(int x, int y) x = " << x << " y = " << y <<  " for this: " << this << '\n'; 
 	}
 
 	Myclass& operator=(const Myclass& other)
@@ -46,10 +50,11 @@ int main()
 	std::cout << "&m = " << &m << "\n";
     // firstly, a temporary object will be created by Myclass(int x) ctor
     // then copy assignment operator will be called for copying from temporary object to m
-    // compare the address of objects copied from and copied to, on the output
     // dtor of m will be called
+    // compare the address of objects copied from and copied to, on the output
 	m = 35;
-	m = {5, 6}; // this is also valid but not used in practice
+    // this is also valid but not used in practice
+	m = {5, 6}; 
 }			    
 ```
 <ins>Possible Output</ins>  
