@@ -20,9 +20,9 @@ Template parameters can be:
 - template parameter 	--> parameter itself is a template (rare usage)
 
 Syntax: 
-
-template <comma-separated-list-of-parameters>
-
+```cpp
+template<comma-separated-list-of-parameters>
+```
 In order for the compiler to write the code of template, it needs to know the types of arguments that corresponds to template parameters. There are three ways of doing this for compiler:
 
 1) Explicit template argument --> `vector<int> x{1, 2, 3}`
