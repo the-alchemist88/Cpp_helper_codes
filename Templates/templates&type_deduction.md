@@ -21,7 +21,7 @@ Template parameters can be:
 
 Syntax: 
 
-template<comma-separated-list-of-parameters>
+template <comma-separated-list-of-parameters>
 
 In order for the compiler to write the code of template, it needs to know the types of arguments that corresponds to template parameters. There are three ways of doing this for compiler:
 
@@ -54,7 +54,7 @@ Ex:
 template<typename T>
 void func(T x)
 {
-    foo(x);  // unknown name, depends on template parameter, compiles witout an error 
+    foo(x);  // unknown name, possible to find x with ADL, compiles without an error
     x.bar(); // unknown name, depends on template parameter, compiles witout an error 
     //baz(); // error
 }
@@ -102,7 +102,7 @@ int main()
     auto var2 = y;      // type is int, const-ness drops
 
     auto var3 = a;      // type is int*
-    auto var4 = ca;     // type is const int*
+    auto var4 = ca;     // type is const int*, this low level const, only top level const-ness drop in copy syntax
 
     auto& var5 = 13;    // error, cannot be bound to R value expression
     auto&& var6 = 5;    // type is int&&
