@@ -1,15 +1,18 @@
 # Generic Programming and Templates
 
 Briefly speaking, generic programming denotes the style of programming that is independent of types. For example in C language "void*" type is used for eliminating dependency to types.
-Besides in C++ and in some other languages inheritence tools(virtual dispatch etc.) is used to employ derived class' codes without knowing the type at runtime.
+However it is called type erasure and caunted as unsafe. Besides in C++ and in some other languages inheritence tools(virtual dispatch etc.) is used to employ derived class' codes without knowing the type at runtime.
+Templates in C++ on the other hand, enable type-safe generic programming, unlike void* in C. 
 
-The most prominant difference between C and C++ compiler is that C++ compiler is able to write code. Consequently, we call such code, which can trigger compiler to write code by its
+The most prominant difference between C and C++ compiler is that C++ compiler can generate code at compile time via templates. Consequently, we call such code, which can trigger compiler to write code by its
 instructions as templates. This style of coding is called Template Meta Programming(TMP). The types of templates are:
 
 - function template
 - class template
 - alias template(C++11)
 - variable template(C++14)
+  
+Concepts are not templates themselves, but a way to constrain templates.
 - concepts(C++20)
 
 
@@ -33,20 +36,24 @@ In order for the compiler to write the code of template, it needs to know the ty
 
 ## Function Templates
 
-Function templates are functions that are parameterized so that they represent a family of functions. The keyword **typename** introduces a type parameter. The process of replacing template parameters by concrete types is called instantiation. It results in a _specalization_(instance) of a template.
+Function templates are functions that are parameterized to represent a family of functions. The keyword **typename** introduces a type parameter. The process of replacing template parameters by concrete types is called instantiation. It results in a _specialization_(instance) of a template. 
 
 ## Translation of Templates
 
-Templates are _compiled_ in several phases:
+Templates are _compiled_ in two phases:
 
-1. Without instantiation at definition time, the template code itself is checked for correctness ignoring the template parameters. This includes:
+### Two-Phase Lookup:
+
+1)
+- Without instantiation at definition time, the template code itself is checked for correctness ignoring the template parameters. This includes:
 	- Syntax errors are discovered, such as missing semicolons.
 	- Using unknown names (type names, function names, …) that don’t depend on template parameters are discovered.
 	- Static assertions that don’t depend on template parameters are checked.
 
-2. If there are multiple template parameters, ambguity conditions are checked.
+- If there are multiple template parameters, ambiguity conditions are checked.
 
-3. At instantiation time, the template code is checked (again) to ensure that all code is valid. That is, now especially, all parts that depend on template parameters are
+2)
+- At instantiation time, the template code is checked (again) to ensure that all code is valid. That is, now especially, all parts that depend on template parameters are
 double-checked.
 
 Ex:
@@ -65,7 +72,23 @@ int main()
 ```
 ## Template Argument Deduction(TAD)
 
-Auto type deduction and TAD work very similarly with one exception (std::initializer_list). In auto type deduction, type deduction is made for the keyword **auto**, not for the variable name itself. Thus, reference and pointer declarators must be taken into account separately. In general, there are three cases:
+Auto type deduction and TAD work very similarly with one exception (std::initializer_list), _auto_ has special rule for braced-init-list.
+```cpp
+template<typename T>
+void fun(T x) {}
+
+int main()
+{
+	auto x = { 1,2,3 };   // OK
+	fun({ 1,2,3 });       // error
+}
+
+```
+
+
+In auto type deduction,
+type deduction is made for the keyword **auto**, not for the variable name itself. Thus, reference and pointer declarators must be taken into account separately. 
+In general, there are three cases:
 
 1) `auto x = expr;`	-->	cv qualifiers and refs drop. Array and function decay occur. Equivalent function template is:
    ```
@@ -79,9 +102,9 @@ Auto type deduction and TAD work very similarly with one exception (std::initial
    void func(T& x);
    ```
 
-3) `auto&& x = expr;`	-->	This is a universal reference. Type of _x_ depends on the value category of expr:
-	- if L value then type of _x_ dedeuced as T& according to reference collapsing rules
-	- if R value(PR value or X value) then type of x deduced as T&& according to reference collapsing rules  
+3) `auto&& x = expr;`	-->	This is a universal reference. Type of _x_ depends on the value category of expr:  
+	- if lvalue then type for _auto_ keyword will be deduced as T&, thus type of _x_ will be T& according to reference collapsing rules.  
+	- if rvalue(PR value or X value) then type for _auto_ keyword will be deduced as T&&, thus type of _x_ will be T&& according to reference collapsing rules.  
 	Equivalent function template is:
    ```
    template<typename T>
@@ -109,7 +132,7 @@ int main()
     auto& var7 = var6;  // type is int&. The name that is type of R value reference(var6), forms nevertheless an L value expression
 
     auto&& var8 = a;  	// type is int(&)[10]
-    auto&& var9 = ca;   // type is const int(&)[10]. ca is L value expression, according to reference collapsing rules var sloud be lvalue ref
+    auto&& var9 = ca;   // type is const int(&)[10]. ca is L value expression, according to reference collapsing rules var should be lvalue ref
 
 }
 ```
@@ -198,6 +221,112 @@ int main()
 	func2(x,x);   // error, T can be int or int&
 }
 ```
+
+## Abbreviated Template Syntax
+
+- There is a shorter sytax for writing function templates:
+
+```cpp
+void fun(auto x, auto y)
+{
+}
+```
+
+This is equivalent to:
+
+```cpp
+template<typename T, typename U>
+void bar(T x, U y)
+{
+}
+```
+
+## Trailing return type (C++14)
+
+Trailing return type syntax is typically used in function templates. Basic example to understand syntax:
+
+Example:
+```cpp
+auto baz(int) -> int
+{
+}
+```
+
+is equivalent to:
+
+```cpp
+int baz(int)
+{
+}
+```
+This syntax is particularly useful in scenarios where it enhances the readability of complex return types.
+
+
+```cpp
+int bar(int);
+
+int (*foo()) (int) // return type is int(*)(int). Functions cannot return function type, but pointer to function type
+{
+	return bar;
+}
+```
+
+is equivalent to:
+
+```cpp
+auto baz() -> int(*)(int)
+{
+	return bar;
+}
+```
+
+Another example:
+
+```cpp
+int arr[15];
+
+int (&fun())[15]
+{
+	return a;
+}
+```
+
+is equivalent to:
+
+```cpp
+auto func() -> int[15]
+{
+	return arr;
+}
+```
+
+In practice, this syntax is most commonly used when the return type depends on template parameters.
+```cpp
+template<typename T, typename U>
+auto sum(T x, U y) -> decltype(x + y) // since decltype(x + y) cannot be put in place of _auto_ keyword as return type, it is placed after -> token
+{
+	return x + y;
+}
+```
+
+## Auto return type (C++14)
+
+In this syntax the compiler deduces the return type by inspecting the return statement(s) within the function body. This is known as Return Type Deduction.
+
+```cpp
+template<typename T, typename U>
+auto sum(T x, U y)
+{
+    return x + y;
+}
+
+```
+- If a function has multiple return statements, they must all deduce to the same type; otherwise, it’s a compilation error.
+
+- The function definition (the body) must be visible to the compiler at the point of call for deduction to occur.
+
+- For recursive functions, at least one return statement must precede the recursive call to allow the compiler to deduce the type first.
+
 
 Resources utilized:
 1) C++Templates[Vandevoorde-Josuttis]
