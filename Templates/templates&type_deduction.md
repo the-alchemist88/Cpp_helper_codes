@@ -40,9 +40,7 @@ Function templates are functions that are parameterized to represent a family of
 
 ## Translation of Templates
 
-Templates are _compiled_ in two phases:
-
-### Two-Phase Lookup:
+Templates are _compiled_ in two phases, this mechanism is called as two-phase lookup:
 
 1)
 - Without instantiation at definition time, the template code itself is checked for correctness ignoring the template parameters. This includes:
@@ -70,6 +68,47 @@ int main()
 {
 }
 ```
+
+## Code Generation: Templates vs. Standard Functions
+
+As we explained above, C++ compiler acts as a "code generator" for templates. It only writes concrete function code (instantiation) when it encounters a unique set of template arguments.
+
+- Type-Based Selection `(template<typename T>)`
+  
+The compiler generates one function for each unique type. If the type T is the same, the compiler reuses the existing specialization.
+
+```cpp
+template<typename T>
+void f(T n) {}
+
+f(1);   // T is int -> f(int) is generated.
+f(5);   // T is int -> Reuse f(int). No new code.
+f(1.0); // T is double -> f(double) is generated. (Total: 2 functions)
+```
+
+- Value-Based Selection `(template<int N>)`
+  
+For Non-type Template Parameters (NTTP), the value itself is part of the function's identity (the signature). Every unique value of N triggers the generation of a new,
+distinct function in the binary.
+```cpp
+template<int N>
+void g() {}
+
+g<1>(); // N=1 -> g<1>() is generated.
+g<5>(); // N=5 -> g<5>() is generated. (Total: 2 functions)
+```
+
+- Standard Functions `(void h(int n))`
+
+Standard functions are compiled only once, regardless of how many different values are passed to them.
+
+```cpp
+void h(int n) {}
+
+h(1); // Calls the single instance of h(int).
+h(5); // Calls the same instance of h(int).
+```
+
 ## Template Argument Deduction(TAD)
 
 Auto type deduction and TAD work very similarly with one exception (std::initializer_list), _auto_ has special rule for braced-init-list.
@@ -84,8 +123,6 @@ int main()
 }
 
 ```
-
-
 In auto type deduction,
 type deduction is made for the keyword **auto**, not for the variable name itself. Thus, reference and pointer declarators must be taken into account separately. 
 In general, there are three cases:
@@ -197,7 +234,7 @@ int main()
 }
 ```
 So the only real difference between auto and template type deduction is that auto assumes that a braced initializer represents a std::initializer_list, but template type deduction
-doesn’t.
+does not.
 
 Examples of template parameter type mismatch situations:
 ```cpp
@@ -241,7 +278,7 @@ void bar(T x, U y)
 }
 ```
 
-## Trailing return type (C++14)
+## Trailing return type (C++11)
 
 Trailing return type syntax is typically used in function templates. Basic example to understand syntax:
 
@@ -303,7 +340,7 @@ auto func() -> int[15]
 In practice, this syntax is most commonly used when the return type depends on template parameters.
 ```cpp
 template<typename T, typename U>
-auto sum(T x, U y) -> decltype(x + y) // since decltype(x + y) cannot be put in place of _auto_ keyword as return type, it is placed after -> token
+auto sum(T x, U y) -> decltype(x + y) // since decltype(x + y) cannot be put in place of "auto" keyword as return type, it is placed after "->" token
 {
 	return x + y;
 }
@@ -314,8 +351,7 @@ auto sum(T x, U y) -> decltype(x + y) // since decltype(x + y) cannot be put in 
 In this syntax the compiler deduces the return type by inspecting the return statement(s) within the function body. This is known as Return Type Deduction.
 
 ```cpp
-template<typename T, typename U>
-auto sum(T x, U y)
+auto sum(int x, int y)
 {
     return x + y;
 }
