@@ -5,7 +5,7 @@ However it causes so-called "type erasure" and counted as not type-safe. Besides
 Templates in C++ on the other hand, enable type-safe generic programming, unlike `void*` in C. 
 
 The most prominant difference between C and C++ compiler is that C++ compiler can generate code at compile time via templates. Consequently, we call such code, which can trigger compiler to write code by its
-instructions as templates. This style of coding is called Template Meta Programming(TMP). The types of templates are:
+instructions, as templates and this style of coding as Template Meta Programming(TMP). The types of templates are:
 
 - function template
 - class template
