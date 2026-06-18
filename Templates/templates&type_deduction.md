@@ -1,8 +1,8 @@
 # Generic Programming and Templates
 
-Briefly speaking, generic programming denotes the style of programming that is independent of types. For example in C language "void*" type is used for eliminating dependency to types.
-However it is called type erasure and caunted as unsafe. Besides in C++ and in some other languages inheritence tools(virtual dispatch etc.) is used to employ derived class' codes without knowing the type at runtime.
-Templates in C++ on the other hand, enable type-safe generic programming, unlike void* in C. 
+Briefly speaking, generic programming denotes the style of programming that is independent of types. For example in C language `void*` type is used for eliminating dependency to types.
+However it causes so-called `type erasure` and counted as not type-safe. Besides, in C++ and several other languages, inheritence tools(virtual dispatch etc.) are used to employ derived class' codes without knowing the type at runtime.
+Templates in C++ on the other hand, enable type-safe generic programming, unlike `void*` in C. 
 
 The most prominant difference between C and C++ compiler is that C++ compiler can generate code at compile time via templates. Consequently, we call such code, which can trigger compiler to write code by its
 instructions as templates. This style of coding is called Template Meta Programming(TMP). The types of templates are:
