@@ -120,7 +120,6 @@ int main()
 	auto x = { 1,2,3 };   // OK
 	fun({ 1,2,3 });       // error
 }
-
 ```
 In auto type deduction,
 type deduction is made for the keyword `auto`, not for the variable name itself. Thus, reference and pointer declarators must be taken into account separately. 
@@ -169,7 +168,6 @@ int main()
 
     auto&& var8 = a;  	// type is int(&)[10]
     auto&& var9 = ca;   // type is const int(&)[10]. ca is lvalue expression, according to reference collapsing rules var should be lvalue ref
-
 }
 ```
 A practical way to inspect the deduced type of an expression in templates is to use the following helper class:
@@ -240,18 +238,16 @@ Examples of template parameter type mismatch situations:
 template<typename T>
 void func1(T, T)
 {
-
 }
 
 template<typename T>
 void func2(T, T&&)
 {
-
 }
 
 int main()
 {
-    func1(1, 5u); // error, T can be int or unsigned int
+	func1(1, 5u); // error, T can be int or unsigned int
 	int x{};
 	
 	func2(x,x);   // error, T can be int or int&
