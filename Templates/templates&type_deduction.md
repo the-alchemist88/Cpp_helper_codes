@@ -164,7 +164,7 @@ int main()
 
     auto& var5 = 13;    // error, cannot be bound to rvalue expression
     auto&& var6 = 5;    // type is int&&
-    auto& var7 = var6;  // type is int&. Although `var6` has type `int&&`, the expression `var6` is an lvalue
+    auto& var7 = var6;  // type is int&. Although `var6` has type int&&, the expression var6 is an lvalue
 
     auto&& var8 = a;  	// type is int(&)[10]
     auto&& var9 = ca;   // type is const int(&)[10]. ca is lvalue expression, according to reference collapsing rules var should be lvalue ref
@@ -202,7 +202,7 @@ int main()
     baz(arr);
 }
 ```
-In the example above, since _TypeTeller_ is a forward declaration(incomplete class), the compiler will issue an error when instantiating it inside template functions. And in the error message it adds the type information of template
+In the example above, since *TypeTeller* is a forward declaration(incomplete class), the compiler will issue an error when instantiating it inside template functions. And in the error message it adds the type information of template
 parameter T, for each function call. Example:
 ```cpp
 #include <initializer_list>
@@ -230,7 +230,7 @@ int main()
     func2({ 1, 3, 5, 7 }); 			// ok, T deduced as int
 }
 ```
-So the only real difference between auto type deduction and template type deduction is that auto assumes that a braced initializer represents a `std::initializer_list`, but template type deduction
+So the only real difference between auto type deduction and template type deduction is that *auto* assumes that a braced initializer represents a `std::initializer_list`, but template type deduction
 does not.
 
 Examples of template parameter type mismatch situations:
