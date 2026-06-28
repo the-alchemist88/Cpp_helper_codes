@@ -62,10 +62,6 @@ void func(T x)
     x.bar(); // unknown name, depends on template parameter, compiles witout an error 
     //baz(); // error
 }
-
-int main()
-{
-}
 ```
 
 ## Code Generation: Templates vs. Standard Functions
