@@ -202,7 +202,7 @@ int main()
     baz(arr);
 }
 ```
-In the example above, since _TypeTeller_ is a forward declaration(incomplete class), the compiler will issue an error. And in the error message it adds the type information of template
+In the example above, since _TypeTeller_ is a forward declaration(incomplete class), the compiler will issue an error when instantiating it inside template functions. And in the error message it adds the type information of template
 parameter T, for each function call. Example:
 ```cpp
 #include <initializer_list>
