@@ -133,7 +133,7 @@ In general, there are three cases:
    void func(T& x);
    ```
 
-3) `auto&& x = expr;`	-->	This is a universal reference. The type of `x` depends on the value category of expr:  
+3) `auto&& x = expr;`	-->	This is a forwarding (aka universal) reference. In contexts where rvlaue syntax appears with deduction, it will be a universal reference. The type of `x` depends on the value category of expr:  
 	- if `expr` is an lvalue then type for `auto` keyword will be deduced as T&, thus type of `x` will be T& according to reference collapsing rules.  
 	- if `expr` is an rvalue(PR value or X value) then type for `auto` keyword will be deduced as T&&, thus type of `x` will be T&& according to reference collapsing rules.  
 	Equivalent function template is:
