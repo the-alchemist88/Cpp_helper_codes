@@ -24,8 +24,7 @@ public:
  
 Notes on features of classes:
 
-- Member function syntax exists in language level. Conceptually, non-static member functions can be viewed as free functions with an implicit object parameter, although at the ABI and code generation level there may be differences.  
-They can be conceptually treated as free functions with an implicit object parameter(typically a pointer to the object) which corresponds to the type of the object on the left-hand side of the dot operator.
+- Member function syntax exists in language level.  They can be conceptually treated as free functions with an implicit object parameter(typically a pointer to the object) which corresponds to the type of the object on the left-hand side of the dot operator. Example:
 
 ```cpp
 class Enemyfighter {};
@@ -45,7 +44,7 @@ int main()
 	attack2(&fighter1, &fighter2);
 }
  ```
-- Access specifiers don't form a scope. Recall that compiler checks code in this order: Name lookup, context control (overload resolution), access control.
+- Access specifiers(public, protected, private) don't form a scope. Recall that compiler checks code in this order: Name lookup, context control (overload resolution), access control.
  
 - Function redeclaration with the same signature is not allowed inside class scope, but overloading is permitted.
  
